@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   
   
-  <title>纲的blog</title>
+  <title>pwn基操 | 纲的blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="一vim vim是我们在使用Linux是经常会使用的工具，新手总是忘记使用方法（当然我也是）。在这里记录下常用命令以防止以后再忘记 1，进入编辑模式： i （在当前位置插入，开始编辑）； 2,保存编辑文本： :w (英文冒号，保存当前编辑的文件）； 3,退出编辑文件： :q（英文冒号，退出当前编辑的文件）； 4,保存并退出： :wq （英文冒号，保存并退出当前编辑的文件）； 5.强制退出：  :q">
 <meta property="og:type" content="article">
-<meta property="og:title" content="纲的blog">
+<meta property="og:title" content="pwn基操">
 <meta property="og:url" content="https://2023478.github.io/2024/03/27/%E5%8D%9A%E5%AE%A2/index.html">
 <meta property="og:site_name" content="纲的blog">
 <meta property="og:description" content="一vim vim是我们在使用Linux是经常会使用的工具，新手总是忘记使用方法（当然我也是）。在这里记录下常用命令以防止以后再忘记 1，进入编辑模式： i （在当前位置插入，开始编辑）； 2,保存编辑文本： :w (英文冒号，保存当前编辑的文件）； 3,退出编辑文件： :q（英文冒号，退出当前编辑的文件）； 4,保存并退出： :wq （英文冒号，保存并退出当前编辑的文件）； 5.强制退出：  :q">
@@ -20,10 +20,10 @@
 <meta property="og:image" content="c:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240312163842964.png">
 <meta property="og:image" content="c:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240317085245419.png">
 <meta property="og:image" content="c:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240325200803566.png">
-<meta property="article:published_time" content="2024-03-27T11:15:02.303Z">
-<meta property="article:modified_time" content="2024-03-25T12:55:08.420Z">
+<meta property="article:published_time" content="2024-03-27T12:06:41.000Z">
+<meta property="article:modified_time" content="2024-03-27T12:07:09.436Z">
 <meta property="article:author" content="wgiegie">
-<meta property="article:tag" content="Wgiegie">
+<meta property="article:tag" content="pwn">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://2023478.github.io/(C:%5CUsers%5Cx%5CPictures%5CScreenshots%5CScreenshots%5C%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png">
   
@@ -83,16 +83,30 @@
         <section id="main"><article id="post-博客" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/03/27/%E5%8D%9A%E5%AE%A2/" class="article-date">
-  <time class="dt-published" datetime="2024-03-27T11:15:02.303Z" itemprop="datePublished">2024-03-27</time>
+  <time class="dt-published" datetime="2024-03-27T12:06:41.000Z" itemprop="datePublished">2024-03-27</time>
 </a>
     
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/CTF/">CTF</a>
+  </div>
+
   </div>
   <div class="article-inner">
     
     
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      pwn基操
+    </h1>
+  
+
+      </header>
+    
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p><strong>一vim</strong></p>
+        <h4 id=""><a href="#" class="headerlink" title=""></a></h4><p><strong>一vim</strong></p>
 <p>vim是我们在使用<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=Linux&spm=1001.2101.3001.7020">Linux</a>是经常会使用的工具，新手总是忘记使用方法（当然我也是）。在这里记录下常用命令以防止以后再忘记</p>
 <p>1，进入编辑模式： i （在当前位置插入，开始编辑）；</p>
 <p>2,保存编辑文本： :w (英文冒号，保存当前编辑的文件）；</p>
@@ -435,7 +449,7 @@
 
 <p>其中的int bufsize指的是能输入的字节的大小，将int bufsize看作n，fgets函数只能读取 n-1 个字符（包括换行符）。如果有一行超过 n-1 个字符，那么 fgets 函数将返回一个不完整的行（只读取该行的前 n-1 个字符）</p>
 <p>也就是说，每次调用时，fgets 函数都会把缓冲区的最后一个字符设为 null(‘\0’)，这意味着最后一个字符不能用来存放需要的数据。所以如果某一行含有 size 个字符（包括换行符），要想把这行读入缓冲区，要把参数 n 设为 size+1，即多留一个位置存储 null(‘\0’)。</p>
-<h6 id=""><a href="#" class="headerlink" title=""></a></h6><p>在payload的构造中如果要使用到base64编码一个数据，在传入到中可以用以下代码</p>
+<h6 id="-1"><a href="#-1" class="headerlink" title=""></a></h6><p>在payload的构造中如果要使用到base64编码一个数据，在传入到中可以用以下代码</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64//导入库，在脚本的一开始处就要</span><br><span class="line">payload=<span class="string">&#x27;A&#x27;</span>*<span class="number">22</span>//在使用base64这个库时因为后面的代码有地方改变，不能加b</span><br><span class="line">payload64= base64.b64encode(payload.encode(<span class="string">&#x27;utf-8&#x27;</span>))</span><br><span class="line">//将payload中的值转化为base64编码的赋值给paylaod64</span><br><span class="line">//此时直接输出payload64中的值会自动加入b，可直接使用</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line">payload=<span class="string">b&#x27;A&#x27;</span>*<span class="number">32</span>+p32(printf)</span><br><span class="line">payload64= base64.b64encode(payload)</span><br></pre></td></tr></table></figure>
@@ -635,10 +649,12 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://2023478.github.io/2024/03/27/%E5%8D%9A%E5%AE%A2/" data-id="clu9r70kz0002ok7z5k9cbebs" data-title="" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      <a data-url="https://2023478.github.io/2024/03/27/%E5%8D%9A%E5%AE%A2/" data-id="clu9rgnge0006fs7zh70uaw3w" data-title="pwn基操" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
       
       
       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li></ul>
+
     </footer>
   </div>
   
@@ -648,7 +664,7 @@
   
     <a href="/2024/03/26/C%E8%AF%AD%E8%A8%80%E9%A2%98%E7%9B%AE/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Älter</strong>
-      <div class="article-nav-title">My New Post</div>
+      <div class="article-nav-title">C语言题目</div>
     </a>
   
 </nav>
@@ -662,12 +678,33 @@
           <aside id="sidebar">
   
     
+  <div class="widget-wrap">
+    <h3 class="widget-title">Kategorien</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CTF/">CTF</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A2%98%E7%9B%AE/">题目</a></li></ul>
+    </div>
+  </div>
+
 
   
     
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80/" rel="tag">C语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li></ul>
+    </div>
+  </div>
+
 
   
     
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C%E8%AF%AD%E8%A8%80/" style="font-size: 10px;">C语言</a> <a href="/tags/pwn/" style="font-size: 10px;">pwn</a>
+    </div>
+  </div>
+
   
     
   <div class="widget-wrap">
@@ -686,11 +723,11 @@
       <ul>
         
           <li>
-            <a href="/2024/03/27/%E5%8D%9A%E5%AE%A2/">(no title)</a>
+            <a href="/2024/03/27/%E5%8D%9A%E5%AE%A2/">pwn基操</a>
           </li>
         
           <li>
-            <a href="/2024/03/26/C%E8%AF%AD%E8%A8%80%E9%A2%98%E7%9B%AE/">My New Post</a>
+            <a href="/2024/03/26/C%E8%AF%AD%E8%A8%80%E9%A2%98%E7%9B%AE/">C语言题目</a>
           </li>
         
           <li>
