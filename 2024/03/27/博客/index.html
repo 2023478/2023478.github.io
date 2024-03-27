@@ -36,7 +36,7 @@ lightGallery(document.getElementById('post-bg'), {
    }
  }
 });
-document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 7.1.1"></head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="数据检索" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>pwn基操</h1><div id="post-info"><span>文章发布时间: <div class="control"><time datetime="2024-03-27T12:06:41.000Z" id="date"> 2024-03-27</time></div></span><br><span>最后更新时间: <div class="control"><time datetime="2024-03-27T12:58:35.717Z" id="updated"> 2024-03-27</time></div></span></div></div><hr><div id="post-content"><p><strong>一vim</strong></p>
+document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 7.1.1"></head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="数据检索" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>pwn基操</h1><div id="post-info"><span>文章发布时间: <div class="control"><time datetime="2024-03-27T12:06:41.000Z" id="date"> 2024-03-27</time></div></span><br><span>最后更新时间: <div class="control"><time datetime="2024-03-27T13:48:46.252Z" id="updated"> 2024-03-27</time></div></span></div></div><hr><div id="post-content"><p><strong>一vim</strong></p>
 <p>vim是我们在使用<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=Linux&spm=1001.2101.3001.7020">Linux</a>是经常会使用的工具，新手总是忘记使用方法（当然我也是）。在这里记录下常用命令以防止以后再忘记</p>
 <p>1，进入编辑模式： i （在当前位置插入，开始编辑）；</p>
 <p>2,保存编辑文本： :w (英文冒号，保存当前编辑的文件）；</p>
@@ -62,7 +62,7 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 <p>11,rm+文件名，删除那个文件</p>
 <p>12,gcc -S 文件名，可以将文件改为汇编语言文件</p>
 <p>13，<code>checksec +文件名</code>，查看文件是否有保护程序</p>
-<p>![屏幕截图 2023-11-24 205006](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-24 205006.png)</p>
+<p>![屏幕截图 2023-11-24 205006](博客\屏幕截图 2023-11-24 205006.png)</p>
 <p>PIE：•程序的防护措施，</p>
 <p>编译时生效，随机化ELF文件的映射地址，</p>
 <p>开启 ASLR 之后，PIE 才会生效。</p>
@@ -73,14 +73,14 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 <p>RELRO：•程序的防护措施，编译时生效</p>
 <p>•部分 RELRO: 在程序装入后, 将其中一些段(如.dynamic)标记为只读, 防止程序的一些重定位信息被修改</p>
 <p>•完全 RELRO: 在部分 RELRO 的基础上, 在程序装入时, 直接解析完所有符号并填入对应的值, 此时所有的 GOT 表项都已初始化, 且不装入link_map与_dl_runtime_resolve的地址。</p>
-<p>![屏幕截图 2023-11-18 193922](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-18 193922.png)</p>
+<p>![屏幕截图 2023-11-18 193922](博客\屏幕截图 2023-11-18 193922.png)</p>
 <p>可执行文件</p>
 <p>广义：文件中的数据是可执行代码的文件.out、.exe、.sh、.py</p>
 <p>狭义：文件中的数据是机器码的文件.out、.exe、.dll、.so</p>
 <p>分类：</p>
 <p>Windows：PE（Portable Executable）可执行程序.exe动态链接库.dll静态链接库.lib</p>
 <p>Linux：ELF（Executable and Linkable Format）可执行程序.out动态链接库.so静态链接库.a</p>
-<p class='item-img' data-src='/2024/03/27/%E5%8D%9A%E5%AE%A2/(C:%5CUsers%5Cx%5CPictures%5CScreenshots%5CScreenshots%5C%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png'><img src="/2024/03/27/%E5%8D%9A%E5%AE%A2/(C:%5CUsers%5Cx%5CPictures%5CScreenshots%5CScreenshots%5C%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt="image-20231118202418867"></p>
+<p class='item-img' data-src='/2024/03/27/%E5%8D%9A%E5%AE%A2/(%E5%8D%9A%E5%AE%A2%5C%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png'><img src="/2024/03/27/%E5%8D%9A%E5%AE%A2/(%E5%8D%9A%E5%AE%A2%5C%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt="image-20231118202418867"></p>
 <p>•ELF文件头表（ELF header）</p>
 <p>•记录了ELF文件的组织结构</p>
 <p>给系统看</p>
@@ -111,7 +111,7 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 <p>•.bss 节&#x2F;&#x2F;只在内存中占空间不在磁盘中占有空间</p>
 <p>•……</p>
 <p>•栈段（Stack segment）</p>
-<p>![屏幕截图 2023-11-19 102459](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-19 102459.png)</p>
+<p>![屏幕截图 2023-11-19 102459](博客\屏幕截图 2023-11-19 102459.png)</p>
 <p>kemel，内核</p>
 <p>starck堆栈</p>
 <p>shared libraries，共享库</p>
@@ -120,7 +120,7 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 <p>text代码段：main函数，sum函数，具体实现的机械码都放在其中，会有一些不可写的代码</p>
 <p>data段会存放已初始化的全局变量，str</p>
 <p>bss段存放未初始化的全局变量，glb（不占用内存空间）</p>
-<p>![屏幕截图 2023-11-19 105211](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-19 105211.png)</p>
+<p>![屏幕截图 2023-11-19 105211](博客\屏幕截图 2023-11-19 105211.png)</p>
 <p>小端序：数据从左往右，存的时候从下到上</p>
 <p>​     </p>
 <p>•RIP</p>
@@ -134,9 +134,9 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 <p>栈（stack）：地址从高地址往低地址增长（从上往下），</p>
 <p>堆（heap）：地址从低地址往高地址增长（从下往上），</p>
 <p>在栈和堆中有shared libraries（共享库），且大小为止，通过两者不同的增长方向使其充分利用空间</p>
-<p> ![屏幕截图 2023-11-19 114829](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-19 114829.png)</p>
+<p> ![屏幕截图 2023-11-19 114829](博客\屏幕截图 2023-11-19 114829.png)</p>
 <p>high address高地址；caller’s Function state函数功能状态;stack top顶端;low address低地址</p>
-<p>![屏幕截图 2023-11-19 120035](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-19 120035.png)</p>
+<p>![屏幕截图 2023-11-19 120035](博客\屏幕截图 2023-11-19 120035.png)</p>
 <p>•函数状态主要涉及三个寄存器 —— esp，ebp，eip。esp 用来存储函数调用栈的栈顶地址，在压栈和退栈时发生变化。</p>
 <p>ebp 用来存储当前函数状态的基地址，在函数运行时不变，可以用来索引确定函数参数或局部变量的位置。</p>
 <p>eip 用来存储即将执行的程序指令的地址，cpu 依照 eip 的存储内容读取指令并执行，eip 随之指向相邻的下一条指令，如此反复，程序就得以连续执行指令。</p>
@@ -150,7 +150,7 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 <p>（2）ebp：基址指针寄存器(extended base pointer)，其内存放着一个指针，该指针永远指向系统栈最上面一个栈帧的底部。</p>
 <p>在栈中ebp常常保存着的是上一个函数的返回值，用于在栈使用完后返回之前的函数，在栈顶</p>
 <p>其中的值是一个指针指向原来的函数的栈低。</p>
-<p>在ebp的更高一位地址有一个更为重要的域：return address![屏幕截图 2023-11-20 210719](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-20 210719.png)</p>
+<p>在ebp的更高一位地址有一个更为重要的域：return address![屏幕截图 2023-11-20 210719](博客\屏幕截图 2023-11-20 210719.png)</p>
 <p>当一个域的函数执行完其中的代码开始执行return前，会先将栈中的esp移到与ebp相同的指向地址并指向这里</p>
 <p>之后由于ebp中存放的是上一个函数的返回值，ebp便通过这个地址指向上一个函数栈顶，同时存放再上一个函数的返回值，与此同时esp自动加一指向return address；</p>
 <p>在ebp和esp中有一个变量可以由我们向其中输入无限的变量，那我们便可通过输入的数据将ebp指向的上面的数据覆盖，然后在程序执行时，到返回地址时由于已经被我们写入的数据覆盖，会直接返回我们写入的地址，从而达到我们的目标，在ida中我们可以先找到那个变量，便可以看到他与ebp和esp的距离，如：char s;&#x2F;&#x2F; [esp+1ch] [ebp-64h]（可能会出现错误，如果有错用动态调试）,我们可以看到此时的s变量距离ebp是0x64字节，当我们向其中写入0x64个字节的数据便可以到ebp的位置，在向上写4个字节便可以覆盖ebp指向的位置，在写4个字节便是要返回的话数值，于是我们只要想s中写入0x68字节的垃圾数据和0x4个字节的特殊数据便可以在函数执行后不正常反悔而是返回到我们需要的值。</p>
@@ -256,7 +256,7 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">context.arch =<span class="string">&quot;amd64&quot;</span></span><br></pre></td></tr></table></figure>
 
 <p>ldd 文件名（必须为可执行的文件名），查看该文件用到的所有动态链接库，如图</p>
-<p>![屏幕截图 2023-11-21 220537](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-21 220537.png)</p>
+<p>![屏幕截图 2023-11-21 220537](博客\屏幕截图 2023-11-21 220537.png)</p>
 <p>其中要重点关注的是第二行，libc.so.6是软链接相当于快捷方式的值指向的是lib中的存放C语言的动态链接库</p>
 <p>动态链接库本身就是一个可执行文件，他也有可执行的入口 </p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ROPgadget --binary yichu --only <span class="string">&quot;pop|ret&quot;</span>，？</span><br></pre></td></tr></table></figure>
@@ -265,16 +265,16 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 <p>在文件名搜system，</p>
 <p>int 0x80,中断号代表进行系统调用，调用系统函数时，函数名一般为sys_write（），但是我们不能直接用他的名称只能在调用时用代号，如sys_write()代号为4，sys_execve()代号11,0xb，可以用0xb直接调用sys_execve()</p>
 <p>在使用int 0x80，要确保（eax&#x3D;0xb,ebx&#x3D;0x8048xxxx,ecx&#x3D;0,edx&#x3D;0）这4个寄存器都已经完成初始化，eax中的0xb代表的是系统函数的调用代（0xb-&gt;sys_execve()）,ebx中存放的是我们最后要执行到的最后地址，如、bin&#x2F;sh&#x2F;的地址</p>
-<p>![屏幕截图 2024-01-07 155233](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2024-01-07 155233.png)</p>
+<p>![屏幕截图 2024-01-07 155233](博客\屏幕截图 2024-01-07 155233.png)</p>
 <p>payload&#x3D;b’A’*112(垃圾数据)+p64(pop_eax_ret)+p64(0xb)+p64(pop_edx_ecx_ebx_ret)+p64(0)+p64(0)+p64(bin_sh)+p64(int_80h)[其中的pop_eax_ret，pop_edx_ecx_ebx_ret，bin_sh，int_80h都要在程序中找到地址并在程序之前写明]</p>
-<p>![屏幕截图 2023-11-22 213524](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-22 213524.png)</p>
-<p>![屏幕截图 2023-11-23 150419](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-23 150419.png)</p>
+<p>![屏幕截图 2023-11-22 213524](博客\屏幕截图 2023-11-22 213524.png)</p>
+<p>![屏幕截图 2023-11-23 150419](博客\屏幕截图 2023-11-23 150419.png)</p>
 <p>在linux中可以生成的可执行文件分为动态链接文件和静态链接文件，用gcc默认生成的是动态链接，用file分析会出现dynamically linke的标志，其中不含有C语言的基本执行代码只有经过编译后的源码，在执行时与系统链接使用C语言的基本代码。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc --<span class="type">static</span> 文件名</span><br></pre></td></tr></table></figure>
 
 <p> 当执行以上代码时会生成静态链接的文件，用file分析是会有statically linke的标志，其中包含有C              语言的基本执行代码。 </p>
-<p>![屏幕截图 2023-11-23 152644](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-23 152644.png)</p>
-<p>![屏幕截图 2023-11-23 153131](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-23 153131.png)</p>
+<p>![屏幕截图 2023-11-23 152644](博客\屏幕截图 2023-11-23 152644.png)</p>
+<p>![屏幕截图 2023-11-23 153131](博客\屏幕截图 2023-11-23 153131.png)</p>
 <p>.got 保存了整个程序的虚拟内存空间中各个符号（变量）的偏移量（地址）</p>
 <p>.got.plt保存的是函数的地址</p>
 <p>●.dynamic section</p>
@@ -282,14 +282,14 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 <h4 id="●link-map"><a href="#●link-map" class="headerlink" title="●link_map"></a>●link_map</h4><p>○保存进程载入的动态链接库的链表</p>
 <p>●__dl_runtime_resolve</p>
 <p>○装载器中用于解析动态链接库中函数的实际址的函数</p>
-<p><strong>动态链接的过程![屏幕截图 2023-11-23 164625](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-23 164625.png)</strong></p>
+<p><strong>动态链接的过程![屏幕截图 2023-11-23 164625](博客\屏幕截图 2023-11-23 164625.png)</strong></p>
 <p>1，第一次进行链接</p>
 <p>在程序中先定义一个foo函数</p>
 <p>代码段首次调用foo，跳转到 .plt 中的 foo 函数项，.plt 中的代码会使程序立即跳转到 .got.plt 中记录的地址</p>
 <p>由于进程是第一次调用 foo，故 .got.plt 中记录的地址是 foo@plt+1，于是会跳转到plt中的下一段代码，先将index入栈，index包括的是foo这个函数的在我们程序的位置（第几个函数），然后是跳转到PLT0段</p>
 <p>在PLT0中再将一个数入栈，这个数指的是用到的是哪一个动态链接库，之后进行跳转，到_dl_runtime_resolve函数，这个函数将解析 foo 的真正地址填入 .got.plt 中</p>
 <p>此后 .got.plt 中保存的是 foo 的真实地址</p>
-<p>![屏幕截图 2023-11-23 165300](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-23 165300.png)</p>
+<p>![屏幕截图 2023-11-23 165300](博客\屏幕截图 2023-11-23 165300.png)</p>
 <p>之后的调用到.got.plt处时便可以直接拿到foo的真实地址</p>
 <p>栈对齐，ret的加入，call的入栈使其对齐</p>
 <p><strong>ida基操</strong></p>
@@ -303,12 +303,12 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 
 <p>在静态链接中，在系统内核中的execve(“&#x2F;bin&#x2F;sh”,NULL,NULL)这个函数可以获得控制权，但由于他是内核函数，所以，在调用它时必须满足一些必要的调用约定才可以进行调用，</p>
 <p>像这些系统内核函数调用必须使用一些特殊的汇编指令才能调用，如int 80（32位）和syscall（64位）就像一个call函数，但是是跳转到内核系统中，至于要跳到哪个函数则要根据之前部分寄存器的值来确定，eax(32)和rax(64)保存了系统调用号（内核函数在内核中都有独属于自己一个调用号，如execve的调用号为11（32位&#x3D;0xb）,59（64位&#x3D;0x3b））,ebx和rdi用来保存在函数中执行的参数的地址，同时要保证ecx，edx和rsi，rdx中的值都为0。</p>
-<p>![屏幕截图 2023-12-03 112959](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-12-03 112959.png)</p>
+<p>![屏幕截图 2023-12-03 112959](博客\屏幕截图 2023-12-03 112959.png)</p>
 <p>对于在动态链接中调用一个在plt段上的函数，先在ida中的plt段中找到需要调用的函数的地址，在栈溢出之后直接来到plt段的函数进行调用，需要注意的是在调用plt段中函数时由于函数会先创造一个独属于自己的栈，虽然这个栈不用关注，但由于这个栈的存在，在payload中plt函数不会直接读取下一个地址而是读取下下个地址，如get@plt会用的的是buf2的地址不会用中间的那一个。</p>
 <p>如果我们在使用时，需要平衡栈空间，便需要消除栈中的数据，对于get下的一个数据get会在最后进行消除，但buf2段不会被消除，此时便需要一个pop|ret的值在中间加入进去，对buf2的值进行消除，对于pop|ret的选择，最后选择通用寄存器入ebx等对程序不会起到大作用的寄存器加进去。</p>
 <p>以上的方法主要适用于在32位中的程序中，如果在64位的程序中，由于函数不会直接调用栈中的参数，在64位的系统中参数的前6个会分别存放在rdi、rsi、rdx、rcx、r8、r9 寄存器中，之后的才会放在栈中，同样的函数调用也是相同的，于是只要在函数执行前将函数调用的参数放在那6个寄存器中（一般函数调用一个参数时，更多的是将rdi的值修改为所需参数在的地址。相同的像gets这种输入的函数，先将rdi的值改为bss段中的空地址，于是输入的值便会直接将存放在那个bss段中，在后期调用时，将rdi中的值改为那个地址，然后直接将程序跳plt段中的函数地址，便会直接调用rdi中的地址的参数，执行函数。）</p>
-<p>![屏幕截图 2023-12-03 152037](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-12-03 152037.png)</p>
-<p>![屏幕截图 2023-12-03 151541](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-12-03 151541.png)![屏幕截图 2023-12-03 151922](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-12-03 151922.png)</p>
+<p>![屏幕截图 2023-12-03 152037](博客\屏幕截图 2023-12-03 152037.png)</p>
+<p>![屏幕截图 2023-12-03 151541](博客\屏幕截图 2023-12-03 151541.png)![屏幕截图 2023-12-03 151922](博客\屏幕截图 2023-12-03 151922.png)</p>
 <p><strong>偏移地址的计算用的版本为libc6_2.35-0ubuntu3.4_i386（32位程序）的</strong></p>
 <p><strong>偏移地址的计算用的版本为libc6_2.35-0ubuntu3.4&#x2F;3.5_amd64（64位程序）的</strong></p>
 <p>在pwntools中，p.recvuntil(“\n”)指的是接收数据，直到遇到换行符”\n”为止。这个指令用于从程序的输出中提取特定的数据。</p>
@@ -407,14 +407,14 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">one_gadget /usr/lib/x86_64-linux-gnu/libc.so<span class="number">.6</span>(/usr/lib/i386-linux-gnu/libc.so<span class="number">.6</span>)</span><br></pre></td></tr></table></figure>
 
 <p>后面接入的是动态链接库，对于32位和64位是不同的库，可以直接在gdb在找，如要打远程则用远程的库，</p>
-<p>![屏幕截图 2024-01-07 150423](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2024-01-07 150423.png)</p>
+<p>![屏幕截图 2024-01-07 150423](博客\屏幕截图 2024-01-07 150423.png)</p>
 <p>一般执行后的情况如下</p>
-<p>![屏幕截图 2024-01-07 150608](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2024-01-07 150608.png)</p>
+<p>![屏幕截图 2024-01-07 150608](博客\屏幕截图 2024-01-07 150608.png)</p>
 <p>要用到的是execve前面的数，这个数字代表这的是在程序中的one_gadget相对于程序基值的偏移量，在使用的过程中用这个数加上程序的基值，便是one_getgad的地址，将程序在执行过程中挟持到这个地方便可以执行one_getgad.但是很多时候并不能成功要每一个都试一下</p>
 <p>三，对于第3种修盖寄存器的指令，就是如下的办法，但很多时候程序中有的指令时不够用的，以此便要提到使用库中的方法</p>
-<p>![屏幕截图 2024-01-07 155233](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2024-01-07 155233.png)</p>
+<p>![屏幕截图 2024-01-07 155233](博客\屏幕截图 2024-01-07 155233.png)</p>
 <p>在所有的动态链接库中都有很多的指令，不过动态链接库中的地址都是相对偏移量，要加上程序的基值才是真实地址，并且有的并不能把直接用，要多试</p>
-<p>![屏幕截图 2024-01-07 154649](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2024-01-07 154649.png)</p>
+<p>![屏幕截图 2024-01-07 154649](博客\屏幕截图 2024-01-07 154649.png)</p>
 <p>如图，可以使用ROP的方法在链接库中寻找需要的偏移量，相同的对于在函数中要用的syscall和0x80指令都可以在动态链接库中找到，然后直接用就行，</p>
 <p>对于64位的程序补充一种指令的使用，</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">rdi--&gt;binsh</span><br><span class="line">rsi--&gt;<span class="number">0</span></span><br><span class="line">r15--&gt;<span class="number">0</span></span><br><span class="line">rdx--&gt;<span class="number">0</span></span><br><span class="line">system    </span><br></pre></td></tr></table></figure>
@@ -478,7 +478,7 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 </ol>
 <p>但是一般在程序中基本不能找到刚好改变这三的寄存器的命令</p>
 <p>特别是在动态链接中最多能找到的是改变rdi和rsi的命令，在这里将之前的一种方法再次讲一遍利用__libc_csu_init函数中的两段命令，将一些没有直接修改寄存器的值改变，</p>
-<p class='item-img' data-src='/2024/03/27/%E5%8D%9A%E5%AE%A2/Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240312163842964.png'><img src="/2024/03/27/%E5%8D%9A%E5%AE%A2/Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240312163842964.png" alt="image-20240312163842964"></p>
+<p class='item-img' data-src='/2024/03/27/%E5%8D%9A%E5%AE%A2/image-20240312163842964-17115472617563.png'><img src="/2024/03/27/%E5%8D%9A%E5%AE%A2/image-20240312163842964-17115472617563.png" alt="image-20240312163842964"></p>
 <p>一般在这个函数的最后这里都会有这两段命令，1，从0x400A3A到0x400A44的修改5个寄存器的值命令。2，从0x400A20到0x400A29的将r13,r14,r15d分别复制到rdx,rsi,edi(这里edi是rdi寄存器的后8位，一般来说对于rdi寄存器来说不会用到前8位，这样一般就可以了)，然后跳转到r12+rbx*8的地址。通过以上两段命令变刚好可将我们需要的三个寄存器的值改变，</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">payload=p64(pop_rbx_rbp_r12_r13_r14_r15_ret)+p64(<span class="number">0</span>)<span class="comment">//为了后面跳转不被影响</span></span><br><span class="line">payload+=p64(<span class="number">1</span>)+p64(read_got)<span class="comment">//修改rbp的值，r12为之后要跳转的函数，必须使用got表的地址不能用plt的</span></span><br><span class="line">paylaod+=p64(<span class="number">0</span>x要读取的长度)+p64(buf空的可写可读之地)+p64(<span class="number">4</span>rax的返回值)</span><br><span class="line">payload+p64(csu_init)+b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*<span class="number">0x38</span><span class="comment">//为了将使用这段指令所空出来的值补完便于执行后面需要的命令</span></span><br></pre></td></tr></table></figure>
 
@@ -511,7 +511,7 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 <p>当程序能执行以上的指令后便可以调用read函数向0x88888888的地方读取0x100的数据，</p>
 <p>对于写好的汇编指令要注入到程序中必须换为机器码才能注入到程序中，可以通过以下的网站换为机器码</p>
 <p>[Online Assembler and Disassembler (shell-storm.org)](<a target="_blank" rel="noopener" href="https://shell-storm.org/online/Online-Assembler-and-Disassembler/?inst=">https://shell-storm.org/online/Online-Assembler-and-Disassembler/?inst=</a> &amp;arch&#x3D;x86-64&amp;as_format&#x3D;inline#assembly)</p>
-<p class='item-img' data-src='/2024/03/27/%E5%8D%9A%E5%AE%A2/Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240317085245419.png'><img src="/2024/03/27/%E5%8D%9A%E5%AE%A2/Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240317085245419.png" alt="image-20240317085245419"></p>
+<p class='item-img' data-src='/2024/03/27/%E5%8D%9A%E5%AE%A2/%E5%8D%9A%E5%AE%A2%5Cimage-20240317085245419.png'><img src="/2024/03/27/%E5%8D%9A%E5%AE%A2/%E5%8D%9A%E5%AE%A2%5Cimage-20240317085245419.png" alt="image-20240317085245419"></p>
 <p>对于已知机器码要想换为ascll可以通过以下网站实现</p>
 <p><a target="_blank" rel="noopener" href="https://www.bchrt.com/tools/ascii-converter/">ASCII、十六进制、二进制、十进制、Base64转换器 (bchrt.com)</a></p>
 <p>但是在很多情况下我们要注入的shellcode是有限制的，有的时候只能输入规定的值如大写字母和数字，像这种情况变要将写的shellcode从16进制的数转为为ascll码的值，如在ascll中A代表41，那么当我们向程序输入A，在程序内部便会存放41如果程序在能执行到这时，便回将那个41当成机器码执行，在ascll码中不同的数相对应的汇编可以在以下的网站中找到</p>
@@ -574,5 +574,5 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 
 
 
-<p class='item-img' data-src='/2024/03/27/%E5%8D%9A%E5%AE%A2/Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240325200803566.png'><img src="/2024/03/27/%E5%8D%9A%E5%AE%A2/Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240325200803566.png" alt="image-20240325200803566"></p>
+<p class='item-img' data-src='/2024/03/27/%E5%8D%9A%E5%AE%A2/image-20240325200803566-17115472740935.png'><img src="/2024/03/27/%E5%8D%9A%E5%AE%A2/image-20240325200803566-17115472740935.png" alt="image-20240325200803566"></p>
 <div id="paginator"></div></div><div id="post-footer"><div id="pages"><div class="footer-link" style="width: 50%;text-align:right;border-right:1px #fe2 solid"><a href="/2024/03/27/wp/">← 下一篇 pwn 一些题详解</a></div><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2024/03/26/C%E8%AF%AD%E8%A8%80%E9%A2%98%E7%9B%AE/">C语言题目 上一篇 →</a></div></div></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="回到顶部" style="opacity: 0; display: none;">∧ </a><a class="i-index" id="to-index" href="#toc-div" title="文章目录">≡</a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="切换主题"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo"></a><h1 id="Dr"><a href="/">wgiegie</a></h1><div id="description"><p></p></div></div><div id="aside-block"><div id="toc-div"><h1>目录</h1><ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E6%A0%88%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F%EF%BC%8Crope%E9%93%BE%E7%9A%84%E6%9E%84%E9%80%A0%EF%BC%8C%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5%E7%9A%84%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">函数栈的工作方式，rope链的构造，动态链接的解析过程&#x3D;</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%97%8Flink-map"><span class="toc-number"></span> <span class="toc-text">●link_map</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96%E5%87%BD%E6%95%B0%E5%9C%A8libc%E4%B8%AD%E7%9A%84%E5%81%8F%E7%A7%BB%E9%87%8F%E5%91%A2%EF%BC%9F"><span class="toc-number"></span> <span class="toc-text">如何获取函数在libc中的偏移量呢？</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link"><span class="toc-number">0.1.</span> <span class="toc-text"></span></a></li></ol></li></ol></div></div><footer><nobr>构建自 <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> 使用主题 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr> 主题作者 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas></body></html>
