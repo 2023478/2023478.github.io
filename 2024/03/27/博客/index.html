@@ -36,7 +36,7 @@ lightGallery(document.getElementById('post-bg'), {
    }
  }
 });
-document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 7.1.1"></head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="数据检索" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>pwn基操</h1><div id="post-info"><span>文章发布时间: <div class="control"><time datetime="2024-03-27T12:06:41.000Z" id="date"> 2024-03-27</time></div></span><br><span>最后更新时间: <div class="control"><time datetime="2024-03-27T12:10:12.264Z" id="updated"> 2024-03-27</time></div></span></div></div><hr><div id="post-content"><p><strong>一vim</strong></p>
+document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 7.1.1"></head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="数据检索" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>pwn基操</h1><div id="post-info"><span>文章发布时间: <div class="control"><time datetime="2024-03-27T12:06:41.000Z" id="date"> 2024-03-27</time></div></span><br><span>最后更新时间: <div class="control"><time datetime="2024-03-27T12:58:35.717Z" id="updated"> 2024-03-27</time></div></span></div></div><hr><div id="post-content"><p><strong>一vim</strong></p>
 <p>vim是我们在使用<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=Linux&spm=1001.2101.3001.7020">Linux</a>是经常会使用的工具，新手总是忘记使用方法（当然我也是）。在这里记录下常用命令以防止以后再忘记</p>
 <p>1，进入编辑模式： i （在当前位置插入，开始编辑）；</p>
 <p>2,保存编辑文本： :w (英文冒号，保存当前编辑的文件）；</p>
@@ -80,7 +80,7 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 <p>分类：</p>
 <p>Windows：PE（Portable Executable）可执行程序.exe动态链接库.dll静态链接库.lib</p>
 <p>Linux：ELF（Executable and Linkable Format）可执行程序.out动态链接库.so静态链接库.a</p>
-<p class='item-img' data-src='/(C:%5CUsers%5Cx%5CPictures%5CScreenshots%5CScreenshots%5C%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png'><img src="/(C:%5CUsers%5Cx%5CPictures%5CScreenshots%5CScreenshots%5C%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt="image-20231118202418867"></p>
+<p class='item-img' data-src='/2024/03/27/%E5%8D%9A%E5%AE%A2/(C:%5CUsers%5Cx%5CPictures%5CScreenshots%5CScreenshots%5C%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png'><img src="/2024/03/27/%E5%8D%9A%E5%AE%A2/(C:%5CUsers%5Cx%5CPictures%5CScreenshots%5CScreenshots%5C%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt="image-20231118202418867"></p>
 <p>•ELF文件头表（ELF header）</p>
 <p>•记录了ELF文件的组织结构</p>
 <p>给系统看</p>
@@ -142,7 +142,7 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 <p>eip 用来存储即将执行的程序指令的地址，cpu 依照 eip 的存储内容读取指令并执行，eip 随之指向相邻的下一条指令，如此反复，程序就得以连续执行指令。</p>
 <p>•下面让我们来看看发生函数调用时，栈顶函数状态以及上述寄存器的变化。变化的核心任务是将调用函数（caller）的状态保存起来，同时创建被调用函数（callee）的状态。</p>
 <p>•首先将被调用函数（callee）的参数按照逆序依次压入栈内。如果被调用函数（callee）不需要参数，则没有这一步骤。这些参数仍会保存在调用函数（caller）的函数状态内，之后压入栈内的数据都会作为被调用函数（callee）的函数状态来保存。</p>
-<p class='item-img' data-src='C:\Users\x\AppData\Roaming\Typora\typora-user-images\image-20231119143141350.png'><img src="C:\Users\x\AppData\Roaming\Typora\typora-user-images\image-20231119143141350.png" alt="image-20231119143141350"></p>
+<p>![image-20231119143141350](博客&#x2F;屏幕截图 2023-11-19 120035-17115442857899-171154428701611-171154428884713-171154429006215.png)</p>
 <p>​                                    将被调用函数的参数压入栈内</p>
 <p>high address高地址；low address低地址；return address回信地址；stack top顶端；caller访客；</p>
 <p>function state功能状态;</p>
@@ -213,10 +213,10 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 
 <p>ljust() 方法将使用指定的字符（默认为空格）作为填充字符使字符串左对齐</p>
 <ul>
-<li><p><input disabled="" type="checkbox"> 
+<li><p><input disabled type="checkbox"> 
 在pwntools中shellcraft.sh   shellcode      elf.search，ljust</p>
 </li>
-<li><p><input disabled="" type="checkbox"> </p>
+<li><p><input disabled type="checkbox"> </p>
 <h5 id="函数栈的工作方式，rope链的构造，动态链接的解析过程"><a href="#函数栈的工作方式，rope链的构造，动态链接的解析过程" class="headerlink" title="函数栈的工作方式，rope链的构造，动态链接的解析过程&#x3D;"></a>函数栈的工作方式，rope链的构造，动态链接的解析过程&#x3D;</h5></li>
 </ul>
 <p>在pwntools中shellcraft.sh</p>
@@ -250,7 +250,7 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo <span class="number">0</span> &gt; /proc/sys/kernel/randomize_va_space</span><br></pre></td></tr></table></figure>
 
 <p>修改发送的栈的地址是不是随机值，正常情况下&#x2F;proc&#x2F;sys&#x2F;kernel&#x2F;randomize_va_space的值为2，若要此时的栈地址则会得到的是一个随机值，修改为0后将称为一个定值，可以通过cat &#x2F;proc&#x2F;sys&#x2F;kernel&#x2F;randomize_va_space知道其值为多少，</p>
-<p>![屏幕截图 2023-11-21 211454](C:\Users\x\Pictures\Screenshots\Screenshots\Screenshots\屏幕截图 2023-11-21 211454.png)</p>
+<p>![屏幕截图 2023-11-21 211454](博客&#x2F;屏幕截图 2023-11-21 211454-17115441695152-17115441721904-17115441747796.png)</p>
 <p>通过动态调试，可以知道我们输入的AAA在一开始入栈的地址为0x7fffffffdeb0,而ebp指向的为0x7fffffffdf20，距离是160个字节，故我们要填充的是160+8（x64系统为8个）垃圾数据然后的8个为需要执行的数据，</p>
 <p>在攻击前由于程序是x64需通过一下指令在pwntools中修改</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">context.arch =<span class="string">&quot;amd64&quot;</span></span><br></pre></td></tr></table></figure>
@@ -379,7 +379,7 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 
 <p>其中的int bufsize指的是能输入的字节的大小，将int bufsize看作n，fgets函数只能读取 n-1 个字符（包括换行符）。如果有一行超过 n-1 个字符，那么 fgets 函数将返回一个不完整的行（只读取该行的前 n-1 个字符）</p>
 <p>也就是说，每次调用时，fgets 函数都会把缓冲区的最后一个字符设为 null(‘\0’)，这意味着最后一个字符不能用来存放需要的数据。所以如果某一行含有 size 个字符（包括换行符），要想把这行读入缓冲区，要把参数 n 设为 size+1，即多留一个位置存储 null(‘\0’)。</p>
-<h6 id=""><a href="#" class="headerlink" title=""></a></h6><p>在payload的构造中如果要使用到base64编码一个数据，在传入到中可以用以下代码</p>
+<h6 id><a href="#" class="headerlink" title></a></h6><p>在payload的构造中如果要使用到base64编码一个数据，在传入到中可以用以下代码</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64//导入库，在脚本的一开始处就要</span><br><span class="line">payload=<span class="string">&#x27;A&#x27;</span>*<span class="number">22</span>//在使用base64这个库时因为后面的代码有地方改变，不能加b</span><br><span class="line">payload64= base64.b64encode(payload.encode(<span class="string">&#x27;utf-8&#x27;</span>))</span><br><span class="line">//将payload中的值转化为base64编码的赋值给paylaod64</span><br><span class="line">//此时直接输出payload64中的值会自动加入b，可直接使用</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line">payload=<span class="string">b&#x27;A&#x27;</span>*<span class="number">32</span>+p32(printf)</span><br><span class="line">payload64= base64.b64encode(payload)</span><br></pre></td></tr></table></figure>
@@ -478,7 +478,7 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 </ol>
 <p>但是一般在程序中基本不能找到刚好改变这三的寄存器的命令</p>
 <p>特别是在动态链接中最多能找到的是改变rdi和rsi的命令，在这里将之前的一种方法再次讲一遍利用__libc_csu_init函数中的两段命令，将一些没有直接修改寄存器的值改变，</p>
-<p class='item-img' data-src='C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240312163842964.png'><img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240312163842964.png" alt="image-20240312163842964"></p>
+<p class='item-img' data-src='/2024/03/27/%E5%8D%9A%E5%AE%A2/Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240312163842964.png'><img src="/2024/03/27/%E5%8D%9A%E5%AE%A2/Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240312163842964.png" alt="image-20240312163842964"></p>
 <p>一般在这个函数的最后这里都会有这两段命令，1，从0x400A3A到0x400A44的修改5个寄存器的值命令。2，从0x400A20到0x400A29的将r13,r14,r15d分别复制到rdx,rsi,edi(这里edi是rdi寄存器的后8位，一般来说对于rdi寄存器来说不会用到前8位，这样一般就可以了)，然后跳转到r12+rbx*8的地址。通过以上两段命令变刚好可将我们需要的三个寄存器的值改变，</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">payload=p64(pop_rbx_rbp_r12_r13_r14_r15_ret)+p64(<span class="number">0</span>)<span class="comment">//为了后面跳转不被影响</span></span><br><span class="line">payload+=p64(<span class="number">1</span>)+p64(read_got)<span class="comment">//修改rbp的值，r12为之后要跳转的函数，必须使用got表的地址不能用plt的</span></span><br><span class="line">paylaod+=p64(<span class="number">0</span>x要读取的长度)+p64(buf空的可写可读之地)+p64(<span class="number">4</span>rax的返回值)</span><br><span class="line">payload+p64(csu_init)+b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*<span class="number">0x38</span><span class="comment">//为了将使用这段指令所空出来的值补完便于执行后面需要的命令</span></span><br></pre></td></tr></table></figure>
 
@@ -511,7 +511,7 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 <p>当程序能执行以上的指令后便可以调用read函数向0x88888888的地方读取0x100的数据，</p>
 <p>对于写好的汇编指令要注入到程序中必须换为机器码才能注入到程序中，可以通过以下的网站换为机器码</p>
 <p>[Online Assembler and Disassembler (shell-storm.org)](<a target="_blank" rel="noopener" href="https://shell-storm.org/online/Online-Assembler-and-Disassembler/?inst=">https://shell-storm.org/online/Online-Assembler-and-Disassembler/?inst=</a> &amp;arch&#x3D;x86-64&amp;as_format&#x3D;inline#assembly)</p>
-<p class='item-img' data-src='C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240317085245419.png'><img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240317085245419.png" alt="image-20240317085245419"></p>
+<p class='item-img' data-src='/2024/03/27/%E5%8D%9A%E5%AE%A2/Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240317085245419.png'><img src="/2024/03/27/%E5%8D%9A%E5%AE%A2/Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240317085245419.png" alt="image-20240317085245419"></p>
 <p>对于已知机器码要想换为ascll可以通过以下网站实现</p>
 <p><a target="_blank" rel="noopener" href="https://www.bchrt.com/tools/ascii-converter/">ASCII、十六进制、二进制、十进制、Base64转换器 (bchrt.com)</a></p>
 <p>但是在很多情况下我们要注入的shellcode是有限制的，有的时候只能输入规定的值如大写字母和数字，像这种情况变要将写的shellcode从16进制的数转为为ascll码的值，如在ascll中A代表41，那么当我们向程序输入A，在程序内部便会存放41如果程序在能执行到这时，便回将那个41当成机器码执行，在ascll码中不同的数相对应的汇编可以在以下的网站中找到</p>
@@ -574,5 +574,5 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 
 
 
-<p class='item-img' data-src='C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240325200803566.png'><img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240325200803566.png" alt="image-20240325200803566"></p>
+<p class='item-img' data-src='/2024/03/27/%E5%8D%9A%E5%AE%A2/Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240325200803566.png'><img src="/2024/03/27/%E5%8D%9A%E5%AE%A2/Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240325200803566.png" alt="image-20240325200803566"></p>
 <div id="paginator"></div></div><div id="post-footer"><div id="pages"><div class="footer-link" style="width: 50%;text-align:right;border-right:1px #fe2 solid"><a href="/2024/03/27/wp/">← 下一篇 pwn 一些题详解</a></div><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2024/03/26/C%E8%AF%AD%E8%A8%80%E9%A2%98%E7%9B%AE/">C语言题目 上一篇 →</a></div></div></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="回到顶部" style="opacity: 0; display: none;">∧ </a><a class="i-index" id="to-index" href="#toc-div" title="文章目录">≡</a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="切换主题"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo"></a><h1 id="Dr"><a href="/">wgiegie</a></h1><div id="description"><p></p></div></div><div id="aside-block"><div id="toc-div"><h1>目录</h1><ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E6%A0%88%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F%EF%BC%8Crope%E9%93%BE%E7%9A%84%E6%9E%84%E9%80%A0%EF%BC%8C%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5%E7%9A%84%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">函数栈的工作方式，rope链的构造，动态链接的解析过程&#x3D;</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%97%8Flink-map"><span class="toc-number"></span> <span class="toc-text">●link_map</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96%E5%87%BD%E6%95%B0%E5%9C%A8libc%E4%B8%AD%E7%9A%84%E5%81%8F%E7%A7%BB%E9%87%8F%E5%91%A2%EF%BC%9F"><span class="toc-number"></span> <span class="toc-text">如何获取函数在libc中的偏移量呢？</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link"><span class="toc-number">0.1.</span> <span class="toc-text"></span></a></li></ol></li></ol></div></div><footer><nobr>构建自 <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> 使用主题 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr> 主题作者 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas></body></html>
