@@ -1,104 +1,42 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  
-  
-  <title>C语言题目 | 纲的blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="编写一个 C 程序，创建一个整型数组，并通过用户输入初始化数组的元素。然后将数组的每个元素转换为二进制格式并输出。  输入示例: 1251 3 7 15 31  输出示例: 123456yaml1: 13: 117: 11115: 111131: 11111  2定义一个名为 IntegerInfo 的结构体，它包含两个成员变量，一个整型变量 num 用于存储整数，另一个字符串 binary 用">
-<meta property="og:type" content="article">
-<meta property="og:title" content="C语言题目">
-<meta property="og:url" content="https://2023478.github.io/2024/03/26/C%E8%AF%AD%E8%A8%80%E9%A2%98%E7%9B%AE/index.html">
-<meta property="og:site_name" content="纲的blog">
-<meta property="og:description" content="编写一个 C 程序，创建一个整型数组，并通过用户输入初始化数组的元素。然后将数组的每个元素转换为二进制格式并输出。  输入示例: 1251 3 7 15 31  输出示例: 123456yaml1: 13: 117: 11115: 111131: 11111  2定义一个名为 IntegerInfo 的结构体，它包含两个成员变量，一个整型变量 num 用于存储整数，另一个字符串 binary 用">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-03-26T13:22:41.000Z">
-<meta property="article:modified_time" content="2024-03-27T12:04:52.786Z">
-<meta property="article:author" content="wgiegie">
-<meta property="article:tag" content="C语言">
-<meta name="twitter:card" content="summary">
-  
-    <link rel="alternate" href="/atom.xml" title="纲的blog" type="application/atom+xml">
-  
-  
-    <link rel="shortcut icon" href="/favicon.png">
-  
-  
-  
-<link rel="stylesheet" href="/css/style.css">
-
-  
-    
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
-
-  
-  
-<meta name="generator" content="Hexo 7.1.1"></head>
-
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">纲的blog</a>
-      </h1>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-        
-          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
-        
-        <a class="nav-icon nav-search-btn" title="Suche"><span class="fa fa-search"></span></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Suche"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://2023478.github.io"></form>
-      </div>
-    </div>
-  </div>
-</header>
-
-      <div class="outer">
-        <section id="main"><article id="post-C语言题目" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/03/26/C%E8%AF%AD%E8%A8%80%E9%A2%98%E7%9B%AE/" class="article-date">
-  <time class="dt-published" datetime="2024-03-26T13:22:41.000Z" itemprop="datePublished">2024-03-26</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E9%A2%98%E7%9B%AE/">题目</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="p-name article-title" itemprop="headline name">
-      C语言题目
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <ol>
+<!DOCTYPE html><html lang="zh-cn" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>C语言题目 | 纲的blog</title><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="preload" as="font" crossorigin="anonymous" href="/font/Bender.ttf"><link rel="preload" as="font" crossorigin="anonymous" href="/font/BenderLight.ttf"><link rel="preload" as="font" crossorigin="anonymous" href="/font/JetBrainsMono-Regular.woff2"><link rel="stylesheet" href="/css/arknights.css"><style>@font-face {
+  font-family: Bender;
+  src: local('Bender'), url("/font/Bender.ttf"), url("/font/Bender.otf");
+}
+@font-face {
+  font-family: BenderLight;
+  src: local('BenderLight'), url("/font/BenderLight.ttf");
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}
+</style><script>var config = {"root":"/","search":{"preload":false,"activeHolder":"键入以继续","blurHolder":"数据检索","noResult":"无 $0 相关数据"},"code":{"codeInfo":"$0 - $1 行","copy":"复制"}}</script><link type="text/css" rel="stylesheet" href="/lib/encrypt/hbe.style.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lightgallery.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-zoom.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-thumbnail.css"><link type="text/css" rel="stylesheet" href="/lib/fontawesome/css/all.min.css"><script>if (window.localStorage.getItem('theme-mode') === 'light')
+ document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark')
+ document.documentElement.setAttribute('theme-mode', 'dark')</script><style>:root {
+ --dark-background: url('https://ak.hypergryph.com/assets/index/images/ak/pc/bk.jpg');
+ --light-background: url('/img/bk.jpg');
+ --theme-encrypt-confirm: '确认'
+}</style><script defer src="/js/arknights.js"></script><script defer src="/js/search.js"></script><script defer type="module">import mermaid from '//unpkg.com/mermaid@10.5.0/dist/mermaid.esm.mjs';
+window.mermaid = mermaid;
+code.paintMermaid();
+</script><script async src="//unpkg.com/lightgallery@2.7.1/lightgallery.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/thumbnail/lg-thumbnail.min.js"></script><script async src="/lib/encrypt/hbe.js"></script><script async src="/js/pjax.js"></script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
+lightGallery(document.getElementById('post-bg'), {
+  plugins: [lgZoom,lgThumbnail],
+  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.busuanzi'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 7.1.1"></head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="数据检索" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>C语言题目</h1><div id="post-info"><span>文章发布时间: <div class="control"><time datetime="2024-03-26T13:22:41.000Z" id="date"> 2024-03-26</time></div></span><br><span>最后更新时间: <div class="control"><time datetime="2024-03-27T12:04:52.786Z" id="updated"> 2024-03-27</time></div></span></div></div><hr><div id="post-content"><ol>
 <li><h4 id="编写一个-C-程序，创建一个整型数组，并通过用户输入初始化数组的元素。然后将数组的每个元素转换为二进制格式并输出。"><a href="#编写一个-C-程序，创建一个整型数组，并通过用户输入初始化数组的元素。然后将数组的每个元素转换为二进制格式并输出。" class="headerlink" title="编写一个 C 程序，创建一个整型数组，并通过用户输入初始化数组的元素。然后将数组的每个元素转换为二进制格式并输出。"></a>编写一个 C 程序，创建一个整型数组，并通过用户输入初始化数组的元素。然后将数组的每个元素转换为二进制格式并输出。</h4></li>
 </ol>
 <p>输入示例:</p>
@@ -155,150 +93,4 @@
 
 
 
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://2023478.github.io/2024/03/26/C%E8%AF%AD%E8%A8%80%E9%A2%98%E7%9B%AE/" data-id="clu9rgng60000fs7z7t2v14lz" data-title="C语言题目" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80/" rel="tag">C语言</a></li></ul>
-
-    </footer>
-  </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2024/03/27/%E5%8D%9A%E5%AE%A2/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Neuer</strong>
-      <div class="article-nav-title">
-        
-          pwn基操
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2024/03/26/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Älter</strong>
-      <div class="article-nav-title">Hello World</div>
-    </a>
-  
-</nav>
-
-  
-</article>
-
-
-</section>
-        
-          <aside id="sidebar">
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Kategorien</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CTF/">CTF</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%A2%98%E7%9B%AE/">题目</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80/" rel="tag">C语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/C%E8%AF%AD%E8%A8%80/" style="font-size: 10px;">C语言</a> <a href="/tags/pwn/" style="font-size: 10px;">pwn</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archiv</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/03/">三月 2024</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">letzter Beitrag</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2024/03/27/%E5%8D%9A%E5%AE%A2/">pwn基操</a>
-          </li>
-        
-          <li>
-            <a href="/2024/03/26/C%E8%AF%AD%E8%A8%80%E9%A2%98%E7%9B%AE/">C语言题目</a>
-          </li>
-        
-          <li>
-            <a href="/2024/03/26/hello-world/">Hello World</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      
-      &copy; 2024 wgiegie<br>
-      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
-
-
-<script src="/js/jquery-3.6.4.min.js"></script>
-
-
-
-  
-<script src="/fancybox/jquery.fancybox.min.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-
-  </div>
-</body>
-</html>
+<div id="paginator"></div></div><div id="post-footer"><div id="pages"><div class="footer-link" style="width: 50%;text-align:right;border-right:1px #fe2 solid"><a href="/2024/03/27/%E5%8D%9A%E5%AE%A2/">← 下一篇 pwn基操</a></div><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2024/03/26/hello-world/">Hello World 上一篇 →</a></div></div></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="回到顶部" style="opacity: 0; display: none;">∧ </a><a class="i-index" id="to-index" href="#toc-div" title="文章目录">≡</a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="切换主题"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo"></a><h1 id="Dr"><a href="/">wgiegie</a></h1><div id="description"><p></p></div></div><div id="aside-block"><div id="toc-div"><h1>目录</h1><ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA-C-%E7%A8%8B%E5%BA%8F%EF%BC%8C%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E6%95%B4%E5%9E%8B%E6%95%B0%E7%BB%84%EF%BC%8C%E5%B9%B6%E9%80%9A%E8%BF%87%E7%94%A8%E6%88%B7%E8%BE%93%E5%85%A5%E5%88%9D%E5%A7%8B%E5%8C%96%E6%95%B0%E7%BB%84%E7%9A%84%E5%85%83%E7%B4%A0%E3%80%82%E7%84%B6%E5%90%8E%E5%B0%86%E6%95%B0%E7%BB%84%E7%9A%84%E6%AF%8F%E4%B8%AA%E5%85%83%E7%B4%A0%E8%BD%AC%E6%8D%A2%E4%B8%BA%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%A0%BC%E5%BC%8F%E5%B9%B6%E8%BE%93%E5%87%BA%E3%80%82"><span class="toc-number">1.</span> <span class="toc-text">编写一个 C 程序，创建一个整型数组，并通过用户输入初始化数组的元素。然后将数组的每个元素转换为二进制格式并输出。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA-C-%E7%A8%8B%E5%BA%8F%EF%BC%8C%E5%AE%9A%E4%B9%89%E4%B8%80%E4%B8%AA%E4%B8%80%E7%BB%B4%E6%95%B4%E5%9E%8B%E6%95%B0%E7%BB%84%EF%BC%8C%E9%80%9A%E8%BF%87%E7%94%A8%E6%88%B7%E8%BE%93%E5%85%A5%E5%88%9D%E5%A7%8B%E5%8C%96%E6%95%B0%E7%BB%84%E7%9A%84%E5%85%83%E7%B4%A0%E3%80%82%E7%84%B6%E5%90%8E%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%EF%BC%8C%E6%8E%A5%E5%8F%97%E8%BF%99%E4%B8%AA%E6%95%B0%E7%BB%84%E5%92%8C%E4%B8%80%E4%B8%AA%E6%95%B4%E6%95%B0-n-%E4%BD%9C%E4%B8%BA%E5%8F%82%E6%95%B0%EF%BC%8C%E8%BF%94%E5%9B%9E%E4%B8%80%E4%B8%AA%E6%96%B0%E7%9A%84%E6%95%B0%E7%BB%84%EF%BC%8C%E5%85%B6%E4%B8%AD%E5%8C%85%E5%90%AB%E5%8E%9F%E6%95%B0%E7%BB%84%E4%B8%AD%E6%89%80%E6%9C%89%E5%A4%A7%E4%BA%8E-n-%E7%9A%84%E5%85%83%E7%B4%A0%E7%9A%84%E4%BA%8C%E8%BF%9B%E5%88%B6%E8%A1%A8%E7%A4%BA%E3%80%82"><span class="toc-number">2.</span> <span class="toc-text">3编写一个 C 程序，定义一个一维整型数组，通过用户输入初始化数组的元素。然后编写一个函数，接受这个数组和一个整数 n 作为参数，返回一个新的数组，其中包含原数组中所有大于 n 的元素的二进制表示。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4%E5%AE%9A%E4%B9%89%E4%B8%80%E4%B8%AA%E5%90%8D%E4%B8%BA-BinaryString-%E7%9A%84%E7%BB%93%E6%9E%84%E4%BD%93%EF%BC%8C%E5%8C%85%E5%90%AB%E4%B8%80%E4%B8%AA%E5%AD%97%E7%AC%A6%E4%B8%B2-str-%E7%94%A8%E4%BA%8E%E5%AD%98%E5%82%A8%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%95%B0%E5%AD%97%EF%BC%8C%E5%92%8C%E4%B8%80%E4%B8%AA%E6%95%B4%E5%9E%8B%E5%8F%98%E9%87%8F-length-%E7%94%A8%E4%BA%8E%E5%AD%98%E5%82%A8%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E9%95%BF%E5%BA%A6%E3%80%82%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%EF%BC%8Cring-%E7%BB%93%E6%9E%84%E4%BD%93%E6%95%B0%E7%BB%84%E4%B8%AD%EF%BC%8C%E6%9C%80%E5%90%8E%E8%BF%94%E5%9B%9E%E8%BF%99%E4%B8%AA%E6%95%B0%E7%BB%84%E3%80%82"><span class="toc-number">3.</span> <span class="toc-text">4定义一个名为 BinaryString 的结构体，包含一个字符串 str 用于存储二进制数字，和一个整型变量 length 用于存储字符串的长度。编写一个函数，ring&#96; 结构体数组中，最后返回这个数组。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA-C-%E7%A8%8B%E5%BA%8F%EF%BC%8C%E5%AE%9A%E4%B9%89%E4%B8%80%E4%B8%AA%E7%BB%93%E6%9E%84%E4%BD%93%E6%95%B0%E7%BB%84%EF%BC%8C%E6%AF%8F%E4%B8%AA%E7%BB%93%E6%9E%84%E4%BD%93%E5%8C%85%E5%90%AB%E4%B8%80%E4%B8%AA%E6%95%B4%E5%9E%8B%E5%8F%98%E9%87%8F%E5%92%8C%E4%B8%80%E4%B8%AA%E5%AD%97%E7%AC%A6%E4%B8%B2%E3%80%82%E9%80%9A%E8%BF%87%E7%94%A8%E6%88%B7%E8%BE%93%E5%85%A5%E5%88%9D%E5%A7%8B%E5%8C%96%E7%BB%93%E6%9E%84%E4%BD%93%E6%95%B0%E7%BB%84%E7%9A%84%E5%85%83%E7%B4%A0%EF%BC%8C%E7%84%B6%E5%90%8E%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%EF%BC%8C%E6%8E%A5%E5%8F%97%E8%BF%99%E4%B8%AA%E7%BB%93%E6%9E%84%E4%BD%93%E6%95%B0%E7%BB%84%E5%92%8C%E4%B8%80%E4%B8%AA%E6%95%B4%E6%95%B0-n-%E4%BD%9C%E4%B8%BA%E5%8F%82%E6%95%B0%EF%BC%8C%E8%BF%94%E5%9B%9E%E4%B8%80%E4%B8%AA%E6%96%B0%E7%9A%84%E6%95%B0%E7%BB%84%EF%BC%8C%E5%85%B6%E4%B8%AD%E5%8C%85%E5%90%AB%E5%8E%9F%E6%95%B0%E7%BB%84%E4%B8%AD%E6%89%80%E6%9C%89%E6%95%B4%E5%9E%8B%E5%8F%98%E9%87%8F%E5%A4%A7%E4%BA%8E-n-%E7%9A%84%E7%BB%93%E6%9E%84%E4%BD%93%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E4%BA%8C%E8%BF%9B%E5%88%B6%E8%A1%A8%E7%A4%BA%E3%80%82"><span class="toc-number">4.</span> <span class="toc-text">5编写一个 C 程序，定义一个结构体数组，每个结构体包含一个整型变量和一个字符串。通过用户输入初始化结构体数组的元素，然后编写一个函数，接受这个结构体数组和一个整数 n 作为参数，返回一个新的数组，其中包含原数组中所有整型变量大于 n 的结构体的字符串的二进制表示。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA-C-%E7%A8%8B%E5%BA%8F%EF%BC%8C%E5%AE%9A%E4%B9%89%E4%B8%80%E4%B8%AA%E5%90%8D%E4%B8%BA-Array-%E7%9A%84%E7%BB%93%E6%9E%84%E4%BD%93%EF%BC%8C%E5%8C%85%E5%90%AB%E4%B8%A4%E4%B8%AA%E6%88%90%E5%91%98%EF%BC%9A%E4%B8%80%E4%B8%AA%E6%95%B4%E5%9E%8B%E6%8C%87%E9%92%88-data-%E7%94%A8%E4%BA%8E%E5%AD%98%E5%82%A8%E6%95%B0%E7%BB%84%E7%9A%84%E5%85%83%E7%B4%A0%EF%BC%8C%E4%B8%80%E4%B8%AA%E6%95%B4%E5%9E%8B%E5%8F%98%E9%87%8F-length-%E7%94%A8%E4%BA%8E%E5%AD%98%E5%82%A8%E6%95%B0%E7%BB%84%E7%9A%84%E9%95%BF%E5%BA%A6%E3%80%82%E4%BD%BF%E7%94%A8%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA-Array-%E7%BB%93%E6%9E%84%E4%BD%93%EF%BC%8C%E5%B9%B6%E9%80%9A%E8%BF%87%E7%94%A8%E6%88%B7%E8%BE%93%E5%85%A5%E5%88%9D%E5%A7%8B%E5%8C%96%E7%BB%93%E6%9E%84%E4%BD%93%E7%9A%84%E6%88%90%E5%91%98%E3%80%82%E7%84%B6%E5%90%8E%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%EF%BC%8C%E4%BD%BF%E7%94%A8%E6%8C%87%E9%92%88%E6%93%8D%E4%BD%9C%EF%BC%8C%E7%BF%BB%E8%BD%AC%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E5%85%83%E7%B4%A0%EF%BC%8C%E5%B9%B6%E8%BE%93%E5%87%BA%E7%BF%BB%E8%BD%AC%E5%90%8E%E7%9A%84%E6%95%B0%E7%BB%84%E3%80%82"><span class="toc-number">5.</span> <span class="toc-text">6编写一个 C 程序，定义一个名为 Array 的结构体，包含两个成员：一个整型指针 data 用于存储数组的元素，一个整型变量 length 用于存储数组的长度。使用动态内存分配创建一个 Array 结构体，并通过用户输入初始化结构体的成员。然后编写一个函数，使用指针操作，翻转数组中的元素，并输出翻转后的数组。</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#7%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA-C-%E7%A8%8B%E5%BA%8F%EF%BC%8C%E5%AE%9A%E4%B9%89%E4%B8%80%E4%B8%AA%E5%90%8D%E4%B8%BA-Buffer-%E7%9A%84%E7%BB%93%E6%9E%84%E4%BD%93%EF%BC%8C%E5%8C%85%E5%90%AB%E4%B8%A4%E4%B8%AA%E6%88%90%E5%91%98%EF%BC%9A%E4%B8%80%E4%B8%AA%E5%AD%97%E7%AC%A6%E6%8C%87%E9%92%88-data-%E7%94%A8%E4%BA%8E%E5%AD%98%E5%82%A8%E5%AD%97%E7%AC%A6%E4%B8%B2%EF%BC%8C%E4%B8%80%E4%B8%AA%E6%95%B4%E5%9E%8B%E5%8F%98%E9%87%8F-length-%E7%94%A8%E4%BA%8E%E5%AD%98%E5%82%A8%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E9%95%BF%E5%BA%A6%E3%80%82%E4%BD%BF%E7%94%A8%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA-Buffer-%E7%BB%93%E6%9E%84%E4%BD%93%EF%BC%8C%E5%B9%B6%E9%80%9A%E8%BF%87%E7%94%A8%E6%88%B7%E8%BE%93%E5%85%A5%E5%88%9D%E5%A7%8B%E5%8C%96%E7%BB%93%E6%9E%84%E4%BD%93%E7%9A%84%E6%88%90%E5%91%98%E3%80%82%E7%84%B6%E5%90%8E%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%EF%BC%8C%E4%BD%BF%E7%94%A8%E6%8C%87%E9%92%88%E6%93%8D%E4%BD%9C%EF%BC%8C%E5%B0%86%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89%E5%B0%8F%E5%86%99%E5%AD%97%E6%AF%8D%E8%BD%AC%E4%B8%BA%E5%A4%A7%E5%86%99%E5%AD%97%E6%AF%8D%EF%BC%8C%E5%B9%B6%E8%BE%93%E5%87%BA%E8%BD%AC%E6%8D%A2%E5%90%8E%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2%E3%80%82"><span class="toc-number">5.0.1.</span> <span class="toc-text">7编写一个 C 程序，定义一个名为 Buffer 的结构体，包含两个成员：一个字符指针 data 用于存储字符串，一个整型变量 length 用于存储字符串的长度。使用动态内存分配创建一个 Buffer 结构体，并通过用户输入初始化结构体的成员。然后编写一个函数，使用指针操作，将字符串中的所有小写字母转为大写字母，并输出转换后的字符串。</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA-C-%E7%A8%8B%E5%BA%8F%EF%BC%8C%E4%BD%BF%E7%94%A8%E6%8C%87%E9%92%88%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E4%BA%8C%E7%BB%B4%E6%95%B4%E5%9E%8B%E6%95%B0%E7%BB%84%EF%BC%8C%E5%B9%B6%E9%80%9A%E8%BF%87%E7%94%A8%E6%88%B7%E8%BE%93%E5%85%A5%E5%88%9D%E5%A7%8B%E5%8C%96%E6%95%B0%E7%BB%84%E7%9A%84%E5%85%83%E7%B4%A0%E3%80%82%E7%84%B6%E5%90%8E%E8%AE%A1%E7%AE%97%E5%B9%B6%E8%BE%93%E5%87%BA%E6%95%B0%E7%BB%84%E4%B8%AD%E6%89%80%E6%9C%89%E5%85%83%E7%B4%A0%E7%9A%84%E5%92%8C%E3%80%82"><span class="toc-number">6.</span> <span class="toc-text">8编写一个 C 程序，使用指针创建一个二维整型数组，并通过用户输入初始化数组的元素。然后计算并输出数组中所有元素的和。</span></a></li></ol></div></div><footer><nobr>构建自 <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> 使用主题 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr> 主题作者 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas></body></html>
