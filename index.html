@@ -267,7 +267,7 @@
 
 <p>后来在学长的指导下才知道这个知识点，也算是收货了一波新知识。</p>
 <p>关于这个知识先来看一个点，在拿到shell后由于ls类命令还是可以使用的边可以看看个个文件的权限。用<code>ls -l</code>d的指令</p>
-<p><img src="/2024/03/28/hxctf/blog/source/_posts/hxctf/image-20240325200803566.png" alt="image-20240325200803566"></p>
+<p><img src="/2024/03/28/hxctf/image-20240325200803566.png" alt="image-20240325200803566"></p>
 <p>在这里边更可以看出此时的flag文件只有一个root用户的rw权限，而此时我们的权限只是一个低用户的权限，故我们并不能之前读取这个文件，同时这个里面还将chmod等加权命令禁止了，故必须想其他的办法，我们便从新看看这个各各文件的权限，会发现在pwn这个文件中有一个其他文件都没有的权限s，而pwn正是我们所攻击的文件，或许这个pwn文件的s权限说不定便是一个比较特殊的突破口。</p>
 <p>首先来小小的介绍这个s权限是什么（大量源于网上内容，可能不真）</p>
 <p>s权限： 设置使文件在执行阶段具有文件所有者的权限，相当于临时拥有文件所有者的身份. 典型的文件是passwd. 如果一般用户执行该文件, 则在执行过程中, 该文件可以获得root权限, 从而可以更改用户的密码.</p>
@@ -1437,7 +1437,7 @@
 
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 <p><img src="/2024/03/26/hello-world/002917-16858097570092.jpg" alt="002917-16858097570092"></p>
-<p>INFO  Copying files from extend dirs…<br>On branch master<br>nothing to commit, working tree clean<br>Everything up-to-date<br>branch ‘master’ set up to track ‘<a href="mailto:&#x67;&#x69;&#x74;&#x40;&#x67;&#105;&#116;&#x68;&#117;&#x62;&#46;&#99;&#x6f;&#x6d;">&#x67;&#x69;&#x74;&#x40;&#x67;&#105;&#116;&#x68;&#117;&#x62;&#46;&#99;&#x6f;&#x6d;</a>:2023478&#x2F;2023478.github.io.git&#x2F;main’.<br>INFO  Deploy done: git</p>
+<p>INFO  Copying files from extend dirs…<br>On branch master<br>nothing to commit, working tree clean<br>Everything up-to-date<br>branch ‘master’ set up to track ‘<a href="mailto:&#x67;&#x69;&#x74;&#64;&#103;&#x69;&#116;&#x68;&#x75;&#x62;&#x2e;&#99;&#x6f;&#109;">&#x67;&#x69;&#x74;&#64;&#103;&#x69;&#116;&#x68;&#x75;&#x62;&#x2e;&#99;&#x6f;&#109;</a>:2023478&#x2F;2023478.github.io.git&#x2F;main’.<br>INFO  Deploy done: git</p>
 
       
     </div>
