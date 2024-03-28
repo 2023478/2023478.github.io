@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Wgiegie-NKctf2024 第一题 | 纲的blog</title>
+
+  <!-- keywords -->
+  
+    <meta name="keywords" content="Wgiegie">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="这是一道之前在有个周末的比赛中的题，比赛是NKCTF2024，网站已经没有了，算是一个战队的招新比赛吧，不过算是一道比较简单的题，主要的漏洞就是格式化字符串漏洞和一个栈溢出，相较于之前那些动不动就上堆的题目好了不止一点，虽然在最后的时候还会有一个特别坑的地方，不够这就已经是后话了，等到的时候再慢慢说。 老规矩，先checksec一下程序，保护全开，有点难整，不过还是丢到ida里面去看看怎么样，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NKctf2024 第一题">
+<meta property="og:url" content="https://2023478.github.io/2024/03/28/hxctf/index.html">
+<meta property="og:site_name" content="纲的blog">
+<meta property="og:description" content="这是一道之前在有个周末的比赛中的题，比赛是NKCTF2024，网站已经没有了，算是一个战队的招新比赛吧，不过算是一道比较简单的题，主要的漏洞就是格式化字符串漏洞和一个栈溢出，相较于之前那些动不动就上堆的题目好了不止一点，虽然在最后的时候还会有一个特别坑的地方，不够这就已经是后话了，等到的时候再慢慢说。 老规矩，先checksec一下程序，保护全开，有点难整，不过还是丢到ida里面去看看怎么样，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://2023478.github.io/2024/03/28/hxctf/image-20240328153030882.png">
+<meta property="og:image" content="https://2023478.github.io/2024/03/28/hxctf/image-20240328153438575.png">
+<meta property="og:image" content="https://2023478.github.io/2024/03/28/hxctf/image-20240328153959045.png">
+<meta property="og:image" content="https://2023478.github.io/2024/03/28/hxctf/image-20240328155823265.png">
+<meta property="og:image" content="https://2023478.github.io/2024/03/28/hxctf/image-20240328154528444.png">
+<meta property="og:image" content="https://2023478.github.io/2024/03/28/hxctf/image-20240328162015627.png">
+<meta property="og:image" content="https://2023478.github.io/2024/03/28/hxctf/image-20240328162412607.png">
+<meta property="og:image" content="https://2023478.github.io/2024/03/28/hxctf/image-20240328162449070.png">
+<meta property="article:published_time" content="2024-03-28T07:08:34.000Z">
+<meta property="article:modified_time" content="2024-03-28T09:06:55.906Z">
+<meta property="article:author" content="wgiegie">
+<meta property="article:tag" content="pwn题解">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://2023478.github.io/2024/03/28/hxctf/image-20240328153030882.png">
+  
+    <link rel="alternative" href="/atom.xml" title="纲的blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://7xkj1z.com1.z0.glb.clouddn.com/head.jpg">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+
+  
+<script src="//cdn.bootcss.com/require.js/2.3.2/require.min.js"></script>
+
+  
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+<body>
+  <div id="container">
+    <div id="particles-js"></div>
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xkj1z.com1.z0.glb.clouddn.com/head.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/"></a></h1>
+		</hgroup>
+
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/C%E8%AF%AD%E8%A8%80/" style="font-size: 10px;">C语言</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/pwn/" style="font-size: 20px;">pwn</a> <a href="/tags/pwn%E9%A2%98%E8%A7%A3/" style="font-size: 10px;">pwn题解</a> <a href="/tags/%E6%90%AD%E5%8D%9A%E5%AE%A2/" style="font-size: 10px;">搭博客</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/smackgg/hexo-theme-smackdown">smackdown</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://7xkj1z.com1.z0.glb.clouddn.com/head.jpg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author"></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-hxctf" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2024/03/28/hxctf/" class="article-date">
+  	<time datetime="2024-03-28T07:08:34.000Z" itemprop="datePublished">2024-03-28</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      NKctf2024 第一题
+      
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn%E9%A2%98%E8%A7%A3/" rel="tag">pwn题解</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/ctf/">ctf</a>
+	</div>
+
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>  这是一道之前在有个周末的比赛中的题，比赛是NKCTF2024，网站已经没有了，算是一个战队的招新比赛吧，不过算是一道比较简单的题，主要的漏洞就是格式化字符串漏洞和一个栈溢出，相较于之前那些动不动就上堆的题目好了不止一点，虽然在最后的时候还会有一个特别坑的地方，不够这就已经是后话了，等到的时候再慢慢说。</p>
+<p>老规矩，先checksec一下程序，保护全开，有点难整，不过还是丢到ida里面去看看怎么样，</p>
+<p><img src="/2024/03/28/hxctf/image-20240328153030882.png" alt="image-20240328153030882"></p>
+<p>这是在ida里面的主函数的样子</p>
+<p><img src="/2024/03/28/hxctf/image-20240328153438575.png" alt="image-20240328153438575"></p>
+<p>有canary保护，主要程序一上来就是一个无限循环的函数，便开始跟随程序的过程一步一步来，</p>
+<p>先看sub_1289()这第一个函数，感觉像解决缓冲区的函数，</p>
+<p><img src="/2024/03/28/hxctf/image-20240328153959045.png" alt="image-20240328153959045"></p>
+<p>果然是一个用于解决缓冲区的函数，不过问题是在代码的最后几行使用了，seccomp函数，这个函数一般是用来开起沙箱保护，关于具体使用沙箱禁止了哪些函数可以用工具直接查看，关于工具的使用如下</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">seccomp-tools dump ./文件名</span><br></pre></td></tr></table></figure>
+
+<p>关于这个工具，如果一个程序开启了沙箱，这会出现类似如下的情况，如果没开则会直接进入程序的执行过程</p>
+<p>这道题的沙箱结果如下，</p>
+<p>当时我第一次分析的时候，不理解这个沙箱的含义，误以为这个题是只能进行open函数的系统调用，导致做了一个下午的无用过，这里便将这个工具的大概讲一讲避免下次还出现这样的傻13问题</p>
+<img src="/2024/03/28/hxctf/image-20240328155823265.png" alt="image-20240328155823265" style="zoom: 33%;">
+
+<img src="/2024/03/28/hxctf/image-20240328154528444.png" alt="image-20240328154528444">
+
+
+
+<p>关于这个工具的具体是嘛，我已不太懂，不过现在大概明白该怎么看这个工具的使用，像这道题中就有A&#x3D;&#x3D;open就跳转0007，而0007的内容便是kill像这种便是将open函数紧用，而其他的函数都是可以用的。如果还有其他函数后面跟的数字在前面的表中的最后是kill这这个函数便是禁用的，其他的函数便是可以用的，像这题便是可以通过system等系统调用从而进行拿到远程服务器的shell，但同时禁用的open便不再能使用orw的办法将远程的flag直接读到屏幕上。</p>
+<p>现在便在次回到一开始的main函数中，开始执行，会要我们输入点东西，只是这个有限制，只能输入1和2并且输入2还没有什么用，暂时会回到程序一开始输入的地方，我们便只能输入1，进入到sub_188c()这个函数中，</p>
+<p><img src="/2024/03/28/hxctf/image-20240328162015627.png" alt="image-20240328162015627"></p>
+<p>很明显这个函数中没有什么可以用的地方，但是当我们回到main函数中，找到sub_19EA()函数并进入其中，会发现直接出现了一个格式化漏洞，如下，</p>
+<p><img src="/2024/03/28/hxctf/image-20240328162412607.png" alt="image-20240328162412607"></p>
+<p>很明显关这一个格式化漏洞变可以将canary和pie保护都给绕过，还可以将程序的libc_base地址暴露出来，配合同题目一起下载的libc版本，大部分栈的问题基本就解决了，虽然在这里能read的数据才只有8字节，能暴露的数据好像挺少的，但别忘了在main函数中这是一个巨大的无限循环函数，只要在执行完这个函数后再回到之前的地方，然后在执行会来便可以有多暴露几个地址。同时查看这个函数中的sub_1984()函数会发现，又有新的漏洞。</p>
+<p>在这里我们想要进入sub_1984()函数之前还会有一个判断，当dword_504c &lt; dword_5010会直接进入exit中从而结束进程，因此我们要保证dword_504c &gt; dword_5010从而顺利进入sub_1984()函数，而这两个数dword_5010的大小为11682，而dword_504c则和之前的一个函数中的过程有关系，到之后在讲，反正要保证在执行这个函数之前dword_504c的值一定要大于11682。</p>
+<p><img src="/2024/03/28/hxctf/image-20240328162449070.png" alt="image-20240328162449070"></p>
+<p>在这里有一个致命的漏洞，便是栈溢出，可以读0x80的数据但buf只能放0x30的数据，在结合之前的格式化字符串漏洞，将canary绕过，然后执行system（&#x2F;bin&#x2F;sh）便可以直接拿到shell。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2024/03/27/%E5%8D%9A%E5%AE%A2%E4%B9%8B%E7%97%9B/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">博客之痛</div>
+      <strong class="article-nav-caption">&gt;</strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="ds-share share" data-thread-key="hxctf" data-title="NKctf2024 第一题" data-url="https://2023478.github.io/2024/03/28/hxctf/"  data-images="http://7xkj1z.com1.z0.glb.clouddn.com/head.jpg" data-content="NKctf2024 第一题">
+    <div class="ds-share-inline">
+      <ul  class="ds-share-icons-16">
+      	<li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+        <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+        <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+        <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+        <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+      </ul>
+      <div class="ds-share-icons-more">
+      </div>
+    </div>
+ </div>
+ 
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2024 wgiegie
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/smackgg/hexo-theme-smackdown" target="_blank">Smackdown</a>
+        </div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+
+<script src="/js/main.js"></script>
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js"></script>
+
+
+  </div>
+</body>
+</html>
