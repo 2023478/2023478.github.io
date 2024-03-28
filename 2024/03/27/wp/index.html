@@ -1,42 +1,242 @@
-<!DOCTYPE html><html lang="zh-cn" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>pwn 一些题详解 | 纲的blog</title><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="preload" as="font" crossorigin="anonymous" href="/font/Bender.ttf"><link rel="preload" as="font" crossorigin="anonymous" href="/font/BenderLight.ttf"><link rel="preload" as="font" crossorigin="anonymous" href="/font/JetBrainsMono-Regular.woff2"><link rel="stylesheet" href="/css/arknights.css"><style>@font-face {
-  font-family: Bender;
-  src: local('Bender'), url("/font/Bender.ttf"), url("/font/Bender.otf");
-}
-@font-face {
-  font-family: BenderLight;
-  src: local('BenderLight'), url("/font/BenderLight.ttf");
-}
-@font-face {
-  font-family: 'JetBrains Mono';
-  src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
-}
-</style><script>var config = {"root":"/","search":{"preload":false,"activeHolder":"键入以继续","blurHolder":"数据检索","noResult":"无 $0 相关数据"},"code":{"codeInfo":"$0 - $1 行","copy":"复制"}}</script><link type="text/css" rel="stylesheet" href="/lib/encrypt/hbe.style.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lightgallery.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-zoom.css"><link type="text/css" rel="stylesheet" href="//unpkg.com/lightgallery@2.7.1/css/lg-thumbnail.css"><link type="text/css" rel="stylesheet" href="/lib/fontawesome/css/all.min.css"><script>if (window.localStorage.getItem('theme-mode') === 'light')
- document.documentElement.setAttribute('theme-mode', 'light')
-if (window.localStorage.getItem('theme-mode') === 'dark')
- document.documentElement.setAttribute('theme-mode', 'dark')</script><style>:root {
- --dark-background: url('https://ak.hypergryph.com/assets/index/images/ak/pc/bk.jpg');
- --light-background: url('/img/bk.jpg');
- --theme-encrypt-confirm: '确认'
-}</style><script defer src="/js/arknights.js"></script><script defer src="/js/search.js"></script><script defer type="module">import mermaid from '//unpkg.com/mermaid@10.5.0/dist/mermaid.esm.mjs';
-window.mermaid = mermaid;
-code.paintMermaid();
-</script><script async src="//unpkg.com/lightgallery@2.7.1/lightgallery.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script><script async src="//unpkg.com/lightgallery@2.7.1/plugins/thumbnail/lg-thumbnail.min.js"></script><script async src="/lib/encrypt/hbe.js"></script><script async src="/js/pjax.js"></script><script class="pjax-js">reset= () => {document.querySelector('.lg-container')?.remove()
-lightGallery(document.getElementById('post-bg'), {
-  plugins: [lgZoom,lgThumbnail],
-  selector: '.item-img'})}</script><script>window.addEventListener("load",() => {pjax = new Pjax({
- cacheBust: false,
- selectors: ['title','article','#aside-block','.pjax-js','data-pjax','.busuanzi'],
- switches: {'article': Pjax.switches.sideBySide},
- switchesOptions: {
-   'article': {
-     classNames: {
-       remove: "pjax-out",
-       add: "pjax-in"
-     }
-   }
- }
-});
-document.addEventListener("pjax:complete", reset);reset()})</script><meta name="generator" content="Hexo 7.1.1"></head><body><div class="loading" style="opacity: 0;"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><div class="navBtn"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><nav><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="数据检索" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup" tabindex="0"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>pwn 一些题详解</h1><div id="post-info"><span>文章发布时间: <div class="control"><time datetime="2024-03-27T12:06:41.000Z" id="date"> 2024-03-27</time></div></span><br><span>最后更新时间: <div class="control"><time datetime="2024-03-27T13:49:44.504Z" id="updated"> 2024-03-27</time></div></span></div></div><hr><div id="post-content"><p>#ret2text</p>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Wgiegie-pwn 一些题详解 | 纲的blog</title>
+
+  <!-- keywords -->
+  
+    <meta name="keywords" content="Wgiegie">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="#ret2text 主要分为32位的和64位的不同程序，在做法是有不同的对应方法与 在一开始都要先在linux中先确定程序使用了那些保护方式与结构类型 1checksec 文件名 ![屏幕截图 2023-11-28 173641](wp&#x2F;屏幕截图 2023-11-28 173641-17115444455564.png) ![屏幕截图 2023-11-28 173737](wp&amp;#x2F">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pwn 一些题详解">
+<meta property="og:url" content="https://2023478.github.io/2024/03/27/wp/index.html">
+<meta property="og:site_name" content="纲的blog">
+<meta property="og:description" content="#ret2text 主要分为32位的和64位的不同程序，在做法是有不同的对应方法与 在一开始都要先在linux中先确定程序使用了那些保护方式与结构类型 1checksec 文件名 ![屏幕截图 2023-11-28 173641](wp&#x2F;屏幕截图 2023-11-28 173641-17115444455564.png) ![屏幕截图 2023-11-28 173737](wp&amp;#x2F">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://blog.forevers.love/usr/uploads/2023/11/4234700732.png">
+<meta property="og:image" content="https://2023478.github.io/2024/03/27/wp/38e10a9971624ec18cd2d549954ca408.png">
+<meta property="og:image" content="http://blog.forevers.love/usr/uploads/2023/11/1648215160.png">
+<meta property="og:image" content="https://2023478.github.io/2024/03/27/wp/701953734d034bbe98efac9dc5c6f836.png">
+<meta property="og:image" content="http://blog.forevers.love/usr/uploads/2023/11/803004082.png">
+<meta property="og:image" content="http://blog.forevers.love/usr/uploads/2023/11/3104877570.png">
+<meta property="og:image" content="http://blog.forevers.love/usr/uploads/2023/11/2163217567.png">
+<meta property="og:image" content="http://blog.forevers.love/usr/uploads/2023/11/3832015840.png">
+<meta property="og:image" content="http://blog.forevers.love/usr/uploads/2023/12/1839070299.png">
+<meta property="og:image" content="http://blog.forevers.love/usr/uploads/2023/12/1565444552.png">
+<meta property="og:image" content="http://blog.forevers.love/usr/uploads/2023/12/3017193538.png">
+<meta property="og:image" content="http://blog.forevers.love/usr/uploads/2023/12/3385520804.png">
+<meta property="og:image" content="http://blog.forevers.love/usr/uploads/2023/12/1100300480.png">
+<meta property="og:image" content="http://blog.forevers.love/usr/uploads/2023/12/1868602236.png">
+<meta property="og:image" content="http://blog.forevers.love/usr/uploads/2023/12/4152783716.png">
+<meta property="og:image" content="http://blog.forevers.love/usr/uploads/2023/12/1473558961.png">
+<meta property="og:image" content="http://blog.forevers.love/usr/uploads/2023/12/3926396535.png">
+<meta property="og:image" content="http://blog.forevers.love/usr/uploads/2023/12/3046998676.png">
+<meta property="article:published_time" content="2024-03-27T12:06:41.000Z">
+<meta property="article:modified_time" content="2024-03-27T13:49:44.504Z">
+<meta property="article:author" content="wgiegie">
+<meta property="article:tag" content="pwn">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.forevers.love/usr/uploads/2023/11/4234700732.png">
+  
+    <link rel="alternative" href="/atom.xml" title="纲的blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://7xkj1z.com1.z0.glb.clouddn.com/head.jpg">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+
+  
+<script src="//cdn.bootcss.com/require.js/2.3.2/require.min.js"></script>
+
+  
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+<body>
+  <div id="container">
+    <div id="particles-js"></div>
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xkj1z.com1.z0.glb.clouddn.com/head.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/"></a></h1>
+		</hgroup>
+
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/C%E8%AF%AD%E8%A8%80/" style="font-size: 10px;">C语言</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/pwn/" style="font-size: 20px;">pwn</a> <a href="/tags/%E6%90%AD%E5%8D%9A%E5%AE%A2/" style="font-size: 10px;">搭博客</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/smackgg/hexo-theme-smackdown">smackdown</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://7xkj1z.com1.z0.glb.clouddn.com/head.jpg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author"></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-wp" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2024/03/27/wp/" class="article-date">
+  	<time datetime="2024-03-27T12:06:41.000Z" itemprop="datePublished">2024-03-27</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      pwn 一些题详解
+      
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/CTF/">CTF</a>
+	</div>
+
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>#ret2text</p>
 <p>主要分为32位的和64位的不同程序，在做法是有不同的对应方法与</p>
 <p>在一开始都要先在linux中先确定程序使用了那些保护方式与结构类型</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">checksec 文件名</span><br></pre></td></tr></table></figure>
@@ -57,21 +257,21 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 <p>关于0的加入：<br>对于本题的函数传参，我们的栈帧构造初步想法如图</p>
 <p>ebp	‘aaaa’<br>r	return to func<br>参数一	“&#x2F;bin&#x2F;sh”<br>输入适量垃圾填充 padding * b ‘a’<br>覆盖返回地址指向func函数 p32(ret_addr)<br>参数”&#x2F;bin&#x2F;sh”地址<br>则payload &#x3D;  padding*b’a’ + p32(ret_addr)  + p32(sh_addr)</p>
 <p>然而这样的脚本在攻击时会出错。原因在于：</p>
-<p>正常的函数调用call来达到push eip；jmp的作用，经过初步payload构造的攻击如下图所示，是通过覆盖return达到jmp的作用的，并没有像call一样push eip到栈中。<br class='item-img' data-src='http://blog.forevers.love/usr/uploads/2023/11/4234700732.png'><img src="http://blog.forevers.love/usr/uploads/2023/11/4234700732.png" alt="38e10a9971624ec18cd2d549954ca408.png"><img src="/2024/03/27/wp/38e10a9971624ec18cd2d549954ca408.png" alt="38e10a9971624ec18cd2d549954ca408"><br> 故而ret执行后，ebp后为我们输入的参数而非eip原地址（函数结束后返回的地址），而函数读取参数的位置在上文中已经展示，为 ebp+0x8。故而在利用ret2text覆盖pwn题时候，需要自行加入一行栈帧的填充。<br class='item-img' data-src='http://blog.forevers.love/usr/uploads/2023/11/1648215160.png'><img src="http://blog.forevers.love/usr/uploads/2023/11/1648215160.png" alt="701953734d034bbe98efac9dc5c6f836.png"><img src="/2024/03/27/wp/701953734d034bbe98efac9dc5c6f836.png" alt="701953734d034bbe98efac9dc5c6f836"><br><em>64位系统</em><br>在64位的中在将垃圾数据写入之后，我们要将&#x2F;bin&#x2F;sh这段数据先写入到一个寄存器中然后将这个寄存器导入到函数中程序才能·执行<br>于是要做的第一步就是找到一个寄存器并修改其中的值，使用</p>
+<p>正常的函数调用call来达到push eip；jmp的作用，经过初步payload构造的攻击如下图所示，是通过覆盖return达到jmp的作用的，并没有像call一样push eip到栈中。<br><img src="http://blog.forevers.love/usr/uploads/2023/11/4234700732.png" alt="38e10a9971624ec18cd2d549954ca408.png"><img src="/2024/03/27/wp/38e10a9971624ec18cd2d549954ca408.png" alt="38e10a9971624ec18cd2d549954ca408"><br> 故而ret执行后，ebp后为我们输入的参数而非eip原地址（函数结束后返回的地址），而函数读取参数的位置在上文中已经展示，为 ebp+0x8。故而在利用ret2text覆盖pwn题时候，需要自行加入一行栈帧的填充。<br><img src="http://blog.forevers.love/usr/uploads/2023/11/1648215160.png" alt="701953734d034bbe98efac9dc5c6f836.png"><img src="/2024/03/27/wp/701953734d034bbe98efac9dc5c6f836.png" alt="701953734d034bbe98efac9dc5c6f836"><br><em>64位系统</em><br>在64位的中在将垃圾数据写入之后，我们要将&#x2F;bin&#x2F;sh这段数据先写入到一个寄存器中然后将这个寄存器导入到函数中程序才能·执行<br>于是要做的第一步就是找到一个寄存器并修改其中的值，使用</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ROPgadget --binary 文件名 --only <span class="string">&#x27;pop|ret&#x27;</span></span><br></pre></td></tr></table></figure>
-<p class='item-img' data-src='http://blog.forevers.love/usr/uploads/2023/11/803004082.png'><img src="http://blog.forevers.love/usr/uploads/2023/11/803004082.png" alt="屏幕截图 2023-11-28 195354.png">![屏幕截图 2023-11-28 195354](wp&#x2F;屏幕截图 2023-11-28 195354.png)<br>通过这个我们可以找的程序中可以给我们使用·修改寄存器的命令的地址<br>在这里我们只用传一段函数于是只要用pop rdi；ret一个指令将rdi中的值修改，然后便是在栈中放入‘bin&#x2F;sh’经由pop提交给rdi，最后便是填system的地址（在这里要填入的不能是plt段的system函数的地址，要填的是.data段中的call system的地址，因为在之前将&#x2F;bin&#x2F;sh的地址填入其中从而导入rdi中，如果要rdi中的数据能进入system中则要用call system，将rdi中值导入system然后在执行该函数)</p>
+<p><img src="http://blog.forevers.love/usr/uploads/2023/11/803004082.png" alt="屏幕截图 2023-11-28 195354.png">![屏幕截图 2023-11-28 195354](wp&#x2F;屏幕截图 2023-11-28 195354.png)<br>通过这个我们可以找的程序中可以给我们使用·修改寄存器的命令的地址<br>在这里我们只用传一段函数于是只要用pop rdi；ret一个指令将rdi中的值修改，然后便是在栈中放入‘bin&#x2F;sh’经由pop提交给rdi，最后便是填system的地址（在这里要填入的不能是plt段的system函数的地址，要填的是.data段中的call system的地址，因为在之前将&#x2F;bin&#x2F;sh的地址填入其中从而导入rdi中，如果要rdi中的数据能进入system中则要用call system，将rdi中值导入system然后在执行该函数)</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">payload=b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*垃圾数据的长度+p64(pop|ret的地址)+</span><br><span class="line">p64(.data段中的/bin/sh的地址)+p64(.data段中的call system的地址)</span><br></pre></td></tr></table></figure>
 
 <p>#ret2shellcode<br>在这一类题中不会出现system和&#x2F;bin&#x2F;sh这种直接可以用来控制的函数，但程序中有一部分是可读可写可执行的部分，这一部分在程序中是很危险的一部分，一旦出现这种地方，同时含有栈溢出，便可以在通过栈溢出之后使程序跳到那部分可读可写可执行的部分，我们在往里面输入我们shellcode（意为一段恶意程序，通过执行这一段恶意程序，获得控制权）</p>
-<p>关于可读可写可执行段的查找可以在gdb调式程序的过程中用vmmap指令查找<br class='item-img' data-src='http://blog.forevers.love/usr/uploads/2023/11/3104877570.png'><img src="http://blog.forevers.love/usr/uploads/2023/11/3104877570.png" alt="屏幕截图 2023-11-30 143610.png">![屏幕截图 2023-11-30 143610](wp&#x2F;屏幕截图 2023-11-30 143610.png)<br>如图便可以查找到从0x601000到0x602000是可读可写可执行（一下称为rwx)的程序，我们便可以将shellcode写入到这段程序</p>
+<p>关于可读可写可执行段的查找可以在gdb调式程序的过程中用vmmap指令查找<br><img src="http://blog.forevers.love/usr/uploads/2023/11/3104877570.png" alt="屏幕截图 2023-11-30 143610.png">![屏幕截图 2023-11-30 143610](wp&#x2F;屏幕截图 2023-11-30 143610.png)<br>如图便可以查找到从0x601000到0x602000是可读可写可执行（一下称为rwx)的程序，我们便可以将shellcode写入到这段程序</p>
 <p>有的时候这个程序不一定在一开始写的时候便有rwx段程序，但在执行时会因为那个指令出现rwx段程序，如</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mprotect(<span class="number">0x601000</span>,<span class="number">0x100</span>,PROT_READ | PROT_WRITE | PROT_EXEC);</span><br></pre></td></tr></table></figure>
 <p>这个指令将0x601000之后的0x100段数据都改为rwx程序于是我们便可以想这段之中写入我们的shellcode，在通过栈溢出使他执行这一段程序。</p>
 <p><strong>shellcode</strong><br>一段恶意程序，可以在pwntools中获得比较简单的一些，执行</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">shellcraft.sh()<span class="comment">//默认为32位的如果要64位执行下面这个</span></span><br><span class="line">shellcraft.amd64.sh()<span class="comment">//</span></span><br></pre></td></tr></table></figure>
-<p class='item-img' data-src='http://blog.forevers.love/usr/uploads/2023/11/2163217567.png'><img src="http://blog.forevers.love/usr/uploads/2023/11/2163217567.png" alt="屏幕截图 2023-11-30 145900.png">![屏幕截图 2023-11-30 145900](wp&#x2F;屏幕截图 2023-11-30 145900.png)<br>此时我们获得不过是汇编语言不能直接传入程序中，必须将它换为机器语言传入才能穿入成功</p>
+<p><img src="http://blog.forevers.love/usr/uploads/2023/11/2163217567.png" alt="屏幕截图 2023-11-30 145900.png">![屏幕截图 2023-11-30 145900](wp&#x2F;屏幕截图 2023-11-30 145900.png)<br>此时我们获得不过是汇编语言不能直接传入程序中，必须将它换为机器语言传入才能穿入成功</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">asm</span>(shellcraft.sh())</span><br><span class="line">这样输出的便是机器语言的shellcode，直接传入其中便可以使用</span><br></pre></td></tr></table></figure>
-<p>在64位的是可能会因为其环境默认为32位的而出现问题可以通过如下修改<br class='item-img' data-src='http://blog.forevers.love/usr/uploads/2023/11/3832015840.png'><img src="http://blog.forevers.love/usr/uploads/2023/11/3832015840.png" alt="屏幕截图 2023-11-30 150708.png">![屏幕截图 2023-11-30 150708](wp&#x2F;屏幕截图 2023-11-30 150708.png)</p>
+<p>在64位的是可能会因为其环境默认为32位的而出现问题可以通过如下修改<br><img src="http://blog.forevers.love/usr/uploads/2023/11/3832015840.png" alt="屏幕截图 2023-11-30 150708.png">![屏幕截图 2023-11-30 150708](wp&#x2F;屏幕截图 2023-11-30 150708.png)</p>
 <p><strong>例题</strong></p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/mman.h&gt;</span> </span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _GNU_SOURCE   </span></span><br><span class="line"></span><br><span class="line"><span class="comment">//gcc poc.c -o poc -no-pie -fno-stack-protector</span></span><br><span class="line"><span class="type">char</span> shellcode[<span class="number">100</span>];</span><br><span class="line"><span class="type">void</span> <span class="title function_">initt</span><span class="params">()</span></span><br><span class="line">	&#123;</span><br><span class="line">		setvbuf(<span class="built_in">stdin</span>, <span class="number">0LL</span>, <span class="number">1</span>, <span class="number">0LL</span>);</span><br><span class="line">		setvbuf(<span class="built_in">stdout</span>, <span class="number">0LL</span>, <span class="number">2</span>, <span class="number">0LL</span>);</span><br><span class="line">		<span class="keyword">return</span> setvbuf(<span class="built_in">stderr</span>, <span class="number">0LL</span>, <span class="number">1</span>, <span class="number">0LL</span>);</span><br><span class="line">	&#125;</span><br><span class="line"><span class="type">void</span> <span class="title function_">pwnn</span><span class="params">()</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="type">char</span> a[<span class="number">10</span>];</span><br><span class="line">		<span class="built_in">puts</span>(<span class="string">&quot;please pwn me!!!&quot;</span>);</span><br><span class="line">		read(<span class="number">0</span>,a,<span class="number">0x20</span>);</span><br><span class="line">	&#125;</span><br><span class="line"><span class="type">void</span> <span class="title function_">InputName</span><span class="params">()</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">puts</span>(<span class="string">&quot;inputs you name&quot;</span>);</span><br><span class="line">		read(<span class="number">0</span>,shellcode,<span class="number">100</span>);</span><br><span class="line">		mprotect(<span class="number">0x601000</span>,<span class="number">0x100</span>,PROT_READ | PROT_WRITE | PROT_EXEC);</span><br><span class="line">	&#125;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	initt();</span><br><span class="line">	InputName();</span><br><span class="line">	pwnn();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>在这段程序中先执行InputName函数，在这个函数中，同构read向shellcode中可以输入最长100字节的数据，然后我们会发现他将0x601000之后100的数据改为rwx段，在ida中正好可以看到shellcode段的数据刚好在这其中，我们便可以通过这个向其中输入shellcode，在pwnn这个函数中正好有栈溢出的存在，<br>于是便可以先通过InputName函数输入shellcode然后再pwnn中栈溢出指向<br>shellcode的地址<br>攻击如下</p>
@@ -85,24 +285,24 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 <p>像这些系统内核函数调用必须使用一些特殊的汇编指令才能调用，如int 80（32位）和syscall（64位）就像一个call函数，但是是跳转到内核系统中，至于要跳到哪个函数则要根据之前部分寄存器的值来确定，eax(32)和rax(64)保存了系统调用号（内核函数在内核中都有独属于自己一个调用号，如execve的调用号为11（32位&#x3D;0xb）,59（64位&#x3D;0x3b））,ebx和rdi用来保存在函数中执行的参数的地址，同时要保证ecx，edx和rsi，rdx中的值都为0。</p>
 <p>大致就是这个但现在我们要面临的问题是如何修改寄存器中的值，这个有一个很好的方法。可以在终端中运行rop便可以找到程序中的可以帮我们修改寄存器的指令</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ROPgadget --binary 文件名 --only <span class="string">&quot;pop|ret&quot;</span></span><br></pre></td></tr></table></figure>
-<p class='item-img' data-src='http://blog.forevers.love/usr/uploads/2023/12/1839070299.png'><img src="http://blog.forevers.love/usr/uploads/2023/12/1839070299.png" alt="屏幕截图 2023-12-09 160956.png">![屏幕截图 2023-12-09 160956](wp&#x2F;屏幕截图 2023-12-09 160956.png)</p>
+<p><img src="http://blog.forevers.love/usr/uploads/2023/12/1839070299.png" alt="屏幕截图 2023-12-09 160956.png">![屏幕截图 2023-12-09 160956](wp&#x2F;屏幕截图 2023-12-09 160956.png)</p>
 <p>如此便可以查看在程序中有那些可以供我们去修改寄存器的命令（像这种用于修改寄存器的指令一般被称为gadget），我们只要在栈溢出的垃圾值后面加入这些指令，pop+寄存器的意思是将此时栈上的值取出放入寄存器中，ret的作用是返回栈中，回到我们自己的指令去继续执行我们的指令，而要放入寄存器中的值则只要放在这个指令地址的后面，在程序执行时会将这个指令的后面的那个值作为出栈的数据放入寄存器中。需要注意的是在命令中可能不止一个寄存器，此时我们变要将每一个寄存器的值都改变，便在寄存器命令后面以此放上要放入寄存器的值，如</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0x0000000000405b44</span> : pop rbx ; pop rbp ; pop r12 ; pop r13 ; ret</span><br><span class="line">这是用上面的那个指令运行后出现的一行数据</span><br><span class="line">我们的利用</span><br><span class="line">p32(<span class="number">0x0000000000405b44</span>)+p32(<span class="number">2</span>)+p32(<span class="number">0</span>)+p32(<span class="number">9</span>)+p32(<span class="number">0x3d</span>)</span><br></pre></td></tr></table></figure>
 <p>如此当被我们劫持的程序执行到这里时，便会依次将2，0，9，0x3d这四个数据分别放入rbx,rbp,r12,r13这四个寄存器中，然后ret会将程序返回到原本的指令中。</p>
 <p>有了以上的分析其实像这种题的过程便可以很清晰的出来了，<br>32位程序：<br>先输入垃圾数据然后，寻找足够的gadget将eax的值改为0xb，ebx改为‘&#x2F;bin&#x2F;sh’的地址（有的程序中会没有这个数据，但可以自己输入，在之后的题便是这种，到时候细讲）ecx改为0，edx改为0。<br>在这4个寄存器的值都改好后便可以执行int 0x80这个指令，获得控制权·<br>64位程序：<br>先输入垃圾数据然后，寻找足够的gadget将rax的值改为0x3b，rbi改为‘&#x2F;bin&#x2F;sh’的地址（有的程序中会没有这个数据，但可以自己输入，在之后的题便是这种，到时候细讲）rsi改为0，rdx改为0。<br>在这4个寄存器的值都改好后便可以执行syscall这个指令，获得控制权·</p>
 <p>如上便是ret2syscall这类题的做法，其实细看回事有很大的限制在其中<br>1，要有足够将4个寄存器都修改的gadget，这一点便基本将动态链接给淘汰了，在大部分的动态链接中是没有足够多的gadget给我们使用的，只用静态链接中才会有足够时的gadget<br>2，在程序中必须有int 0x80（32位程序）或syscall（64位程序）指令</p>
 <p>现在便拿出一道方法用的是ret2syscall但其中用了ret2csu的思想的一道动态链接的64位程序的（神奇）题</p>
-<p>老样子先用checksec查看程序的保护（这道题是学长给的，在一开始题目就是ret2syscall虽然我一度怀疑题目错了，但最后确实没错，在后面为了好输入我改成poc）<br class='item-img' data-src='http://blog.forevers.love/usr/uploads/2023/12/1565444552.png'><img src="http://blog.forevers.love/usr/uploads/2023/12/1565444552.png" alt="屏幕截图 2023-12-09 170220.png">![屏幕截图 2023-12-09 170220](wp&#x2F;屏幕截图 2023-12-09 170220.png)<br>没什么特别的那就直接开整吧，</p>
-<p>既然是ret2syscall那就找gadget，这里便是我懵逼的第一个地方，如此少的gadget，只能找到修改rdi和rsi的指令器外两个寄存器的值该怎么改？（拿命改），<br class='item-img' data-src='http://blog.forevers.love/usr/uploads/2023/12/3017193538.png'><img src="http://blog.forevers.love/usr/uploads/2023/12/3017193538.png" alt="屏幕截图 2023-12-09 171431.png">![屏幕截图 2023-12-09 171431](wp&#x2F;屏幕截图 2023-12-09 171431.png)</p>
-<p>先不管将程序放入64位的ida中<br class='item-img' data-src='http://blog.forevers.love/usr/uploads/2023/12/3385520804.png'><img src="http://blog.forevers.love/usr/uploads/2023/12/3385520804.png" alt="屏幕截图 2023-12-09 172045.png">![屏幕截图 2023-12-09 172045](wp&#x2F;屏幕截图 2023-12-09 172045.png)<br>果然，一看左边这么少的函数就知道是个动态链接的程序，<br>返回到汇编的窗口仔细一找woc居然有syscall指令<br class='item-img' data-src='http://blog.forevers.love/usr/uploads/2023/12/1100300480.png'><img src="http://blog.forevers.love/usr/uploads/2023/12/1100300480.png" alt="屏幕截图 2023-12-09 172639.png">![屏幕截图 2023-12-09 172639](wp&#x2F;屏幕截图 2023-12-09 172639.png)<br>but在参数一栏找发现没有&#x2F;bin&#x2F;sh<br class='item-img' data-src='http://blog.forevers.love/usr/uploads/2023/12/1868602236.png'><img src="http://blog.forevers.love/usr/uploads/2023/12/1868602236.png" alt="屏幕截图 2023-12-09 172745.png">![屏幕截图 2023-12-09 172745](wp&#x2F;屏幕截图 2023-12-09 172745.png)<br>这便是我疑惑的第2个地方，后来问了学长才知道，在主程序中有gets函数便可以在劫持程序后利用gets函数将&#x2F;bin&#x2F;sh这个字符串输入到bss段中的空地址中，然后再调用。</p>
+<p>老样子先用checksec查看程序的保护（这道题是学长给的，在一开始题目就是ret2syscall虽然我一度怀疑题目错了，但最后确实没错，在后面为了好输入我改成poc）<br><img src="http://blog.forevers.love/usr/uploads/2023/12/1565444552.png" alt="屏幕截图 2023-12-09 170220.png">![屏幕截图 2023-12-09 170220](wp&#x2F;屏幕截图 2023-12-09 170220.png)<br>没什么特别的那就直接开整吧，</p>
+<p>既然是ret2syscall那就找gadget，这里便是我懵逼的第一个地方，如此少的gadget，只能找到修改rdi和rsi的指令器外两个寄存器的值该怎么改？（拿命改），<br><img src="http://blog.forevers.love/usr/uploads/2023/12/3017193538.png" alt="屏幕截图 2023-12-09 171431.png">![屏幕截图 2023-12-09 171431](wp&#x2F;屏幕截图 2023-12-09 171431.png)</p>
+<p>先不管将程序放入64位的ida中<br><img src="http://blog.forevers.love/usr/uploads/2023/12/3385520804.png" alt="屏幕截图 2023-12-09 172045.png">![屏幕截图 2023-12-09 172045](wp&#x2F;屏幕截图 2023-12-09 172045.png)<br>果然，一看左边这么少的函数就知道是个动态链接的程序，<br>返回到汇编的窗口仔细一找woc居然有syscall指令<br><img src="http://blog.forevers.love/usr/uploads/2023/12/1100300480.png" alt="屏幕截图 2023-12-09 172639.png">![屏幕截图 2023-12-09 172639](wp&#x2F;屏幕截图 2023-12-09 172639.png)<br>but在参数一栏找发现没有&#x2F;bin&#x2F;sh<br><img src="http://blog.forevers.love/usr/uploads/2023/12/1868602236.png" alt="屏幕截图 2023-12-09 172745.png">![屏幕截图 2023-12-09 172745](wp&#x2F;屏幕截图 2023-12-09 172745.png)<br>这便是我疑惑的第2个地方，后来问了学长才知道，在主程序中有gets函数便可以在劫持程序后利用gets函数将&#x2F;bin&#x2F;sh这个字符串输入到bss段中的空地址中，然后再调用。</p>
 <p>好到现在来总结一下，我们能使用的有<br>syscall命令，<br>rdi和rsi寄存器，<br>用gets函数输入&#x2F;bin&#x2F;sh，<br>如果不考虑ret2libc的话，还差rax和rdx寄存器的改变</p>
-<p><strong>此时一个重要的思想出来，在程序中的__libc_csu_init函数，能有大用，改变某些寄存器的作用</strong><br>这便是ret2csu的思想，将程序导入__libc_csu_init函数中从而改变一些gadget不能改变的寄存器的值<br class='item-img' data-src='http://blog.forevers.love/usr/uploads/2023/12/4152783716.png'><img src="http://blog.forevers.love/usr/uploads/2023/12/4152783716.png" alt="屏幕截图 2023-12-09 192250.png">![屏幕截图 2023-12-09 192250](wp&#x2F;屏幕截图 2023-12-09 192250.png)<br>在这里便可以先让程序执行0x4012DA地址的指令，修改rbx,rbp,r12,r13,r14,r15寄存器的值，然后在使程序执行0x4012C0地址的指令，从而修改rdx,rsi,edi的值（虽然是edi不是rdi，但是也可以相当于改变rdi，一般用不到前面的位数改变后面的足够了）最后的call可以直接跳转到一个函数出执行（这里有一个大坑，后面慢慢讲)</p>
-<p>到了此时便只差rax的值不能改变，在程序中慢慢找看看能不能找到可以改变的地方<br class='item-img' data-src='http://blog.forevers.love/usr/uploads/2023/12/1473558961.png'><img src="http://blog.forevers.love/usr/uploads/2023/12/1473558961.png" alt="屏幕截图 2023-12-09 194646.png">![屏幕截图 2023-12-09 194646](wp&#x2F;屏幕截图 2023-12-09 194646.png)<br>好，找到了，在0x40119e及后面的指令在利用后刚好能将edi中的值传输到eax中（在64为系统中主用的是r开头的寄存器，e开头寄存器就是r开头的寄存器的后半部分，大部分情况下，r开头的寄存器前半部分的值用不到的，e的改变足够用），在这里还有一个很重要的点，我们是先将edi的值传进[rbp+var_4]，在将[rbp+var_4]传进eax中，于是我们必须要保证[rbp+var_4]中的值是一个空但有限的地址，在bss段中选择。（var_4在前面有定义，但不用管比较小，只要保证rbp中的地址空并且有效就行)</p>
+<p><strong>此时一个重要的思想出来，在程序中的__libc_csu_init函数，能有大用，改变某些寄存器的作用</strong><br>这便是ret2csu的思想，将程序导入__libc_csu_init函数中从而改变一些gadget不能改变的寄存器的值<br><img src="http://blog.forevers.love/usr/uploads/2023/12/4152783716.png" alt="屏幕截图 2023-12-09 192250.png">![屏幕截图 2023-12-09 192250](wp&#x2F;屏幕截图 2023-12-09 192250.png)<br>在这里便可以先让程序执行0x4012DA地址的指令，修改rbx,rbp,r12,r13,r14,r15寄存器的值，然后在使程序执行0x4012C0地址的指令，从而修改rdx,rsi,edi的值（虽然是edi不是rdi，但是也可以相当于改变rdi，一般用不到前面的位数改变后面的足够了）最后的call可以直接跳转到一个函数出执行（这里有一个大坑，后面慢慢讲)</p>
+<p>到了此时便只差rax的值不能改变，在程序中慢慢找看看能不能找到可以改变的地方<br><img src="http://blog.forevers.love/usr/uploads/2023/12/1473558961.png" alt="屏幕截图 2023-12-09 194646.png">![屏幕截图 2023-12-09 194646](wp&#x2F;屏幕截图 2023-12-09 194646.png)<br>好，找到了，在0x40119e及后面的指令在利用后刚好能将edi中的值传输到eax中（在64为系统中主用的是r开头的寄存器，e开头寄存器就是r开头的寄存器的后半部分，大部分情况下，r开头的寄存器前半部分的值用不到的，e的改变足够用），在这里还有一个很重要的点，我们是先将edi的值传进[rbp+var_4]，在将[rbp+var_4]传进eax中，于是我们必须要保证[rbp+var_4]中的值是一个空但有限的地址，在bss段中选择。（var_4在前面有定义，但不用管比较小，只要保证rbp中的地址空并且有效就行)</p>
 <p>由于本题中需要用到的空地址有点多，先讲一下空地址的选择<br>由于我们在调用gets函数需要向空地址写入数据，便要找到一个可写的地址，而bss段便是一个可写的地方，我们可以通过gdb调试中寻找在gdb调试进入程序后输入</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vmmap</span><br></pre></td></tr></table></figure>
 <p>命令便可以看到每一段地址对应的能力，然后在确认好地址后用如下命令查看地址对应的存放情况</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x/<span class="number">20</span>gx 地址名<span class="comment">//20代表的是从该地址往后的20字节的地址都显示出来</span></span><br></pre></td></tr></table></figure>
-<p class='item-img' data-src='http://blog.forevers.love/usr/uploads/2023/12/3926396535.png'><img src="http://blog.forevers.love/usr/uploads/2023/12/3926396535.png" alt="屏幕截图 2023-12-09 201100.png">![屏幕截图 2023-12-09 201100](wp&#x2F;屏幕截图 2023-12-09 201100.png)<br>如此便可以确认这个地址是一个可写的空的有效的地址</p>
+<p><img src="http://blog.forevers.love/usr/uploads/2023/12/3926396535.png" alt="屏幕截图 2023-12-09 201100.png">![屏幕截图 2023-12-09 201100](wp&#x2F;屏幕截图 2023-12-09 201100.png)<br>如此便可以确认这个地址是一个可写的空的有效的地址</p>
 <p>如此我们便可以将这个题的全部思路写出来，在一开始直接向程序中输入24个垃圾字节数据进行栈溢出，用于劫持程序，然后利用gets函数输入&#x2F;bin&#x2F;sh字符串，<br>在这里会出现一个事情，我们要向一个特定地址输入字符，而gets函数的原型是</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">char</span> *<span class="title function_">gets</span><span class="params">(<span class="type">char</span> *str)</span>;</span><br></pre></td></tr></table></figure>
 <p>于是在执行gets函数中时便会向先调用rdi寄存器（rdi为最常用的通用寄存器）中的值作为函数输入的值的存放地址，<br>于是我们便要向rdi赋一个空地址，然后才调用gets函数</p>
@@ -122,7 +322,7 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 <p>#ret2libc<br>在这里将之间讲述无system和无&#x2F;bin&#x2F;sh的情况将32位与64位分开讲述</p>
 <p><strong>32位</strong><br>在这类题中一般是动态链接很多操作都不能执行<br>更多的知识不多讲直接将做题的过程<br>对于这种题我们一般可以先调用可已打印东西的函数，如puts的函数将got中谋个函数的地址答应出来，根据动态链接的延迟绑定规定，在第一次调用某个函数之后其在动态链接库中的地址将被写入got表中，我们便可以同过put等打印数据的函数将其打印出来地址，这个地址便是该函数在动态链接库中对应的地址，在题中有很大的可能这个地址是一个变化中的地址，这是系统的一种保护操作，但是一般答应出来的后3位（16进制的数）是不会变的，而我们便可以将这后3位的地址用于判断其动态链接库的类型，</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">from LibcSearcher import LibcSearcher<span class="comment">//这个可用于自动寻找库，不过可能有点老，反正我没有用这个成功过</span></span><br><span class="line">io=process(<span class="string">&#x27;./文件名&#x27;</span>)</span><br><span class="line">puts_plt=<span class="number">0x00000</span><span class="comment">//puts在plt段的地址，可以直接在ida中找也可以用链接文件后直接用程序找</span></span><br><span class="line">main=<span class="number">0x00000</span><span class="comment">//main函数在text段中的地址，用于在打印地址后返回main从新开始执行</span></span><br><span class="line">libc_start_main=<span class="number">0x000000000</span><span class="comment">//got段中的libc_start_main的地址，在第一次调用后会有真实地址，打印出来</span></span><br><span class="line">payload=b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*<span class="number">22</span>+p32(put_plt)+p32(main)+p32(libc_start_main)</span><br><span class="line"><span class="comment">//32位的函数调用特点，间隔一个放参数。</span></span><br><span class="line">io.recvuntil(<span class="string">&quot;\n&quot;</span>)<span class="comment">//可用可不用，关键根据当时的情况来加入，括号内是程序的输出</span></span><br><span class="line">libcaddr=u32(io.recv(<span class="number">4</span>))</span><br><span class="line"><span class="comment">//用于接收用puts函数打印出来的__libc_start_main函数的真实地址</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>在有libc_start_main函数的真实地址后，可以在网上查找函数的偏移地址<br class='item-img' data-src='http://blog.forevers.love/usr/uploads/2023/12/3046998676.png'><img src="http://blog.forevers.love/usr/uploads/2023/12/3046998676.png" alt="屏幕截图 2023-12-09 220543.png">![屏幕截图 2023-12-09 220543](wp&#x2F;屏幕截图 2023-12-09 220543.png)<br>一般来说真实地址的值会因为保护程序的存在而使中间的地址被随机化，但最后的3位（16进制)不会被改变，便可以通过后3位查到偏移量，<br><strong>程序的基本地址&#x3D;__libc_start_main函数的真实地址-__libc_start_main函数的偏移量<br>system函数的真实地址&#x3D;程序的基本地址+system函数的偏移量<br>str_bin_sh函数的真实地址&#x3D;程序的基本地址+str_bin_sh函数的偏移量</strong></p>
+<p>在有libc_start_main函数的真实地址后，可以在网上查找函数的偏移地址<br><img src="http://blog.forevers.love/usr/uploads/2023/12/3046998676.png" alt="屏幕截图 2023-12-09 220543.png">![屏幕截图 2023-12-09 220543](wp&#x2F;屏幕截图 2023-12-09 220543.png)<br>一般来说真实地址的值会因为保护程序的存在而使中间的地址被随机化，但最后的3位（16进制)不会被改变，便可以通过后3位查到偏移量，<br><strong>程序的基本地址&#x3D;__libc_start_main函数的真实地址-__libc_start_main函数的偏移量<br>system函数的真实地址&#x3D;程序的基本地址+system函数的偏移量<br>str_bin_sh函数的真实地址&#x3D;程序的基本地址+str_bin_sh函数的偏移量</strong></p>
 <p>然后调用system函数利用str_bin_sh函数，便也可以获得控制权，</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">__libc_start_main=<span class="number">0x000</span><span class="comment">//__libc_start_main函数的偏移地址</span></span><br><span class="line">system=<span class="number">0x00000</span><span class="comment">//system函数的偏移地址，</span></span><br><span class="line">str_bin_sh=<span class="number">0x000</span><span class="comment">//__libc_start_main函数的偏移地址</span></span><br><span class="line">以上这三个的数值由网上查阅</span><br><span class="line">libcbase_addr=libcaddr-__libc_start_main</span><br><span class="line">system_addr=libcbase_addr+system</span><br><span class="line">binsh_addr=libcbase_addr+str_bin_sh</span><br><span class="line">payload2 = b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*<span class="number">22</span> + p32(sys_addr) + b<span class="number">&#x27;</span>AAAA<span class="number">&#x27;</span> + p32(binsh_addr)</span><br><span class="line"><span class="comment">//这里中间的数为了平衡栈顶要在中间加上4字节的垃圾数据</span></span><br><span class="line">io.sendline(payload2)</span><br><span class="line">io.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
@@ -130,4 +330,114 @@ document.addEventListener("pjax:complete", reset);reset()})</script><meta name="
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">from LibcSearcher import *</span><br></pre></td></tr></table></figure>
 
 
-<div id="paginator"></div></div><div id="post-footer"><div id="pages"><div class="footer-link" style="width: 50%;text-align:right;border-right:1px #fe2 solid"><a href="/2024/03/27/%E5%8D%9A%E5%AE%A2/">← 下一篇 pwn基操</a></div><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2024/03/26/C%E8%AF%AD%E8%A8%80%E9%A2%98%E7%9B%AE/">C语言题目 上一篇 →</a></div></div></div></div><div class="bottom-btn"><div><a class="i-top" id="to-top" onClick="scrolls.scrolltop();" title="回到顶部" style="opacity: 0; display: none;">∧ </a><a class="i-color" id="color-mode" onClick="colorMode.change()" title="切换主题"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo"></a><h1 id="Dr"><a href="/">wgiegie</a></h1><div id="description"><p></p></div></div><div id="aside-block"></div><footer><nobr>构建自 <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> 使用主题 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr> 主题作者 <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas></body></html>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/03/27/hexo/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">&lt;</strong>
+      <div class="article-nav-title">
+        
+          hexo基操
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/03/27/%E5%8D%9A%E5%AE%A2/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">pwn基操</div>
+      <strong class="article-nav-caption">&gt;</strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="ds-share share" data-thread-key="wp" data-title="pwn 一些题详解" data-url="https://2023478.github.io/2024/03/27/wp/"  data-images="http://7xkj1z.com1.z0.glb.clouddn.com/head.jpg" data-content="pwn 一些题详解">
+    <div class="ds-share-inline">
+      <ul  class="ds-share-icons-16">
+      	<li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+        <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+        <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+        <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+        <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+      </ul>
+      <div class="ds-share-icons-more">
+      </div>
+    </div>
+ </div>
+ 
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2024 wgiegie
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/smackgg/hexo-theme-smackdown" target="_blank">Smackdown</a>
+        </div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+
+<script src="/js/main.js"></script>
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js"></script>
+
+
+  </div>
+</body>
+</html>
