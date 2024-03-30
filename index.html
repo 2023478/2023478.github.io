@@ -172,6 +172,84 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-数组越界" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2024/03/30/%E6%95%B0%E7%BB%84%E8%B6%8A%E7%95%8C/" class="article-date">
+  	<time datetime="2024-03-30T02:53:25.000Z" itemprop="datePublished">2024-03-30</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/03/30/%E6%95%B0%E7%BB%84%E8%B6%8A%E7%95%8C/">
+        数组越界
+        
+      </a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>昨天在攻防世界刷题的时候，无意之间找到一道题，不算难，就是一道很基础的栈溢出的题目，不过这个栈溢出的方式在我之前做的题里边还没怎么遇见，今天把他全部整出来了，故写这篇博客记录一下这方法和这道题的wp</p>
+<p>放一下题目的连接<a target="_blank" rel="noopener" href="https://adworld.xctf.org.cn/challenges/list">攻防世界 (xctf.org.cn)</a>，是这里面pwn的stack2题目</p>
+<p><img src="/2024/03/30/%E6%95%B0%E7%BB%84%E8%B6%8A%E7%95%8C/image-20240330110056677.png" alt="image-20240330110056677"></p>
+<p><strong>知识点</strong></p>
+<p>在这道题中用到的栈溢出的方法便是这篇博客的题目，<em>数组越界</em>，</p>
+<p>我们知道在C语言之中有一种叫数组的东西，就像<code>int a[9]=0</code>,这样的（字母[数字]）便叫数组，数组一般在定义的时候变会在栈上规划好一片空间，用于专门放数组内的数，一般来说，我们如果在调用数组的时候要对数组中的数进行我们需要的定义时，会可能使用如下的定义方式</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> i=<span class="number">0</span></span><br><span class="line"><span class="type">int</span> b=<span class="number">0</span></span><br><span class="line"><span class="type">int</span> a[<span class="number">10</span>]=<span class="number">0</span></span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>,$i)</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>,$b)</span><br><span class="line">    a[i]=b</span><br></pre></td></tr></table></figure>
+
+<p>即对于数组的第几位和大小都由自己进行定义，这样的定义虽然很方便，但有一个巨大的问题在于在我们一开始的时候便对数组已经下好了定义，而程序在下定义时便已经将栈上的空间分配好了，而我们定义的数组也是只有固定的大小，就像在上面的代码中我们定义的数组是<code>int a[10]=0</code>，那么便只有a[0]到a[9]的长度是在栈上用于存放这个数组的长度的，其他的栈空间，都有属于他们自己的命令与作用，</p>
+<p>但是，如果在程序中使用了如上的自定义数组的方式，由于C语言对我们有很大的信任，这样的定于在编译时是不会报错的，但如果我们在定义第几个数组i的这里超过了本来定义好的数组的长度，程序中没有对这个进行长度检查的方式，于是程序会直接就按你发送的长度在栈上找到相应的地方将你之后输入的内容存放进去。</p>
+<p>于此，数组越界的利用方式便出来了，当我们可以对数组的第几个数进行自定义时，程序并不会检查是否超过数组的长度，而是依然在栈上寻找输入的相应的地址将要存放的内容存放进去，但是我们知道在数组定义之初，栈上的空间便是以经分配好的了，出了数组相应的空间，栈上的其他空间都存放有相应的数据与命令，而数组越界让我们有了将栈上其他空间的数据改变的能力。</p>
+<p>当数组越界发生时，只要我们知道发生越界的这个数组开头与我们需要改变的栈上的数据的地址的距离，便可以在一开始输入数组个数时将距离输入，程序变回自动将这个距离指向的地址找到，然后我们在输入要存放数据，程序变会将会那个地址里存放的内容改为我们输入的数据，但是栈上存放的很大一部分是我们在后面需要执行的数据，特别像<code>ret</code>等命令执行完成之后，esp寄存器所指向的便是程序要执行的命令所存放的地址如下，程序在执行ret命令之前变回将下一步的命令的地址放在esp寄存器中</p>
+<p><img src="/2024/03/30/%E6%95%B0%E7%BB%84%E8%B6%8A%E7%95%8C/image-20240330142352990.png" alt="image-20240330142352990"></p>
+<p>因此，只要我们在知道程序中数组的开头地址，与在执行完这一段包含数组的命令的最后ret命令时，esp寄存器的值，算出差值，在程序执行的过程中将差值输入其中并将其内容改为需要执行的数值，便完成对程序执行的控制，达成栈溢出的目的。<br>以上便是关于栈溢出中数组越界的基本知识点与利用，如果你看了还是不太明白，你可以选择在网上看看其他大佬写的，以上只是我个人的理解与想法，或许有不对的欢迎指出。</p>
+<p>接下来便以一道题来做解。</p>
+<p><strong>stack2的wp</strong></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/CTF/">CTF</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
     <article id="post-hxctf" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -311,7 +389,7 @@
 
       
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/ctf/">ctf</a>
+	<a class="article-category-link" href="/categories/CTF/">CTF</a>
 	</div>
 
 
@@ -1437,7 +1515,7 @@
 
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 <p><img src="/2024/03/26/hello-world/002917-16858097570092.jpg" alt="002917-16858097570092"></p>
-<p>INFO  Copying files from extend dirs…<br>On branch master<br>nothing to commit, working tree clean<br>Everything up-to-date<br>branch ‘master’ set up to track ‘<a href="mailto:&#x67;&#x69;&#x74;&#64;&#103;&#x69;&#116;&#x68;&#x75;&#x62;&#x2e;&#99;&#x6f;&#109;">&#x67;&#x69;&#x74;&#64;&#103;&#x69;&#116;&#x68;&#x75;&#x62;&#x2e;&#99;&#x6f;&#109;</a>:2023478&#x2F;2023478.github.io.git&#x2F;main’.<br>INFO  Deploy done: git</p>
+<p>INFO  Copying files from extend dirs…<br>On branch master<br>nothing to commit, working tree clean<br>Everything up-to-date<br>branch ‘master’ set up to track ‘<a href="mailto:&#x67;&#105;&#x74;&#64;&#103;&#105;&#116;&#x68;&#117;&#98;&#46;&#x63;&#x6f;&#x6d;">&#x67;&#105;&#x74;&#64;&#103;&#105;&#116;&#x68;&#117;&#98;&#46;&#x63;&#x6f;&#x6d;</a>:2023478&#x2F;2023478.github.io.git&#x2F;main’.<br>INFO  Deploy done: git</p>
 
       
     </div>
