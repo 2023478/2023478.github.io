@@ -22,8 +22,10 @@
 <meta property="og:image" content="https://2023478.github.io/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240409215156595.png">
 <meta property="og:image" content="https://2023478.github.io/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240410203227873.png">
 <meta property="og:image" content="https://2023478.github.io/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240410212049191.png">
+<meta property="og:image" content="https://2023478.github.io/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240410214307841.png">
+<meta property="og:image" content="https://2023478.github.io/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240411162059021.png">
 <meta property="article:published_time" content="2024-04-09T12:53:47.000Z">
-<meta property="article:modified_time" content="2024-04-10T13:33:59.044Z">
+<meta property="article:modified_time" content="2024-04-11T14:24:57.773Z">
 <meta property="article:author" content="wgiegie">
 <meta property="article:tag" content="堆">
 <meta name="twitter:card" content="summary">
@@ -235,6 +237,7 @@
 
 <p>当执行完这行代码后堆管理器便会在arena中找到一块大小为0x100的区域作为分配给用户的堆的区域</p>
 <p>同时我们所获得这个ptr是个指针，指向是通过malloc（）后得到的一块内存区域chunk的中间。</p>
+<p><strong>每次 malloc 申请得到的内存指针，其实指向 user data 的起始处</strong></p>
 <p><strong>chunk</strong></p>
 <p>用户申请内存的单位，也是堆管理器管理内存的基本单位 </p>
 <p>malloc()返回的指针指向一个chunk的数据区域</p>
@@ -262,6 +265,10 @@
 <p>如果检测到这个chunk的上一个是一个free chunk的话变回返回一格0，存放在这位置</p>
 <p>而当这个p的值为0，便可以知道当前这个chunk以及上面的chunk都是free chunk，此时这两个chunk变回合并为同一个free chunk，将下面的chunk从管理器中去除，整体变为上一个chunk的数据段，上一个chunk中的size则扩大到上下两个chunk合并后的整个chunk的大小。</p>
 <p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240410212049191.png" alt="image-20240410212049191"></p>
+<p>free chunk出了这种结构之外还有两种另外的结构</p>
+<p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240410214307841.png" alt="image-20240410214307841"></p>
+<p><strong>bin</strong></p>
+<p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240411162059021.png" alt="image-20240411162059021"></p>
 
       
     </div>
