@@ -319,6 +319,21 @@
 <p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240410212049191.png" alt="image-20240410212049191"></p>
 <p>free chunk出了这种结构之外还有两种另外的结构</p>
 <p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240410214307841.png" alt="image-20240410214307841"></p>
+<p>chunk在代码段的实现</p>
+<p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240416163709790.png" alt="image-20240416163709790"></p>
+<p>理论上来说所有的chunk的出现都需要这几行代码的经过产生相应的区域，但由于程序为了节约时间对于不同的时间与不同状态的chunk其结构并不相同，并不是全部都包含由这些结构。不同的chunk有不同的结构，在上文中有所显示。</p>
+<p><em>在chunk中，其存储数据的方式和栈的存储方式相反，堆的存储方式为由高地址向低地址不断存储的图，但在堆的chunk中，其结构最上方prev size为最低的地址然后依次向下增大</em>，输入的数据在数据段中从低到高不断增大的地址存放</p>
+<p>在前文中得到的ptr指针所指向的便是控制字段size往下的数据段的开头，方便数据的直接存放。</p>
+<p>在一个申请的有堆的程序中，在执行完malloc后的各各段的地址如下</p>
+<p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240416170351224.png" alt="image-20240416170351224"></p>
+<p>蓝色字体便是程序中的堆的所在地址和长度，其位置在data段的正上方，紧邻这data段中的的bss区（前提是其堆的大小不算太大）</p>
+<p>在程序中如果我们申请了一块长度为0x100的堆，那当程序执行完malloc函数后我们所得到的chunk的大小并不就是0x100，一般是0x111，这多出来的0x11包括8字节的prev size和size这两个控制字段，已经一个在size的末尾的p（在上文中有介绍）。</p>
+<p>因此指向堆的指针所指向的并不是chunk的开头，而是chunk中的数据段的开头</p>
+<p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240416211427476.png" alt="image-20240416211427476"></p>
+<p><strong>prev size的复用</strong></p>
+<p>在chunk中的开头的第一个prev size的控制字节是用来存放这个chunk的上面一个free chunk的大小的，它有且只有这一个作用。在一个程序中如果一开始申请的是0x20的长度的堆，那程序中会分配相应大小的chunk用来使用，然后在使用完这个chunk后将其释放，这个chunk便回成为free chunk存放在堆管理器中，方便以后的使用。</p>
+<p>在这之后如果我们在程序中再次申请一个堆，程序会先在已有的chunk中寻找有没有适合的free chunk，然后将这个free chunk变为能使用的chunk用于使用，如果此时我们向程序申请一个大小为0x28的长度的堆，似乎之前我们申请的那个堆长度不够不能再使用了。但实际上，在程序中所有的chunk是放在一起的，也正因此才回有prev size的使用。当程序发现现在我们需要的chunk的大小与之前那个已经有的chunk只差一个字段，刚好是prev size等一个控制字段的大小，然后当我们把之前申请的那个chunk从free chunk转化为malloc chunk后，后发现一个问题，此时下一个chunk的开头prev size没有用了，他的上面不是free chunk 然后他刚好在上一个chunk的数据段的下面，而此时的数据段刚好差这一个长度，因此程序会将他直接转化为上一个chunk的数据段，以满足其的使用。这边是prev size的复用。</p>
+<p>简单来说便是，在程序中一开始申请了长度为x的堆，后来把他释放了，之后在申请一个长度为x到x+8的堆，程序会将之前申请的那个chunk再次使用，两次使用的chunk会是同一个chunk</p>
 <p><strong>bin</strong></p>
 <p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240411162059021.png" alt="image-20240411162059021"></p>
 
@@ -1866,7 +1881,7 @@
 
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 <p><img src="/2024/03/26/hello-world/002917-16858097570092.jpg" alt="002917-16858097570092"></p>
-<p>INFO  Copying files from extend dirs…<br>On branch master<br>nothing to commit, working tree clean<br>Everything up-to-date<br>branch ‘master’ set up to track ‘<a href="mailto:&#x67;&#x69;&#116;&#64;&#103;&#x69;&#x74;&#104;&#117;&#98;&#46;&#x63;&#x6f;&#109;">&#x67;&#x69;&#116;&#64;&#103;&#x69;&#x74;&#104;&#117;&#98;&#46;&#x63;&#x6f;&#109;</a>:2023478&#x2F;2023478.github.io.git&#x2F;main’.<br>INFO  Deploy done: git</p>
+<p>INFO  Copying files from extend dirs…<br>On branch master<br>nothing to commit, working tree clean<br>Everything up-to-date<br>branch ‘master’ set up to track ‘<a href="mailto:&#103;&#x69;&#116;&#64;&#x67;&#x69;&#x74;&#104;&#x75;&#98;&#46;&#99;&#111;&#109;">&#103;&#x69;&#116;&#64;&#x67;&#x69;&#x74;&#104;&#x75;&#98;&#46;&#99;&#111;&#109;</a>:2023478&#x2F;2023478.github.io.git&#x2F;main’.<br>INFO  Deploy done: git</p>
 
       
     </div>
