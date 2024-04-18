@@ -334,8 +334,20 @@
 <p>在chunk中的开头的第一个prev size的控制字节是用来存放这个chunk的上面一个free chunk的大小的，它有且只有这一个作用。在一个程序中如果一开始申请的是0x20的长度的堆，那程序中会分配相应大小的chunk用来使用，然后在使用完这个chunk后将其释放，这个chunk便回成为free chunk存放在堆管理器中，方便以后的使用。</p>
 <p>在这之后如果我们在程序中再次申请一个堆，程序会先在已有的chunk中寻找有没有适合的free chunk，然后将这个free chunk变为能使用的chunk用于使用，如果此时我们向程序申请一个大小为0x28的长度的堆，似乎之前我们申请的那个堆长度不够不能再使用了。但实际上，在程序中所有的chunk是放在一起的，也正因此才回有prev size的使用。当程序发现现在我们需要的chunk的大小与之前那个已经有的chunk只差一个字段，刚好是prev size等一个控制字段的大小，然后当我们把之前申请的那个chunk从free chunk转化为malloc chunk后，后发现一个问题，此时下一个chunk的开头prev size没有用了，他的上面不是free chunk 然后他刚好在上一个chunk的数据段的下面，而此时的数据段刚好差这一个长度，因此程序会将他直接转化为上一个chunk的数据段，以满足其的使用。这边是prev size的复用。</p>
 <p>简单来说便是，在程序中一开始申请了长度为x的堆，后来把他释放了，之后在申请一个长度为x到x+8的堆，程序会将之前申请的那个chunk再次使用，两次使用的chunk会是同一个chunk</p>
-<p><strong>bin</strong></p>
-<p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240411162059021.png" alt="image-20240411162059021"></p>
+<p><strong>物理链表</strong></p>
+<p>在chunk中第一个控制字段prev size用于存放上一个chunk的长度，再结合自身的位置便回，可以知道上一个chunk的初始位置，一个chunk知道上一个chunk的初始地址，构成物理链表</p>
+<p><strong>bin中的逻辑链表</strong></p>
+<p>管理 arena 中空闲 chunk 的结构，以数组的形式存在，数组元素为相应大小的 chunk 链表的链表头，存在于 arena 的 malloc_state 中</p>
+<p>bin的结构是一个数组，有一个又一个的指针构成，每一个指针都指向一个相应大小的free chunk的初始位置，在被指向的free chunk中有一个fd控制字段，这个控制字段也存放的是一个指针，执向的是与这个chunk大小相同的的chunk初始位置。在bin作为最开始的指针指向相应大小的chunk，fd在指向相同大小的chunk，这个便是逻辑链表，如图</p>
+<p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240418143002441.png" alt="image-20240418143002441"></p>
+<p>用指针的方式将相同大小的chunk连接起来，存放在bin中方便之后的寻找</p>
+<p>在bin中还有一种双向链表，将相同的大小的的chunk互相链接起来，以便使用，其基本结构如下，通过两个bin指针与chunk中fd，bk的不断指向构成，其中在使用中，为依次使用，从靠近bin的顺序被依次调用。</p>
+<p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240411162059021.png" alt="image-20240411162059021"> </p>
+<p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240418151335033.png" alt="image-20240418151335033"></p>
+<p>LIFO指其中的chunk的调用和栈上的调用方式一样，先进先出。</p>
+<p>管理的free chunk在64位的程序下位32位的程序的两倍的大小</p>
+<p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240418152210990.png" alt="image-20240418152210990"></p>
+<p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240418152258402.png" alt="image-20240418152258402"></p>
 
       
     </div>
@@ -1881,7 +1893,7 @@
 
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 <p><img src="/2024/03/26/hello-world/002917-16858097570092.jpg" alt="002917-16858097570092"></p>
-<p>INFO  Copying files from extend dirs…<br>On branch master<br>nothing to commit, working tree clean<br>Everything up-to-date<br>branch ‘master’ set up to track ‘<a href="mailto:&#103;&#x69;&#116;&#64;&#x67;&#x69;&#x74;&#104;&#x75;&#98;&#46;&#99;&#111;&#109;">&#103;&#x69;&#116;&#64;&#x67;&#x69;&#x74;&#104;&#x75;&#98;&#46;&#99;&#111;&#109;</a>:2023478&#x2F;2023478.github.io.git&#x2F;main’.<br>INFO  Deploy done: git</p>
+<p>INFO  Copying files from extend dirs…<br>On branch master<br>nothing to commit, working tree clean<br>Everything up-to-date<br>branch ‘master’ set up to track ‘<a href="mailto:&#x67;&#x69;&#x74;&#x40;&#x67;&#x69;&#x74;&#104;&#117;&#98;&#x2e;&#x63;&#x6f;&#109;">&#x67;&#x69;&#x74;&#x40;&#x67;&#x69;&#x74;&#104;&#117;&#98;&#x2e;&#x63;&#x6f;&#109;</a>:2023478&#x2F;2023478.github.io.git&#x2F;main’.<br>INFO  Deploy done: git</p>
 
       
     </div>
