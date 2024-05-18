@@ -1005,6 +1005,23 @@
 <p>假设我们需要对栈上的某一块地址进行修改，我们便可以先使用D指针向A堆块输入<strong>要修改的栈的地址的上两个字节的地址</strong>，然后在fast bin中A堆块的便会将fd字段也修改成那个栈上的地址。导致程序误以为在fast bin中多了一个free chunk，然后当我们再向程序申请堆块时，如果申请的长度与A的大小相同，程序变回将fast bin中的A再次分配出去，然后我们再一次申请堆块时，由于fast bin中A堆块已经分配出去，而原本A堆块中fd字段指向的是栈上的地址，于是这一次对堆的申请，程序会将fast bin中最近是栈的地址空间当做可用的free chunk，从而分配出去。以供我们进行修改，但是由于这里程序依然是将栈上的地址作为堆块分配出去，然后fd这个字段指向的地址是堆块的开头地址，因此栈上的地址依然会有两个字节被程序认为是chunk的prev size和size字段，而不能使用，只有两个字节下面的地址才是数据段，才能被我们所修改。因此我们在对A堆块fd修改时，要输入的是要修改的栈上地址的上面两个字节的地址才能在后面malloc到栈上地址，修改时修改到我们需要的数据。</p>
 <p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240512173005244.png" alt="image-20240512173005244"></p>
 <p>大致的结构如上图，通过对A中的fd的修改，使得fast bin中能指向栈上地址，然后通过对fast bin中的堆的申请，从而申请到栈上的地址做为堆块用于使用，对这个堆块修改，从而间接修改栈上的内容。</p>
+<p><strong>house_of_force</strong></p>
+<p>通过堆溢出，将top chunk的大小标记为整个地址空间。然后在通过malloc到我们需要修改的地址空间，再此malloc使程序将我们需要修改的地址空间当做chunk分配给我们，然后修改。</p>
+<p><strong>top chunk</strong></p>
+<ul>
+<li><strong>概念：</strong>当一个chunk处于一个arena的最顶部(即最高内存地址处)的时候，就称之为top chunk。</li>
+<li><strong>作用：</strong>该chunk并<strong>不属于任何****bin</strong>，而是在系统当前的所有free chunk(无论那种bin)都无法满足用户请求的内存大小的时候，将此chunk当做一个应急消防员，分配给用户使用。</li>
+<li><strong>分配的规则：</strong>如果top chunk的大小比用户请求的大小要大的话，就将该top chunk分作两部分：1）用户请求的chunk；2）剩余的部分成为新的top chunk。否则，就需要扩展heap或分配新的heap了——在main arena中通过sbrk扩展heap，而在thread arena中通过mmap分配新的heap。</li>
+</ul>
+<p>一般来说当我们在程序中malloc一个堆块后，程序分配给我们的chunk其上方就是top chunk的区域，其中包含的就是空闲状态的chunk，方便下次需要chunk时能快速调用。这两个chunk在程序中分配图如下：</p>
+<p>在chunk中数据的填入，与下图中的箭头方向相同，从下往上填入。</p>
+<p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240516164904604.png" alt="image-20240516164904604"></p>
+<p>如果在我们得到的这个chunk中有堆溢出漏洞的发生，那么我填入的数据便会一直向上填入，在填入的过程中便会将top chunk的原数据覆盖，由于在top chunk中不会对数据进行检查判断是否被篡改，因此当我们填入的数据将top chunk中的size值覆盖为程序整个地址空间大小（32位是4gb，64位是8gb）时，程序会认为整个地址空间都是top chunk，导致我们在下次malloc时，程序在top chunk中寻找是否满足大小时，由于top chunk的size已经被我们修改为程序的整个地址空间了，于是程序会认为整个地址空间都是能被分配的chunk，于是我们在第二次malloc时无论需要的chunk大小是多少程序都会在分配给我们。</p>
+<p>于是我们便可以直接从原本的top chunk的地址malloc一个新的chunk，并使这个新的chunk长度为从top chunk的起始地址到我们需要修改的栈上地址的起始空间的前两个字节的长度（在下一次malloc中需要两个字节作为prev size和size，使得我们需要修改的地方能直接成为我们chunk中的数据段，从而直接修改），使得程序将这一段空间作为chunk分配给我们（主要是为了下一次malloc时能直接将要修改的地址分配给我们使用不用将中间的数据区别覆盖·，这个起到一个垫脚石的作用），然后再malloc一段空间，使得程序将栈上的空间作为chunk提供给我们使用。，我们向这个chunk输入数据，从而修改栈上的数据到达目的。</p>
+<p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240516172821078.png" alt="image-20240516172821078"></p>
+<p>如果我们要修改得时date段的数据，那便要malloc的长度将使一个负数(date段的数据在chunk的下方)，由于我们在之前的覆盖中已经将top chunk中的size的大小表为整个地址空间，于是我们在malloc一个负数时，程序会将top chunk的起始地址向下移动这个负数的长度。然后我们再malloc一个正数时，程序便会从我们刚刚移动过的top chunk的头地址可是分配一个相应大小的chunk以供使用。</p>
+<p>因此我们只在栈溢出后malloc一个负数，其大小就是从top chunk的起始地址到要修改的date段地址的下两个字节的距离的负数（两个字节作为下个chunk的前两个控制字段），然后再malloc一个正数的chunk，输入数据便可以达到我们的目的。</p>
+<p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240516175155536.png" alt="image-20240516175155536"></p>
 
       
     </div>
@@ -2550,7 +2567,7 @@
 
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 <p><img src="/2024/03/26/hello-world/002917-16858097570092.jpg" alt="002917-16858097570092"></p>
-<p>INFO  Copying files from extend dirs…<br>On branch master<br>nothing to commit, working tree clean<br>Everything up-to-date<br>branch ‘master’ set up to track ‘<a href="mailto:&#103;&#x69;&#116;&#x40;&#103;&#105;&#x74;&#104;&#x75;&#x62;&#x2e;&#99;&#x6f;&#x6d;">&#103;&#x69;&#116;&#x40;&#103;&#105;&#x74;&#104;&#x75;&#x62;&#x2e;&#99;&#x6f;&#x6d;</a>:2023478&#x2F;2023478.github.io.git&#x2F;main’.<br>INFO  Deploy done: git</p>
+<p>INFO  Copying files from extend dirs…<br>On branch master<br>nothing to commit, working tree clean<br>Everything up-to-date<br>branch ‘master’ set up to track ‘<a href="mailto:&#103;&#105;&#116;&#64;&#x67;&#x69;&#116;&#104;&#117;&#98;&#46;&#99;&#x6f;&#x6d;">&#103;&#105;&#116;&#64;&#x67;&#x69;&#116;&#104;&#117;&#98;&#46;&#99;&#x6f;&#x6d;</a>:2023478&#x2F;2023478.github.io.git&#x2F;main’.<br>INFO  Deploy done: git</p>
 
       
     </div>
