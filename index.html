@@ -256,7 +256,8 @@
 <p>其实就是完成一个打印的功能的函数，不过这里在程序中使用了一个指针指向他，并通过指针调用。而<code>**(&amp;ptr + v1)</code>这个就是指向在之前根据我们自己输入的大小申请的相应大小的堆块。</p>
 <p>所以这里就用这两个指针完成了对堆内容的打印。并且这里的这两个指针是存放在同一个堆块之中，那我们便可以想是否能够修改这个堆块中的这两个指针的内容从而执行我们的后门函数，从而达到目的。</p>
 <p>在这里结合之前发现的uaf漏洞，会发现这里会出现一个致命的问题，在理论上我们之前申请堆块用的指针被存放在ptr及其后面的位置中，程序为了方便管理会依次使用ptr后的空间，并不是覆盖。然后在我们使用清理堆块的选项时，并没有将指针一同清零，因此，在ptr的地址中依然有指向堆块的指针存在，并没有被清理，然后我们在调用打印的函数时，依然能调用已经被free掉的堆块，并执行其中的内容，于是我们对本题的攻击便基本成型。</p>
-<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240528205137589.png" alt="image-20240528205137589"></p>
+<img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240528205137589.png" alt="image-20240528205137589" style="zoom:200%;">
+
 <p>大致的思路如图，根据这个来描述针对本题的攻击。</p>
 <p>在程序中先使用创建日志的函数，申请一个大小&gt;0x18的堆（这里必须要让程序配一个与0x10大小不同的堆块，多的8可以输入到下一个chunk中的prev size字段，一旦超过8便只能从新申请更大的堆块），随便填一点内容就行，这样程序便会像上面的ptr指向的两个堆块一样出现这样的结构，然后在执行同样的操作，再申请一个大于0x18的堆，这样程序的ptr和ptr+1地段都会出现上文中的结构。</p>
 <p>在之后我们通过程序中的清理函数的选项将我们刚刚申请的这4个堆块都free掉。于是程序中的fast bin中便会出现上面左边的结构，这4个堆依次连接，便于程序的下次快速调用，这里我们虽然将我们之前申请的堆块free掉了，但是ptr中的指针这些都没有被清零。</p>
@@ -2762,7 +2763,7 @@
 
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 <p><img src="/2024/03/26/hello-world/002917-16858097570092.jpg" alt="002917-16858097570092"></p>
-<p>INFO  Copying files from extend dirs…<br>On branch master<br>nothing to commit, working tree clean<br>Everything up-to-date<br>branch ‘master’ set up to track ‘<a href="mailto:&#103;&#x69;&#116;&#64;&#103;&#x69;&#116;&#104;&#117;&#98;&#x2e;&#x63;&#x6f;&#109;">&#103;&#x69;&#116;&#64;&#103;&#x69;&#116;&#104;&#117;&#98;&#x2e;&#x63;&#x6f;&#109;</a>:2023478&#x2F;2023478.github.io.git&#x2F;main’.<br>INFO  Deploy done: git</p>
+<p>INFO  Copying files from extend dirs…<br>On branch master<br>nothing to commit, working tree clean<br>Everything up-to-date<br>branch ‘master’ set up to track ‘<a href="mailto:&#x67;&#x69;&#116;&#64;&#x67;&#105;&#x74;&#x68;&#x75;&#x62;&#46;&#x63;&#111;&#109;">&#x67;&#x69;&#116;&#64;&#x67;&#105;&#x74;&#x68;&#x75;&#x62;&#46;&#x63;&#111;&#109;</a>:2023478&#x2F;2023478.github.io.git&#x2F;main’.<br>INFO  Deploy done: git</p>
 
       
     </div>
