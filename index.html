@@ -172,6 +172,84 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-周报（2024-6-3-2024-6-9）" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2024/06/09/%E5%91%A8%E6%8A%A5%EF%BC%882024-6-3-2024-6-9%EF%BC%89/" class="article-date">
+  	<time datetime="2024-06-09T13:23:18.000Z" itemprop="datePublished">2024-06-09</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/06/09/%E5%91%A8%E6%8A%A5%EF%BC%882024-6-3-2024-6-9%EF%BC%89/">
+        周报（2024.6.3-2024.6.9）
+        
+      </a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>又是一周过去，又到周报的时间，正好做题的头昏眼花的，开写。</p>
+<p>这周还算是学到了点东西吧，</p>
+<ol>
+<li>off-by-one</li>
+<li>malloc_hook和free_hook也算是会了一点</li>
+<li>unsortedbin泄露libc地址，还顺带会了这个house of orange</li>
+</ol>
+<p>原本说要把fastbin的学会的，被其他的事情耽误了，还没学完，还差一点。</p>
+<p>明天是端午的假期不出意外的话，应该是在实验室过了，也好多学的东西，把之前摸鱼的时间补一补，今天学长整了一道蓝桥杯的来，唉，做的头昏眼花的，接触过的方法还是太少了，学吧，尽量明天把这道题整出来。继续学fastbin的东西。</p>
+<p>下周内容：</p>
+<ol>
+<li>fastbin attack（本来这周就该干完的有拖了）</li>
+<li>unsorted bin attack</li>
+</ol>
+<p>这最后一个，好好学学，这个泄露libc地址的时候挺重要的。</p>
+<p>话说什么时候开始看libc源码？难绷，都不知道能看懂多少。抽时间大致看看吧</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%91%A8%E6%8A%A5/" rel="tag">周报</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/%E5%91%A8%E6%8A%A5/">周报</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
     <article id="post-周报（2024-5-27-2024-6-2）" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -1319,7 +1397,7 @@
 <p>在chunk中第一个控制字段prev size用于存放上一个chunk的长度，再结合自身的位置便回，可以知道上一个chunk的初始位置，一个chunk知道上一个chunk的初始地址，构成物理链表</p>
 <p><strong>bin中的逻辑链表</strong></p>
 <p>管理 arena 中空闲 chunk 的结构，以数组的形式存在，数组元素为相应大小的 chunk 链表的链表头，存在于 arena 的 malloc_state 中</p>
-<p>bin的结构是一个数组，有一个又一个的指针构成，每一个指针都指向一个相应大小的free chunk的初始位置，在被指向的free chunk中有一个fd控制字段，这个控制字段也存放的是一个指针，执向的是与这个chunk大小相同的的chunk初始位置。在bin作为最开始的指针指向相应大小的chunk，fd在指向相同大小的chunk，这个便是逻辑链表，如图</p>
+<p>bin的结构是一个数组，有一个又一个的指针构成，每一个指针都指向一个相应大小的free chunk的初始位置，在被指向的free chunk中有一个fd控制字段，这个控制字段也存放的是一个指针，执向的是与这个chunk大小相同的的chunk初始位置。在bin作为最开始的指针指向相应大小的chunk，fd在指向相同大小的chunk，这个便是逻辑链表，如图（释放的顺序的从下往上释放，下面的那个fd段为0的chunk为第一个释放的chunk）</p>
 <p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240418143002441.png" alt="image-20240418143002441"></p>
 <p>用指针的方式将相同大小的chunk连接起来，存放在bin中方便之后的寻找</p>
 <p>在bin中还有一种双向链表，将相同的大小的的chunk互相链接起来，以便使用，其基本结构如下，通过两个bin指针与chunk中fd，bk的不断指向构成，其中在使用中，为依次使用，从靠近bin的顺序被依次调用。</p>
@@ -2949,7 +3027,7 @@
 
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 <p><img src="/2024/03/26/hello-world/002917-16858097570092.jpg" alt="002917-16858097570092"></p>
-<p>INFO  Copying files from extend dirs…<br>On branch master<br>nothing to commit, working tree clean<br>Everything up-to-date<br>branch ‘master’ set up to track ‘<a href="mailto:&#x67;&#x69;&#116;&#64;&#x67;&#x69;&#116;&#104;&#117;&#98;&#x2e;&#99;&#x6f;&#109;">&#x67;&#x69;&#116;&#64;&#x67;&#x69;&#116;&#104;&#117;&#98;&#x2e;&#99;&#x6f;&#109;</a>:2023478&#x2F;2023478.github.io.git&#x2F;main’.<br>INFO  Deploy done: git</p>
+<p>INFO  Copying files from extend dirs…<br>On branch master<br>nothing to commit, working tree clean<br>Everything up-to-date<br>branch ‘master’ set up to track ‘<a href="mailto:&#103;&#105;&#x74;&#x40;&#103;&#105;&#x74;&#x68;&#x75;&#98;&#x2e;&#99;&#111;&#x6d;">&#103;&#105;&#x74;&#x40;&#103;&#105;&#x74;&#x68;&#x75;&#98;&#x2e;&#99;&#111;&#x6d;</a>:2023478&#x2F;2023478.github.io.git&#x2F;main’.<br>INFO  Deploy done: git</p>
 
       
     </div>
