@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Wgiegie-libc版本问题 | 纲的blog</title>
+
+  <!-- keywords -->
+  
+    <meta name="keywords" content="Wgiegie">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="之前做堆的题总是会与到与libc版本的相关问题，这里开一篇新文，讲一讲目前遇到的有关于在做题的的libc版本不同的问题与解决方案。 patchelf 这个可以说是做堆题的必备神器，大多数的堆的漏洞与版本有关，不同的版本的堆题对bin和chunk的管理方式各不相同，故很多题目在附件中会一同把libc版本一同下发，遇到这种事便可以直接在我们本地的libc库中寻找到相应的版本然后直接patchelf上题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="libc版本问题">
+<meta property="og:url" content="https://2023478.github.io/2024/06/10/libc%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="纲的blog">
+<meta property="og:description" content="之前做堆的题总是会与到与libc版本的相关问题，这里开一篇新文，讲一讲目前遇到的有关于在做题的的libc版本不同的问题与解决方案。 patchelf 这个可以说是做堆题的必备神器，大多数的堆的漏洞与版本有关，不同的版本的堆题对bin和chunk的管理方式各不相同，故很多题目在附件中会一同把libc版本一同下发，遇到这种事便可以直接在我们本地的libc库中寻找到相应的版本然后直接patchelf上题">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://2023478.github.io/2024/06/10/libc%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98/image-20240610153131951.png">
+<meta property="og:image" content="https://2023478.github.io/2024/06/10/libc%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98/image-20240610153937881.png">
+<meta property="og:image" content="https://2023478.github.io/2024/06/10/libc%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98/image-20240610154438708.png">
+<meta property="og:image" content="https://2023478.github.io/2024/06/10/libc%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98/image-20240610154926138.png">
+<meta property="og:image" content="https://2023478.github.io/2024/06/10/libc%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98/image-20240610155344821.png">
+<meta property="og:image" content="https://2023478.github.io/2024/06/10/libc%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98/image-20240610155728919.png">
+<meta property="og:image" content="https://2023478.github.io/2024/06/10/libc%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98/image-20240610161714030.png">
+<meta property="og:image" content="https://2023478.github.io/2024/06/10/libc%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98/image-20240610161813782.png">
+<meta property="article:published_time" content="2024-06-10T07:17:29.000Z">
+<meta property="article:modified_time" content="2024-06-10T08:25:11.264Z">
+<meta property="article:author" content="wgiegie">
+<meta property="article:tag" content="pwn工具">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://2023478.github.io/2024/06/10/libc%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98/image-20240610153131951.png">
+  
+    <link rel="alternative" href="/atom.xml" title="纲的blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://7xkj1z.com1.z0.glb.clouddn.com/head.jpg">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+
+  
+<script src="//cdn.bootcss.com/require.js/2.3.2/require.min.js"></script>
+
+  
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+<body>
+  <div id="container">
+    <div id="particles-js"></div>
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xkj1z.com1.z0.glb.clouddn.com/head.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/"></a></h1>
+		</hgroup>
+
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/C%E8%AF%AD%E8%A8%80/" style="font-size: 10px;">C语言</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/pwn/" style="font-size: 16.67px;">pwn</a> <a href="/tags/pwn%E5%A7%BF%E5%8A%BF/" style="font-size: 10px;">pwn姿势</a> <a href="/tags/pwn%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">pwn工具</a> <a href="/tags/pwn%E9%A2%98%E8%A7%A3/" style="font-size: 13.33px;">pwn题解</a> <a href="/tags/%E5%91%A8%E6%8A%A5/" style="font-size: 20px;">周报</a> <a href="/tags/%E5%A0%86/" style="font-size: 13.33px;">堆</a> <a href="/tags/%E6%90%AD%E5%8D%9A%E5%AE%A2/" style="font-size: 10px;">搭博客</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/smackgg/hexo-theme-smackdown">smackdown</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://7xkj1z.com1.z0.glb.clouddn.com/head.jpg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author"></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-libc版本问题" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2024/06/10/libc%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98/" class="article-date">
+  	<time datetime="2024-06-10T07:17:29.000Z" itemprop="datePublished">2024-06-10</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      libc版本问题
+      
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn%E5%B7%A5%E5%85%B7/" rel="tag">pwn工具</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/pwn/">pwn</a>
+	</div>
+
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>之前做堆的题总是会与到与libc版本的相关问题，这里开一篇新文，讲一讲目前遇到的有关于在做题的的libc版本不同的问题与解决方案。</p>
+<p><strong>patchelf</strong></p>
+<p>这个可以说是做堆题的必备神器，大多数的堆的漏洞与版本有关，不同的版本的堆题对bin和chunk的管理方式各不相同，故很多题目在附件中会一同把libc版本一同下发，遇到这种事便可以直接在我们本地的libc库中寻找到相应的版本然后直接patchelf上题就行。关于这个工具的使用具体可以看之前的有篇文章，写的有这里不细讲</p>
+<p>食用方法</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">patchelf --<span class="built_in">set</span>-interpreter libc文件名（包括路径） --<span class="built_in">set</span>-rpath libc文件所在的文件夹全名（包括路径） pwn（文件名）	</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>寻找libc</strong></p>
+<p>有的题目并不会直接把libc文件下发，而是同题目一起发一个<em>libc.so.6</em>文件，这个文件其实也能看出这道题要使用的libc版本，不过要使用一个命令。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">strings libc.so<span class="number">.6</span>  | grep GLIBC</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2024/06/10/libc%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98/image-20240610153131951.png" alt="image-20240610153131951"></p>
+<p>这样也能知道这个的libc版本为<code>Ubuntu GLIBC 2.31-0ubuntu9.2</code>然后在patchef相应的libc做这道题就行。</p>
+<p><strong>libc版本下载</strong></p>
+<p>关于libc版本的的下载，这个确实在glibc-all-in-one这里面就已经有大部分的libc版本。</p>
+<p>先讲这个里面有的libc版本的食用吧</p>
+<p><img src="/2024/06/10/libc%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98/image-20240610153937881.png" alt="image-20240610153937881"></p>
+<p>这是里面有的文件，在这里面的libc文件夹里面就是我们已经下了的libc文件，如果里面没有我们需要的libc版本，这我们可以这里在个页面下，</p>
+<p><img src="/2024/06/10/libc%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98/image-20240610154438708.png" alt="image-20240610154438708"></p>
+<p>先使用<code>cat list</code>查看我们可以再这里面下的版本，先确定要下的版本的名字后使用下面这个命令下载</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./download 版本名字</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/06/10/libc%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98/image-20240610154926138.png" alt="image-20240610154926138"></p>
+<p>像这样就算这个版本下好了，然后便可以去之前那个的libc文件夹中食用了。</p>
+<p>出了这些之外，还可以使用宁外一个命令查看和下载宁外一些版本</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat old_list</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/06/10/libc%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98/image-20240610155344821.png" alt="image-20240610155344821"></p>
+<p>这里面也有一些版本的现在，不过由于是过时的版本所以加上了old，</p>
+<p>同样的在下载时也要用不同的命令下载</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./download_old 版本名</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/06/10/libc%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98/image-20240610155728919.png" alt="image-20240610155728919"></p>
+<p>这样下好之后就可以去libc文件夹中食用了。</p>
+<p>如果你发现这两个里面都没有你所要的libc版本（有的题目是真的ex，非要用一些小版本）</p>
+<p>那便要去网上下相应的文件解压食用了。</p>
+<p>拿上面的需要的libc2.31的9.2版本来说，这个版本在我们的这里是没有的我们只能去网上找了下来用，</p>
+<p>在之前的文件中有一个debs的文件夹其中放着的就是各个libc版本的deb文件，我们要下的也是这种文件，</p>
+<p><a target="_blank" rel="noopener" href="https://launchpad.net/ubuntu/+source/glibc/2.31-0ubuntu9.2/+build/20580861">amd64 build : 2.31-0ubuntu9.2 : glibc package : Ubuntu (launchpad.net)</a></p>
+<p>可以在这个网站上下载</p>
+<p><img src="/2024/06/10/libc%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98/image-20240610161714030.png" alt="image-20240610161714030"></p>
+<p>把这个标黄的下载来就行</p>
+<p><img src="/2024/06/10/libc%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98/image-20240610161813782.png" alt="image-20240610161813782"></p>
+<p>拖动到之前的那个debs文件夹中便是这个样子，</p>
+<p>然后解压就行，</p>
+<p>以下来源于<a target="_blank" rel="noopener" href="https://blog.csdn.net/linuxvfast/article/details/117701825">Ubuntu系统下deb包的解压、打包、安装、卸载及常用命令_ubuntu解压deb-CSDN博客</a>这篇文章。</p>
+<p>1.首先下载deb包，比如：将其放在 &#x2F;home&#x2F;tools&#x2F; 根目录下：</p>
+<p>2.进入到tools根目录下的终端，输入下面命令创建文件夹extract，并在extract文件夹下创建<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=DEBIAN&spm=1001.2101.3001.7020">DEBIAN</a>文件夹</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p extract/DEBIAN</span><br></pre></td></tr></table></figure>
+
+<p>3.将deb包解压到extract文件夹下</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dpkg -X ./xxx.deb extract</span><br></pre></td></tr></table></figure>
+
+<p>4.解压deb包中的control信息(包的依赖在这里面的control文件中)</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dpkg -e ./xxx.deb extract/DEBIAN</span><br></pre></td></tr></table></figure>
+
+<p>5.创建build文件夹</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir build</span><br></pre></td></tr></table></figure>
+
+<p>6.将解压到extract文件夹中所有的内容重新打包为deb包</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dpkg-deb -b extract build/</span><br></pre></td></tr></table></figure>
+
+<p>7.安装deb包</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dpkg -i xxx.deb　　(如果出现权限拒绝，在 dpkg 前加上 sudo 即可)</span><br></pre></td></tr></table></figure>
+
+<p>8.卸载deb包</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dpkg -r xxx.deb　　( -r 参数只是删除了软件包，不能完全删除其配置文件，如果想要连同配置文件一起删除，可以使用 -P 参数)</span><br></pre></td></tr></table></figure>
+
+<p>常用命令参数实例</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">dpkg -i package.deb #安装包 </span><br><span class="line">dpkg -r package #删除包 </span><br><span class="line">dpkg -P package #删除包（包括配置文件） </span><br><span class="line">dpkg -L package #列出与该包关联的文件 </span><br><span class="line">dpkg -l package #显示该包的版本 </span><br><span class="line">dpkg --unpack package.deb #解开deb包的内容 </span><br><span class="line">dpkg -S keyword #搜索所属的包内容 </span><br><span class="line">dpkg -l #列出当前已安装的包 </span><br><span class="line">dpkg -c package.deb #列出deb包的内容 </span><br><span class="line">dpkg --configure package #配置包</span><br></pre></td></tr></table></figure>
+
+
+
+<p>我们只要运行的第四部就可以食用了</p>
+<p>打开同目录的extract文件夹，在打开里面的lib文件夹里面的那个就存放这我们要的libc版本，然后使用相同的patchelf就可以开始食用题目了。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2024/06/09/%E5%91%A8%E6%8A%A5%EF%BC%882024-6-3-2024-6-9%EF%BC%89/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">周报（2024.6.3-2024.6.9）</div>
+      <strong class="article-nav-caption">&gt;</strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="ds-share share" data-thread-key="libc版本问题" data-title="libc版本问题" data-url="https://2023478.github.io/2024/06/10/libc%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98/"  data-images="http://7xkj1z.com1.z0.glb.clouddn.com/head.jpg" data-content="libc版本问题">
+    <div class="ds-share-inline">
+      <ul  class="ds-share-icons-16">
+      	<li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+        <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+        <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+        <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+        <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+      </ul>
+      <div class="ds-share-icons-more">
+      </div>
+    </div>
+ </div>
+ 
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2024 wgiegie
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/smackgg/hexo-theme-smackdown" target="_blank">Smackdown</a>
+        </div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+
+<script src="/js/main.js"></script>
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js"></script>
+
+
+  </div>
+</body>
+</html>
