@@ -633,6 +633,97 @@
 <li>打印并接收新chunk的内容（注意如果一定要输入数据，注意不要过多，影响第二字节的内容）</li>
 <li>减去相应的差值得到libc基地址。</li>
 </ul>
+<p><strong>Fastbin Attack</strong></p>
+<p>这一类有四种小类，这里将分批讲解。</p>
+<p><em>Fastbin Double Free</em></p>
+<p>这是一种利用比较多的漏洞，这种漏洞的实现的条件比较苛刻，但其攻击的效果也属于比较明显的便于利用的一种，这种的攻击的手段需要的有uaf漏洞，只有在有uaf漏洞的基础上以及比较早的比如libc2.23这些比较早期的版本下才能实现这种攻击的手段，具体的现在来讲。</p>
+<p>既然是Double Free，那就必须要进行双重释放，对同一个堆块进行两次free，中间必须要free得有一个或多个chunk这样才能实现对同一个chunk进行两次释放，<img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240418143002441.png" alt="image-20240418143002441"></p>
+<p>这里借用一下之前文章中的图片讲解一下，在fastbin中的结构是用chunk中的fd指针指向之前一个free的指针的头地址，然后bin的指针指向最近free的chunk的头地址，对于最后一个chunk中的fd指针则为0，就这样可以再fastbin中构成由最开始的bin中的指针开始依次由fd指针相连的chunk链，就这样在malloc相同的大小的chunk时便可以在直接从这个fastbin中依次取出来用就行。</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240611213009652.png" alt="image-20240611213009652"></p>
+<p>就这样我们先free两个chunk这时bin指向第二个free的malloc，这个malloc的fd指针指向第一个chunk的头地址，第一个chunk的fd指针为0。</p>
+<p>这时我们就对第一个free的chunk进行二次free，于是bin中的指针就会回到第一个chunk的头地址，同时这个chunk的fd指针也会因为在之前有已经free掉的chunk，从而指向第二个chunk的头地址，</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240611213952236.png" alt="image-20240611213952236"></p>
+<p>就这样原本的fastbin中的结构，由<code>bin--&gt;第二个chunk--&gt;第一个chunk</code>，变成</p>
+<p><code>bin--&gt;第一个chunk--&gt;第二个chunk--&gt;第一个chunk</code>这样的双重free结构，</p>
+<p>这样当我们向程序再申请一个相同大小的chunk时，程序会先从bin的指向中取出第一个chunk以供使用，但是由于之前的双重释放从而使得bin中的结构即使取出第一个chunk后依然有第一个chunk的存在，</p>
+<p><code>bin--&gt;第二个chunk--&gt;第一个chunk</code></p>
+<p>是这样的结构，虽然第一个chunk被我们取了出来但是在bin中依然有他的存在，并且此时第一个chunk中的fd指针在fastbin中由于是有用的指向了第二个chunk的头地址。</p>
+<p>这里如果我们在程序的其他地方构造一个fake_chunk（这个地方可以是bss段上，甚至可以是栈上的地址）,并使得第一个chunk中fd指针就指向这个fake_chunk的头地址，而这个fake_chunk的构造很简单，就是确保size段的大小和前两个chunk的size一样，同时其他的保持为0就行，然后在修改了chunk中的fd段后bin中的结构就会改变为如下的结构。</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240611220613433.png" alt="image-20240611220613433"></p>
+<p>这样之后，我们再向程序连续申请两个大小相同的chunk后bin就会指向我们fake_chunkde1,然后在申请一个就会使我们刚刚伪造的fake_chunk,被我们申请为一个新的chunk，从而可以修改这个地址的内容。</p>
+<p><strong>House Of Spirit</strong></p>
+<p>这个方法我个人感觉很奇妙，虽然这种方法有种脱裤子放屁的感觉（在更多的地方感觉使用fd修改可能更多，不过这种方法的思想还很值得学习的）。</p>
+<p>这种方法的主要过程就是在使用free函数释放某一个chunk，我们通过在bss段或其他的地址伪造一段chunk，在使用于释放的那个指针指向的就是我们伪造的这个chunk，通过这样使得我们这伪造的这个chunk被挂入进fastbin中的单项链表中，被程序识别为一个free掉的chunk，在后期我们在向程序申请相同大小的chunk时，能直接将那块地址作为chunk以供我们要使用，从而是我们能修改那块区域和使用其中的数据段。</p>
+<p>我之前说的脱裤子放屁的感觉就是在这里，我们本可以直接修改fastbin中的bk段直接指向伪造的chunk，但我们却要将那块伪造的chunk释放来挂入fastbin中，这不是脱裤子放屁，这是什么。不过并不是所有题都能直接修改free chunk的，所以这种方法的出现以可以理解。</p>
+<p>关于这种方法在伪造chunk时有几个需要注意的点，这里我直接吵ctfwiki上了，原文在这里</p>
+<p><a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/user-mode/heap/ptmalloc2/fastbin-attack/#house-of-spirit">Fastbin Attack - CTF Wiki (ctf-wiki.org)</a></p>
+<p>要想构造 fastbin fake chunk，并且将其释放时，可以将其放入到对应的 fastbin 链表中，需要绕过一些必要的检测，即</p>
+<ul>
+<li>fake chunk 的 ISMMAP 位不能为 1，因为 free 时，如果是 mmap 的 chunk，会单独处理。</li>
+<li>fake chunk 地址需要对齐， MALLOC_ALIGN_MASK</li>
+<li>fake chunk 的 size 大小需要满足对应的 fastbin 的需求，同时也得对齐。</li>
+<li>fake chunk 的 next chunk 的大小不能小于 <code>2 * SIZE_SZ</code>，同时也不能大于<code>av-&gt;system_mem</code> 。</li>
+<li>fake chunk 对应的 fastbin 链表头部不能是该 fake chunk，即不能构成 double free 的情况。</li>
+</ul>
+<p>在借用一篇大佬写的解释<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41202237/article/details/109284167">好好说话之Fastbin Attack（2）：House Of Spirit_fastbin attack house of spirit-CSDN博客</a>（这个是真的nb大佬，写的文章都太好了）</p>
+<h5 id="1、fake-chunk-的-ISMMAP-位不能为-1，因为-free-时，如果是-mmap-的-chunk，会单独处理"><a href="#1、fake-chunk-的-ISMMAP-位不能为-1，因为-free-时，如果是-mmap-的-chunk，会单独处理" class="headerlink" title="1、fake chunk 的 ISMMAP 位不能为 1，因为 free 时，如果是 mmap 的 chunk，会单独处理"></a>1、fake chunk 的 ISMMAP 位不能为 1，因为 free 时，如果是 mmap 的 chunk，会单独处理</h5><p>IS_MAPPED，记录当前 chunk 是否是由 mmap 分配的，这个标志位位于size低二比特位</p>
+<h5 id="2、fake-chunk-地址需要对齐，-MALLOC-ALIGN-MASK"><a href="#2、fake-chunk-地址需要对齐，-MALLOC-ALIGN-MASK" class="headerlink" title="2、fake chunk 地址需要对齐， MALLOC_ALIGN_MASK"></a>2、fake chunk 地址需要对齐， MALLOC_ALIGN_MASK</h5><p>因为fake_chunk可以在任意可写位置构造，这里对齐指的是地址上的对齐而不仅仅是内存对齐，比如32位程序的话fake_chunk的prev_size所在地址就应该位<code>0xXXXX0</code>或<code>0xXXXX4</code>。64位的话地址就应该在<code>0xXXXX0</code>或<code>0xXXXX8</code></p>
+<h5 id="3、fake-chunk-的-size-大小需要满足对应的-fastbin-的需求，同时也得对齐"><a href="#3、fake-chunk-的-size-大小需要满足对应的-fastbin-的需求，同时也得对齐" class="headerlink" title="3、fake chunk 的 size 大小需要满足对应的 fastbin 的需求，同时也得对齐"></a>3、fake chunk 的 size 大小需要满足对应的 fastbin 的需求，同时也得对齐</h5><p>fake_chunk如果想挂进fastbin的话构造的大小就不能大于<code>0x80</code>，关于对齐和上面一样，并且在确定prev_size的位置后size所在位置要满足堆块结构的摆放位置</p>
+<h5 id="4、fake-chunk-的-next-chunk-的大小不能小于-2-SIZE-SZ，同时也不能大于av-system-mem"><a href="#4、fake-chunk-的-next-chunk-的大小不能小于-2-SIZE-SZ，同时也不能大于av-system-mem" class="headerlink" title="4、fake chunk 的 next chunk 的大小不能小于 2 * SIZE_SZ，同时也不能大于av-&gt;system_mem"></a>4、fake chunk 的 next chunk 的大小不能小于 2 * SIZE_SZ，同时也不能大于av-&gt;system_mem</h5><p>fake_chunk 的大小，大小必须是 2 * SIZE_SZ 的整数倍。如果申请的内存大小不是 2 * SIZE_SZ 的整数倍，会被转换满足大小的最小的 2 * SIZE_SZ 的倍数。32 位系统中，SIZE_SZ 是 4；64 位系统中，SIZE_SZ 是 8。最大不能超过av-&gt;system_mem，即128kb。next_chunk的大小一般我们会设置成为一个超过fastbin最大的范围的一个数，但要小雨128kb，这样做的目的是在chunk连续释放的时候，能够保证伪造的chunk在释放后能够挂在fastbin中main_arena的前面，这样以来我们再一次申请伪造chunk大小的块时可以直接重启伪造chunk</p>
+<h5 id="5、fake-chunk-对应的-fastbin-链表头部不能是该-fake-chunk，即不能构成-double-free-的情况"><a href="#5、fake-chunk-对应的-fastbin-链表头部不能是该-fake-chunk，即不能构成-double-free-的情况" class="headerlink" title="5、fake chunk 对应的 fastbin 链表头部不能是该 fake chunk，即不能构成 double free 的情况"></a>5、fake chunk 对应的 fastbin 链表头部不能是该 fake chunk，即不能构成 double free 的情况</h5><p>这个检查就是fake_chunk前一个释放块不能是fake_chunk本身，如果是的话_int_free函数就会检查出来并且中断。可以参考篇文章<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41202237/article/details/109199077">好好说话之Fastbin Attack（1）：Fastbin Double Free</a></p>
+<p>这里在讲讲我的自己的简单补充，伪造的chunk最好如下，fake_prev_size的值为0，fake_size可以根据自己的需求来调整，但不能超过fastbin的要求，还有这里填的是0x几0不用加1。在整个fake_chunk结束的下一行便要是宁一个fake chunk，这个只要整prev_szie 和size段就好，这个的prev szie是之前伪造的那个chunk的整体大小，然后size这个的大小在32位系统我使用了0x100是可行的，不知道在64位的系统中可以不，到时候在仔细研究一下。</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxMjAyMjM3,size_16,color_FFFFFF,t_70#pic_center.png" alt="在这里插入图片描述"></p>
+<p>就这样我们伪造一个chunk然后把这个chunk的数据段起始地址，当做这个chunk的指针放入free函数中，这样这个chunk变回被程序当做free chunk挂入fastbin中，然后我们在申请这个大小的chunk，便可以把这个地址当做新被chunk，被我们使用。</p>
+<p><strong>Alloc to Stack</strong></p>
+<p><strong>Arbitrary Alloc</strong></p>
+<p>这还有两种方法，这两种方法的大致差别不大，都是在程序中寻找一块可用的地址然后修改fastbin的bk指针使其指向这个地址，在fastbin中增加这块地址，在之后将这块地址申请出来作为一个新chunk使用。</p>
+<p>关于这块这地址的检查，不需要多的就一个对size段的大小检查，因此我们这可以在malloc_hook的地址上面通过偏移地址使得size只有0x7几，这样只要我们申请的chunk大小为0x70，程序就会直接把那块区域分配给我们使用。</p>
+<h2 id="2017-0ctf-babyheap"><a href="#2017-0ctf-babyheap" class="headerlink" title="2017 0ctf babyheap"></a><a target="_blank" rel="noopener" href="https://github.com/ctf-wiki/ctf-challenges/tree/master/pwn/heap/fastbin-attack/2017_0ctf_babyheap">2017 0ctf babyheap</a></h2><p>这里讲一个泄露libc手法，是在做这道题时遇到的，这个手还是比较可以的。</p>
+<p>关于这种手法的使用条件，为</p>
+<ul>
+<li>可以申请多个chunk大小不一</li>
+<li>每一个chunk都可以进行堆溢出</li>
+<li>可以打印chunk中的内容</li>
+</ul>
+<p>其实有这些条件这道题就可以用这种泄露的办法将libc地址泄露。</p>
+<p>这里就拿这道题的条件分析，（这里面的图我从大佬的博客里面偷的，写的太好的这个大佬，强推！！！原文在这里<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41202237/article/details/112320919">好好说话之Fastbin Attack（4）：Arbitrary Alloc_好好说话 ctf-CSDN博客</a>，和上面的那篇是同一个作者，膜拜大佬。）</p>
+<p>这道题我们不知道堆的指针在哪，同时也没有uaf漏洞给我们使用，那我们要泄露libc的地址，虽然这里我们能创造unsortbin，但我们并不知道这个chunk的地址故不能直接泄露他，这里便可以用这个方法泄露libc的地址</p>
+<p>这里我们先申请5个chunk前4个大小为0x20，最后一个0x90，申请后的样子如下</p>
+<h4 id><a href="#" class="headerlink" title></a><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxMjAyMjM3,size_16,color_FFFFFF,t_70.png" alt="在这里插入图片描述"></h4><p>形成这样的结构后，我们在依次free掉chunk3和chunk2这两个chunk，使得在fastbin中能形成一个链表，为什么要先free chunk3在chunk2，这里是为了在chunk2中出现bk指针执向chunk3头地址（fastbin的结构使后free的chunk中的bk指向前一个free的chunk的头地址），然后我们在利用chunk1的堆溢出，从而直接修改chunk2中的bk指针，使其指向chunk5的头地址。</p>
+<p>这里虽然我们并不知道chunk5的准确头地址，但这里因为堆的对齐导致堆块的地址即使在每一次程序的加载都会有变化，但末尾的后3位是固定，这里我们只需要将chunk2的bk指针的后两位数字覆盖为chunk5的头地址的后两位，这样就可以改变fastbin中的结构使得chunk2后直接是chunk5的地址</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxMjAyMjM3,size_16,color_FFFFFF,t_70-17182860203185.png" alt="在这里插入图片描述"></p>
+<p>这里我们还需要做的就是再利用chunk4中的堆溢出将chunk5的size段改为0x21，这里修改是为使chunk5的大小与chunk2的大小保持一致，这样我们能在之后的申请中将chunk再一次申请出来被程序再次记录下，<img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxMjAyMjM3,size_16,color_FFFFFF,t_70-17182863339718.png" alt="在这里插入图片描述"></p>
+<p>修改后的结构如上，这样chunk2和chunk5的大小一致，我们可以直接向程序申请这个大小的堆块从而使得程序中的第3个指针的位置存放的也是第5个chunk的指针，也就是chunk5的重启</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxMjAyMjM3,size_16,color_FFFFFF,t_70-171828680334711.png" alt="在这里插入图片描述"></p>
+<p>再这样之后再程序中就有两个地址同时记录则chunk5的地址，分别为地址空间为3和5的指针，不过由于这个地址我们并不知道但并不影响我们对其的引用。其实到这里剩下的就很简单了，我们再一次利用chunk4的堆溢出修改chunk5的size段的数据恢复为0x91，然后我们在申请一个chunk块，这个会从top chunk分出来，用以避免chunk5 free时直接与top chunk合并，之后我们直接free掉chunk5这样，chunk5就回进入unsortbin中，产生指向main_arena的fd指针，这里我们知道程序在free掉后会同时清楚相应位置存放的指针，但是这里由于我们之前的操作导致在程序中不只有记录chunk5的位置有指向chunk5的指针，还有记录chunk3的位置有指向chunk5的指针，这样就到导致我们可以通过打印chunk3的方法从而打印出chunk5中的内容，这样就可以通过unsortbin的bk指针得知libc的地址。</p>
+<p>补充一下图，恢复chunk5的大小<img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxMjAyMjM3,size_16,color_FFFFFF,t_70-171828773725714.png" alt="在这里插入图片描述"></p>
+<p>free chunk5，产生unsortbin</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxMjAyMjM3,size_16,color_FFFFFF,t_70-171828778885817.png" alt="在这里插入图片描述"></p>
+<p>在次感谢holk大佬的博客，跪谢！</p>
+<p>其实这种方法的主要目的就在与使用堆溢出修改fastbin中fd的指向，在申请相同chunk区域，使得程序中两个地址同时记录着同一块chunk的指针，然后利用这块chunk产生unsortbin，在利用后面存放这块chunk的指针打印chunk中的内容，从而实现libc地址的泄露。</p>
+<p>巧妙的方法，感觉要长脑子了。</p>
+<p><strong>Unsorted Bin Attack</strong></p>
+<p>这个手法咋说呢，感觉有点鸡肋，单独使用的作用并不是那么的大，可能在大部分时候要配和着其他的手法来使用才算可以发挥作用，或许可以用来在有的时候用于泄露libc的地址，但条件感觉要的有点多，在没有在实际的题目的使用过。并且这种攻击的手法之前好像看见有人说从libc2.28开始就不能再使用，在系统中多了对Unsorted Bin 的大小检测的函数，这种攻击的方式便不能再使用所以对题目的要求也较高，就有点鸡肋。不过既然有种手法就还是学一下，至少知道这种漏洞的存在。</p>
+<p>前话到此为止，现在开始讲有关这种手法的操作。</p>
+<p>关于Unsorted Bin这是一个神奇的bin，我们知道有的chunk由于大小限制所以在释放后会被放入的Unsorted Bin中作为其中的一部分free chunk以供下次申请时快速使用，但是其实在没有chunk进入到unsorted bin的时候他自己本身就是一个单独的chunk结构，不过不参与到chunk的分配只作用来作为unsorted bin的基础机构，如下图</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240615220108814.png" alt="image-20240615220108814"></p>
+<p>（这个图还是偷的csdn的大佬holk，再次跪谢大佬，跪谢大佬无私，原文链接<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41202237/article/details/112589899">好好说话之Unsorted Bin Attack_unsortedbin attack-CSDN博客</a>）</p>
+<p>这个就是unsorted bin结构，而当有free chunk进入到unsorted bin中时这两个的结构变回发生新的变化，</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240615220500217.png" alt="image-20240615220500217"></p>
+<p>此时chunk_400是我们程序中由free从而进入到unsorted bin中chunk，这个chunk的fd和bk指针都会指向unsorted bin的结构chunk的头地址，而我们知道unsorted bin的结构在程序中的位置在main_arena+88的地方，这就是为什么我们能通过泄露unsorted bin的fd和bk指针从而获取到程序的libc地址。</p>
+<p>我们关于这个漏洞的手法就正式从这里开始，这里我们如果修改了我们free进unsorted bin中的这个chunk的bk指针，使其指向宁一个地址那么程序便会直接将那个地址默认为一个新free进unsorted bin中的chunk，从而形成一个新的结构。</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240615221509136.png" alt="image-20240615221509136"></p>
+<p>这里的bk指向的chunk中对任何一个的数值没有要求只要修改bk的指向，程序就会默认这个地址为一个新的chunk被收录进unsorted bin（这个在libc2.23中是如此其他版本还不知道），但是这里在个填入的地址后期并不会被申请出来。这里还有一个重要的点，就是在我们堆溢出修改chunk_400时我们不必保存fd指针的指向一直指向unsorted bin的头地址，我们可以直接覆盖为0。这样也不影响后面的操作。</p>
+<p>现在便是这种方法的最后一步，由于在unsorted bin中对free chunk的申请保持的是一种<code>FIFO</code>（先进先出）的利用手法，所以即使在这里我们将一个新的地址作为新的free chunk挂入unsorted bin中，只要我们能在申请到与chunk_400同样大小的chunk那程序依然会先从unsorted bin中将chunk_400拿出给我们使用，而在这里一旦将chunk_400拿出来unsorted bin中变回对结构有新的变化，变化的结果如下</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240615223112353.png" alt="image-20240615223112353"></p>
+<p>变化之后unsorted bin的fd指针指向chunk_400的头地址，bk指针指向我们创造的fake chunk的头地址，而对我们来说最终要的便是我们的fake chunk的bk指针被修改为指向unsorted bin的头地址。</p>
+<p>就这样我们成功做到将我们写入chunk_400中的地址的下两位修改为unsorted bin的头地址，但是由于这个地址在程序中随机化的，所以我们并不能保证这个数值的大小。虽然这个地址是main_arena+88，与libc的距离是固定不变的，但我们并不知道具体的大小，所以这里是有一点鸡肋的存在，但或许可以通过打印修改的这里的地址获取到libc的地址，但这并不好用。</p>
+<p>好，到这里这种手法就差不多结束了，总结一下，这种手法能做的就是将程序中的某一块地址的内容修改为main_arena+88的地址， 是一个比较大的数。</p>
+<ol>
+<li>产生unsorted bin</li>
+<li>修改这个unsorted bin的bk指针指向我们要修改的地址-0x10的地址</li>
+<li>重新通过malloc启用unsorted bin中的那个chunk</li>
+</ol>
 
       
     </div>
@@ -1537,7 +1628,8 @@
 <p>在chunk中第一个控制字段prev size用于存放上一个chunk的长度，再结合自身的位置便回，可以知道上一个chunk的初始位置，一个chunk知道上一个chunk的初始地址，构成物理链表</p>
 <p><strong>bin中的逻辑链表</strong></p>
 <p>管理 arena 中空闲 chunk 的结构，以数组的形式存在，数组元素为相应大小的 chunk 链表的链表头，存在于 arena 的 malloc_state 中</p>
-<p>bin的结构是一个数组，有一个又一个的指针构成，每一个指针都指向一个相应大小的free chunk的初始位置，在被指向的free chunk中有一个fd控制字段，这个控制字段也存放的是一个指针，执向的是与这个chunk大小相同的的chunk初始位置。在bin作为最开始的指针指向相应大小的chunk，fd在指向相同大小的chunk，这个便是逻辑链表，如图（释放的顺序的从下往上释放，下面的那个fd段为0的chunk为第一个释放的chunk）</p>
+<p>bin的结构是一个数组，有一个又一个的指针构成，每一个指针都指向一个相应大小的free chunk的初始位置，在被指向的free chunk中有一个fd控制字段，这个控制字段也存放的是一个指针，执向的是与这个chunk大小相同的的chunk初始位置。在bin作为最开始的指针指向相应大小的chunk，fd在指向相同大小的chunk，这个便是逻辑链表，如图（释放的顺序的从下往上释放，最下面的那个fd段为0的chunk为第一个释放的chunk）</p>
+<p>这个bin的地址中的指向是刚刚释放的chunk，如最下面的chunk在释放后，bin的指向就这是他，等着后面的chunk在次被释放后bin的指向便会改变为新的释放的chunk。</p>
 <p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240418143002441.png" alt="image-20240418143002441"></p>
 <p>用指针的方式将相同大小的chunk连接起来，存放在bin中方便之后的寻找</p>
 <p>在bin中还有一种双向链表，将相同的大小的的chunk互相链接起来，以便使用，其基本结构如下，通过两个bin指针与chunk中fd，bk的不断指向构成，其中在使用中，为依次使用，从靠近bin的顺序被依次调用。</p>
@@ -3167,7 +3259,7 @@
 
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 <p><img src="/2024/03/26/hello-world/002917-16858097570092.jpg" alt="002917-16858097570092"></p>
-<p>INFO  Copying files from extend dirs…<br>On branch master<br>nothing to commit, working tree clean<br>Everything up-to-date<br>branch ‘master’ set up to track ‘<a href="mailto:&#x67;&#105;&#x74;&#64;&#x67;&#105;&#116;&#x68;&#117;&#x62;&#46;&#x63;&#111;&#x6d;">&#x67;&#105;&#x74;&#64;&#x67;&#105;&#116;&#x68;&#117;&#x62;&#46;&#x63;&#111;&#x6d;</a>:2023478&#x2F;2023478.github.io.git&#x2F;main’.<br>INFO  Deploy done: git</p>
+<p>INFO  Copying files from extend dirs…<br>On branch master<br>nothing to commit, working tree clean<br>Everything up-to-date<br>branch ‘master’ set up to track ‘<a href="mailto:&#103;&#105;&#116;&#64;&#x67;&#105;&#116;&#x68;&#117;&#x62;&#x2e;&#x63;&#111;&#109;">&#103;&#105;&#116;&#64;&#x67;&#105;&#116;&#x68;&#117;&#x62;&#x2e;&#x63;&#111;&#109;</a>:2023478&#x2F;2023478.github.io.git&#x2F;main’.<br>INFO  Deploy done: git</p>
 
       
     </div>

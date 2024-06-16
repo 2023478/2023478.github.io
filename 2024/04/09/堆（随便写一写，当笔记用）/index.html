@@ -38,7 +38,7 @@
 <meta property="og:image" content="https://2023478.github.io/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240516172821078.png">
 <meta property="og:image" content="https://2023478.github.io/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240516175155536.png">
 <meta property="article:published_time" content="2024-04-09T12:53:47.000Z">
-<meta property="article:modified_time" content="2024-06-08T08:14:12.222Z">
+<meta property="article:modified_time" content="2024-06-16T01:14:32.404Z">
 <meta property="article:author" content="wgiegie">
 <meta property="article:tag" content="堆">
 <meta name="twitter:card" content="summary">
@@ -299,7 +299,8 @@
 <p>在chunk中第一个控制字段prev size用于存放上一个chunk的长度，再结合自身的位置便回，可以知道上一个chunk的初始位置，一个chunk知道上一个chunk的初始地址，构成物理链表</p>
 <p><strong>bin中的逻辑链表</strong></p>
 <p>管理 arena 中空闲 chunk 的结构，以数组的形式存在，数组元素为相应大小的 chunk 链表的链表头，存在于 arena 的 malloc_state 中</p>
-<p>bin的结构是一个数组，有一个又一个的指针构成，每一个指针都指向一个相应大小的free chunk的初始位置，在被指向的free chunk中有一个fd控制字段，这个控制字段也存放的是一个指针，执向的是与这个chunk大小相同的的chunk初始位置。在bin作为最开始的指针指向相应大小的chunk，fd在指向相同大小的chunk，这个便是逻辑链表，如图（释放的顺序的从下往上释放，下面的那个fd段为0的chunk为第一个释放的chunk）</p>
+<p>bin的结构是一个数组，有一个又一个的指针构成，每一个指针都指向一个相应大小的free chunk的初始位置，在被指向的free chunk中有一个fd控制字段，这个控制字段也存放的是一个指针，执向的是与这个chunk大小相同的的chunk初始位置。在bin作为最开始的指针指向相应大小的chunk，fd在指向相同大小的chunk，这个便是逻辑链表，如图（释放的顺序的从下往上释放，最下面的那个fd段为0的chunk为第一个释放的chunk）</p>
+<p>这个bin的地址中的指向是刚刚释放的chunk，如最下面的chunk在释放后，bin的指向就这是他，等着后面的chunk在次被释放后bin的指向便会改变为新的释放的chunk。</p>
 <p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240418143002441.png" alt="image-20240418143002441"></p>
 <p>用指针的方式将相同大小的chunk连接起来，存放在bin中方便之后的寻找</p>
 <p>在bin中还有一种双向链表，将相同的大小的的chunk互相链接起来，以便使用，其基本结构如下，通过两个bin指针与chunk中fd，bk的不断指向构成，其中在使用中，为依次使用，从靠近bin的顺序被依次调用。</p>
