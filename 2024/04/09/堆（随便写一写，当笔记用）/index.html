@@ -37,8 +37,10 @@
 <meta property="og:image" content="https://2023478.github.io/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240516164904604.png">
 <meta property="og:image" content="https://2023478.github.io/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240516172821078.png">
 <meta property="og:image" content="https://2023478.github.io/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240516175155536.png">
+<meta property="og:image" content="https://2023478.github.io/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240620150551052.png">
+<meta property="og:image" content="https://2023478.github.io/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240620150930731.png">
 <meta property="article:published_time" content="2024-04-09T12:53:47.000Z">
-<meta property="article:modified_time" content="2024-06-16T01:14:32.404Z">
+<meta property="article:modified_time" content="2024-06-20T07:18:07.842Z">
 <meta property="article:author" content="wgiegie">
 <meta property="article:tag" content="堆">
 <meta name="twitter:card" content="summary">
@@ -346,6 +348,14 @@
 <p>如果我们要修改得时date段的数据，那便要malloc的长度将使一个负数(date段的数据在chunk的下方)，由于我们在之前的覆盖中已经将top chunk中的size的大小表为整个地址空间，于是我们在malloc一个负数时，程序会将top chunk的起始地址向下移动这个负数的长度。然后我们再malloc一个正数时，程序便会从我们刚刚移动过的top chunk的头地址可是分配一个相应大小的chunk以供使用。</p>
 <p>因此我们只在栈溢出后malloc一个负数，其大小就是从top chunk的起始地址到要修改的date段地址的下两个字节的距离的负数（两个字节作为下个chunk的前两个控制字段），然后再malloc一个正数的chunk，输入数据便可以达到我们的目的。</p>
 <p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240516175155536.png" alt="image-20240516175155536"></p>
+<p><strong>有关于各个bin的chunk进入与分配结构</strong></p>
+<p><em>tcachebins</em>:</p>
+<p>先进后出，后进先出</p>
+<p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240620150551052.png" alt="image-20240620150551052"></p>
+<h6 id="分配的时候将从chunk4开始分配依次分配到chunk1。"><a href="#分配的时候将从chunk4开始分配依次分配到chunk1。" class="headerlink" title="分配的时候将从chunk4开始分配依次分配到chunk1。"></a>分配的时候将从chunk4开始分配依次分配到chunk1。</h6><p><em>unsortedbin</em>：</p>
+<p>先进先出，后进后出。</p>
+<p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240620150930731.png" alt="image-20240620150930731"></p>
+<p>分配的时候从chunk1开始依次分配到chunk4。（要注意这几个chunk如果大小相同，并且相临，那么进入到unsortedbin后会直接合并为一个大chunk，然后在要分配时直接切割这个大chunk）</p>
 
       
     </div>

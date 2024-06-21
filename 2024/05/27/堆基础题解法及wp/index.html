@@ -11,12 +11,12 @@
   
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="UAF漏洞 这类漏洞的基础与原理就是在申请堆块后没有在使用free函数释放这个堆块的同时将在申请是用于指向这个堆块的指针一并清0，使得在后面的程序中还能使用这个指针对程序中的数据造成泄露或执行的操作。 (想自己写一个例子，发现能力不足，还是从网上抄一下算了)  如上代码所示，指针p1申请内存，打印其地址，值 然后释放p1 指针p2申请同样大小的内存，打印p2的地址，p1指针指向的值 Gcc编译，运">
+  <meta name="description" content="UAF漏洞这类漏洞的基础与原理就是在申请堆块后没有在使用free函数释放这个堆块的同时将在申请是用于指向这个堆块的指针一并清0，使得在后面的程序中还能使用这个指针对程序中的数据造成泄露或执行的操作。 (想自己写一个例子，发现能力不足，还是从网上抄一下算了)  如上代码所示，指针p1申请内存，打印其地址，值 然后释放p1 指针p2申请同样大小的内存，打印p2的地址，p1指针指向的值 Gcc编译，运行">
 <meta property="og:type" content="article">
 <meta property="og:title" content="堆基础题解法及wp">
 <meta property="og:url" content="https://2023478.github.io/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/index.html">
 <meta property="og:site_name" content="纲的blog">
-<meta property="og:description" content="UAF漏洞 这类漏洞的基础与原理就是在申请堆块后没有在使用free函数释放这个堆块的同时将在申请是用于指向这个堆块的指针一并清0，使得在后面的程序中还能使用这个指针对程序中的数据造成泄露或执行的操作。 (想自己写一个例子，发现能力不足，还是从网上抄一下算了)  如上代码所示，指针p1申请内存，打印其地址，值 然后释放p1 指针p2申请同样大小的内存，打印p2的地址，p1指针指向的值 Gcc编译，运">
+<meta property="og:description" content="UAF漏洞这类漏洞的基础与原理就是在申请堆块后没有在使用free函数释放这个堆块的同时将在申请是用于指向这个堆块的指针一并清0，使得在后面的程序中还能使用这个指针对程序中的数据造成泄露或执行的操作。 (想自己写一个例子，发现能力不足，还是从网上抄一下算了)  如上代码所示，指针p1申请内存，打印其地址，值 然后释放p1 指针p2申请同样大小的内存，打印p2的地址，p1指针指向的值 Gcc编译，运行">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://2023478.github.io/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/772091-20151028173133357-937820954.png">
 <meta property="og:image" content="https://2023478.github.io/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/772091-20151028173152185-843248270.png">
@@ -62,8 +62,11 @@
 <meta property="og:image" content="https://2023478.github.io/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240615220500217.png">
 <meta property="og:image" content="https://2023478.github.io/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240615221509136.png">
 <meta property="og:image" content="https://2023478.github.io/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240615223112353.png">
+<meta property="og:image" content="https://2023478.github.io/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxMjAyMjM3,size_16,color_FFFFFF,t_70-17188743446133.png">
+<meta property="og:image" content="https://2023478.github.io/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxMjAyMjM3,size_16,color_FFFFFF,t_70.png">
+<meta property="og:image" content="https://2023478.github.io/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxMjAyMjM3,size_16,color_FFFFFF,t_70-17188743583236.png">
 <meta property="article:published_time" content="2024-05-27T13:07:47.000Z">
-<meta property="article:modified_time" content="2024-06-16T01:14:27.048Z">
+<meta property="article:modified_time" content="2024-06-20T12:04:39.143Z">
 <meta property="article:author" content="wgiegie">
 <meta property="article:tag" content="堆">
 <meta name="twitter:card" content="summary">
@@ -262,8 +265,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><strong>UAF漏洞</strong></p>
-<p>这类漏洞的基础与原理就是在申请堆块后没有在使用free函数释放这个堆块的同时将在申请是用于指向这个堆块的指针一并清0，使得在后面的程序中还能使用这个指针对程序中的数据造成泄露或执行的操作。</p>
+        <h1 id="UAF漏洞"><a href="#UAF漏洞" class="headerlink" title="UAF漏洞"></a><strong>UAF漏洞</strong></h1><p>这类漏洞的基础与原理就是在申请堆块后没有在使用free函数释放这个堆块的同时将在申请是用于指向这个堆块的指针一并清0，使得在后面的程序中还能使用这个指针对程序中的数据造成泄露或执行的操作。</p>
 <p>(想自己写一个例子，发现能力不足，还是从网上抄一下算了)</p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/772091-20151028173133357-937820954.png" alt="img"></p>
 <p>如上代码所示，指针p1申请内存，打印其地址，值</p>
@@ -333,8 +335,7 @@
 <p>这种结构出现在大小小于0x400的chunk在被free后链接而成（大于0x400的在free后会成为unsortedbin），在这种结构中，chunk的fd指针由于指向下一个chunk的原本的的数据段，现在的fd段（如果下面没有chunk了，这个fd指针将会指向0）。这里面的chunk在再次使用时遵循的是先进先出的规律，当再次malloc时，先吧上面一个满足大小的chunk拿出来使用，然后在将下面一个满足大小的chunk拿出来使用。</p>
 <p>这里如果我们便可以通过uaf漏洞，将chunk中fd指针的值修改为我们需要的地址空间然后，malloc到这块空间，便可以对其进行修改。</p>
 <p>（这里好像不用在意要修改的地址空间上两位的值能不能构成chunk的prev size和size都可以，malloc到那里直接修改，但是在其他版本可能要满足条件）</p>
-<p><strong>unlink</strong></p>
-<p>现简单说一下这一类题的大致问题在哪里，与一般的解决办法。</p>
+<h1 id="unlink"><a href="#unlink" class="headerlink" title="unlink"></a><strong>unlink</strong></h1><p>现简单说一下这一类题的大致问题在哪里，与一般的解决办法。</p>
 <p>要能使用这种解决办法的题，会以下的几种重要的东西是我们能够使用的，才能使用这种办法。</p>
 <ol>
 <li>能连续申请几个连续的堆，</li>
@@ -346,23 +347,19 @@
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240602084358411.png" alt="image-20240602084358411"></p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240602085046748.png" alt="image-20240602085046748"></p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240602085110947.png" alt="image-20240602085110947"></p>
-<p><strong>Off-By-One</strong></p>
-<p>这个漏洞在很多的地方都算是比较常见的吧，不过在之前的栈的时候属于不太好利用的一种，不过在堆中由于堆的特殊性导致，这个漏洞难够在很多地方发挥出意想不到的作用。</p>
+<h1 id="Off-By-One"><a href="#Off-By-One" class="headerlink" title="Off-By-One"></a><strong>Off-By-One</strong></h1><p>这个漏洞在很多的地方都算是比较常见的吧，不过在之前的栈的时候属于不太好利用的一种，不过在堆中由于堆的特殊性导致，这个漏洞难够在很多地方发挥出意想不到的作用。</p>
 <p>这个漏洞的具体就是使用read等函数向某块地址写入数据时，如果使用了循环的方式，而循环的次数的大小与那块地址的大小相同，如我们有的是大小为16的数组，我们通过循环向这里写入数字，而我们的循环的次数是由我们数组的大小决定，这里简单的说就是对循环的次数没有进行严格的检查，像循环的次数由变量x决定，并且循环的此时就等于这个x的值，这里x&#x3D;16，看起来好像没什么问题但是会发现，由于程序中的这些数组的起始都是从0开始，包括循环的+</p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240604222351621.png" alt="image-20240604222351621"></p>
-<p><strong>unsortedbin泄露libc地址</strong></p>
-<p>关于这种bin的具体结构等之后学会了在细讲，这里先讨论如何利用这种bin将libc的地址泄露。</p>
+<h1 id="unsortedbin泄露libc地址"><a href="#unsortedbin泄露libc地址" class="headerlink" title="unsortedbin泄露libc地址"></a><strong>unsortedbin泄露libc地址</strong></h1><p>关于这种bin的具体结构等之后学会了在细讲，这里先讨论如何利用这种bin将libc的地址泄露。</p>
 <p>由于在不同的libc版本中unsortedbin的产生不同，这里将针对不同libc版本进行分别讲解。</p>
-<p><em>一，libc-2.27</em></p>
-<p>在2.27的libc版本中又一种tcachebins的存在，这会导致数据区小于0x400，整体小于0x410的chunk在free后被放入tcachebins这里面，供下次使用，因此我们这里首先要先malloc一块大小大于0x400的chunk，同时这个chunk还不能与top chunk相邻，否则在free后会被top chunk直接合并，因此我们必须保证这个大于0x400的chunk与top chunk中间还有一个chunk用于隔离这两个chunk。就像满足这样的条件</p>
+<h3 id="一，libc-2-27"><a href="#一，libc-2-27" class="headerlink" title="一，libc-2.27"></a><em>一，libc-2.27</em></h3><p>在2.27的libc版本中又一种tcachebins的存在，这会导致数据区小于0x400，整体小于0x410的chunk在free后被放入tcachebins这里面，供下次使用，因此我们这里首先要先malloc一块大小大于0x400的chunk，同时这个chunk还不能与top chunk相邻，否则在free后会被top chunk直接合并，因此我们必须保证这个大于0x400的chunk与top chunk中间还有一个chunk用于隔离这两个chunk。就像满足这样的条件</p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240606153035259.png" alt="image-20240606153035259"></p>
 <p>然后我们将大于0x400的这块chunk，free掉，就会得到一块被放置在unsortedbin中，且满足条件的free</p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240606153330482.png" alt="image-20240606153330482"></p>
 <p>而此时这个free掉的chunk中的fd和bk指针由于只有这一个chunk在unsortedbin中，所以他们同时指向的都是main_arena+96的地址</p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240606153458981.png" alt="image-20240606153458981"></p>
 <p>并且这个地址在程序中与libc的基地址的距离是始终保持相同的，只要能泄露这个便可以知道程序中的libc的基地址，在其他版本中其实也如此，不过在有的地方也有不同。</p>
-<p><strong>house of orange</strong></p>
-<p>今天做题的时候刚好遇到这个知识点，那就现在把他写一下。</p>
+<h1 id="house-of-orange"><a href="#house-of-orange" class="headerlink" title="house of orange"></a><strong>house of orange</strong></h1><p>今天做题的时候刚好遇到这个知识点，那就现在把他写一下。</p>
 <p>这个的作用并不能直接作用于程序上实现shell，这个漏洞的作用只是在于特殊情况下泄露libc的地址，其实这里用到也就是创造unsortedbin，从而泄露libc的地址，我们知道在上面的使用unsortedbin泄露libc地址的方法前提是要能创造一个大小满足free后进入unsortedbin的大小的chunk并且这个chunk还不能与top chunk相邻的的条件的chunk，并且还要能将这个chunk，free掉使得它进入到unsortedbin中，然后在将fd指针的值打印出来，这样才能泄露libc的值，而这里我们就是在面对没有free函数的情况下，依然能产生unsortedbin从而泄露libc的值。</p>
 <p>具体的不细将，直接将做法。</p>
 <p>关于这种做法目前我之在libc-2.23上做过，关于其他的libc可能有所不同，请注意。这里也是按在libc-2.23上来讲。</p>
@@ -401,10 +398,8 @@
 <li>打印并接收新chunk的内容（注意如果一定要输入数据，注意不要过多，影响第二字节的内容）</li>
 <li>减去相应的差值得到libc基地址。</li>
 </ul>
-<p><strong>Fastbin Attack</strong></p>
-<p>这一类有四种小类，这里将分批讲解。</p>
-<p><em>Fastbin Double Free</em></p>
-<p>这是一种利用比较多的漏洞，这种漏洞的实现的条件比较苛刻，但其攻击的效果也属于比较明显的便于利用的一种，这种的攻击的手段需要的有uaf漏洞，只有在有uaf漏洞的基础上以及比较早的比如libc2.23这些比较早期的版本下才能实现这种攻击的手段，具体的现在来讲。</p>
+<h1 id="Fastbin-Attack"><a href="#Fastbin-Attack" class="headerlink" title="Fastbin Attack"></a><strong>Fastbin Attack</strong></h1><p>这一类有四种小类，这里将分批讲解。</p>
+<h3 id="Fastbin-Double-Free"><a href="#Fastbin-Double-Free" class="headerlink" title="Fastbin Double Free"></a><em>Fastbin Double Free</em></h3><p>这是一种利用比较多的漏洞，这种漏洞的实现的条件比较苛刻，但其攻击的效果也属于比较明显的便于利用的一种，这种的攻击的手段需要的有uaf漏洞，只有在有uaf漏洞的基础上以及比较早的比如libc2.23这些比较早期的版本下才能实现这种攻击的手段，具体的现在来讲。</p>
 <p>既然是Double Free，那就必须要进行双重释放，对同一个堆块进行两次free，中间必须要free得有一个或多个chunk这样才能实现对同一个chunk进行两次释放，<img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240418143002441.png" alt="image-20240418143002441"></p>
 <p>这里借用一下之前文章中的图片讲解一下，在fastbin中的结构是用chunk中的fd指针指向之前一个free的指针的头地址，然后bin的指针指向最近free的chunk的头地址，对于最后一个chunk中的fd指针则为0，就这样可以再fastbin中构成由最开始的bin中的指针开始依次由fd指针相连的chunk链，就这样在malloc相同的大小的chunk时便可以在直接从这个fastbin中依次取出来用就行。</p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240611213009652.png" alt="image-20240611213009652"></p>
@@ -419,8 +414,7 @@
 <p>这里如果我们在程序的其他地方构造一个fake_chunk（这个地方可以是bss段上，甚至可以是栈上的地址）,并使得第一个chunk中fd指针就指向这个fake_chunk的头地址，而这个fake_chunk的构造很简单，就是确保size段的大小和前两个chunk的size一样，同时其他的保持为0就行，然后在修改了chunk中的fd段后bin中的结构就会改变为如下的结构。</p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240611220613433.png" alt="image-20240611220613433"></p>
 <p>这样之后，我们再向程序连续申请两个大小相同的chunk后bin就会指向我们fake_chunkde1,然后在申请一个就会使我们刚刚伪造的fake_chunk,被我们申请为一个新的chunk，从而可以修改这个地址的内容。</p>
-<p><strong>House Of Spirit</strong></p>
-<p>这个方法我个人感觉很奇妙，虽然这种方法有种脱裤子放屁的感觉（在更多的地方感觉使用fd修改可能更多，不过这种方法的思想还很值得学习的）。</p>
+<h3 id="House-Of-Spirit"><a href="#House-Of-Spirit" class="headerlink" title="House Of Spirit"></a><em>House Of Spirit</em></h3><p>这个方法我个人感觉很奇妙，虽然这种方法有种脱裤子放屁的感觉（在更多的地方感觉使用fd修改可能更多，不过这种方法的思想还很值得学习的）。</p>
 <p>这种方法的主要过程就是在使用free函数释放某一个chunk，我们通过在bss段或其他的地址伪造一段chunk，在使用于释放的那个指针指向的就是我们伪造的这个chunk，通过这样使得我们这伪造的这个chunk被挂入进fastbin中的单项链表中，被程序识别为一个free掉的chunk，在后期我们在向程序申请相同大小的chunk时，能直接将那块地址作为chunk以供我们要使用，从而是我们能修改那块区域和使用其中的数据段。</p>
 <p>我之前说的脱裤子放屁的感觉就是在这里，我们本可以直接修改fastbin中的bk段直接指向伪造的chunk，但我们却要将那块伪造的chunk释放来挂入fastbin中，这不是脱裤子放屁，这是什么。不过并不是所有题都能直接修改free chunk的，所以这种方法的出现以可以理解。</p>
 <p>关于这种方法在伪造chunk时有几个需要注意的点，这里我直接吵ctfwiki上了，原文在这里</p>
@@ -442,11 +436,11 @@
 <p>这里在讲讲我的自己的简单补充，伪造的chunk最好如下，fake_prev_size的值为0，fake_size可以根据自己的需求来调整，但不能超过fastbin的要求，还有这里填的是0x几0不用加1。在整个fake_chunk结束的下一行便要是宁一个fake chunk，这个只要整prev_szie 和size段就好，这个的prev szie是之前伪造的那个chunk的整体大小，然后size这个的大小在32位系统我使用了0x100是可行的，不知道在64位的系统中可以不，到时候在仔细研究一下。</p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxMjAyMjM3,size_16,color_FFFFFF,t_70#pic_center.png" alt="在这里插入图片描述"></p>
 <p>就这样我们伪造一个chunk然后把这个chunk的数据段起始地址，当做这个chunk的指针放入free函数中，这样这个chunk变回被程序当做free chunk挂入fastbin中，然后我们在申请这个大小的chunk，便可以把这个地址当做新被chunk，被我们使用。</p>
-<p><strong>Alloc to Stack</strong></p>
-<p><strong>Arbitrary Alloc</strong></p>
+<p><em>Alloc to Stack</em></p>
+<p><em>Arbitrary Alloc</em></p>
 <p>这还有两种方法，这两种方法的大致差别不大，都是在程序中寻找一块可用的地址然后修改fastbin的bk指针使其指向这个地址，在fastbin中增加这块地址，在之后将这块地址申请出来作为一个新chunk使用。</p>
 <p>关于这块这地址的检查，不需要多的就一个对size段的大小检查，因此我们这可以在malloc_hook的地址上面通过偏移地址使得size只有0x7几，这样只要我们申请的chunk大小为0x70，程序就会直接把那块区域分配给我们使用。</p>
-<h2 id="2017-0ctf-babyheap"><a href="#2017-0ctf-babyheap" class="headerlink" title="2017 0ctf babyheap"></a><a target="_blank" rel="noopener" href="https://github.com/ctf-wiki/ctf-challenges/tree/master/pwn/heap/fastbin-attack/2017_0ctf_babyheap">2017 0ctf babyheap</a></h2><p>这里讲一个泄露libc手法，是在做这道题时遇到的，这个手还是比较可以的。</p>
+<h4 id="2017-0ctf-babyheap"><a href="#2017-0ctf-babyheap" class="headerlink" title="2017 0ctf babyheap"></a><a target="_blank" rel="noopener" href="https://github.com/ctf-wiki/ctf-challenges/tree/master/pwn/heap/fastbin-attack/2017_0ctf_babyheap">2017 0ctf babyheap</a></h4><p>这里讲一个泄露libc手法，是在做这道题时遇到的，这个手法还是比较可以的。</p>
 <p>关于这种手法的使用条件，为</p>
 <ul>
 <li>可以申请多个chunk大小不一</li>
@@ -470,8 +464,7 @@
 <p>在次感谢holk大佬的博客，跪谢！</p>
 <p>其实这种方法的主要目的就在与使用堆溢出修改fastbin中fd的指向，在申请相同chunk区域，使得程序中两个地址同时记录着同一块chunk的指针，然后利用这块chunk产生unsortbin，在利用后面存放这块chunk的指针打印chunk中的内容，从而实现libc地址的泄露。</p>
 <p>巧妙的方法，感觉要长脑子了。</p>
-<p><strong>Unsorted Bin Attack</strong></p>
-<p>这个手法咋说呢，感觉有点鸡肋，单独使用的作用并不是那么的大，可能在大部分时候要配和着其他的手法来使用才算可以发挥作用，或许可以用来在有的时候用于泄露libc的地址，但条件感觉要的有点多，在没有在实际的题目的使用过。并且这种攻击的手法之前好像看见有人说从libc2.28开始就不能再使用，在系统中多了对Unsorted Bin 的大小检测的函数，这种攻击的方式便不能再使用所以对题目的要求也较高，就有点鸡肋。不过既然有种手法就还是学一下，至少知道这种漏洞的存在。</p>
+<h1 id="Unsorted-Bin-Attack"><a href="#Unsorted-Bin-Attack" class="headerlink" title="Unsorted Bin Attack"></a><strong>Unsorted Bin Attack</strong></h1><p>这个手法咋说呢，感觉有点鸡肋，单独使用的作用并不是那么的大，可能在大部分时候要配和着其他的手法来使用才算可以发挥作用，或许可以用来在有的时候用于泄露libc的地址，但条件感觉要的有点多，在没有在实际的题目的使用过。并且这种攻击的手法之前好像看见有人说从libc2.28开始就不能再使用，在系统中多了对Unsorted Bin 的大小检测的函数，这种攻击的方式便不能再使用所以对题目的要求也较高，就有点鸡肋。不过既然有种手法就还是学一下，至少知道这种漏洞的存在。</p>
 <p>前话到此为止，现在开始讲有关这种手法的操作。</p>
 <p>关于Unsorted Bin这是一个神奇的bin，我们知道有的chunk由于大小限制所以在释放后会被放入的Unsorted Bin中作为其中的一部分free chunk以供下次申请时快速使用，但是其实在没有chunk进入到unsorted bin的时候他自己本身就是一个单独的chunk结构，不过不参与到chunk的分配只作用来作为unsorted bin的基础机构，如下图</p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240615220108814.png" alt="image-20240615220108814"></p>
@@ -492,6 +485,94 @@
 <li>修改这个unsorted bin的bk指针指向我们要修改的地址-0x10的地址</li>
 <li>重新通过malloc启用unsorted bin中的那个chunk</li>
 </ol>
+<h3 id="关于unsorted-bin"><a href="#关于unsorted-bin" class="headerlink" title="关于unsorted bin"></a><em>关于unsorted bin</em></h3><p>这里讲一下有关于unsorted bin中的chunk的分配有关的事情，我们知道除了再有tcache bin的情况下一般只要大于fastbin的范围（0x80）的free chunk会被放入到unsorted bin中，但unsorted bin并不会长期存放，只会作为一个暂时的chunk存放地，在之后如果有需要malloc时，程序会先看fastbin中是否有符合要求的free chunk ，然后在在unsorted bin中寻找。</p>
+<p>这里我们假设在unsorted bin中有两个chunk，一个为chunk(P1)0x390（&lt;0x3F0）,另一个为chunk(P2)0x410（&gt;0x3F0）这两个chunk，并且小的chunk在第一位大的在第二位。这时我们向程序申请1个0x90的chunk，程序会在unsorted bin中进行寻找，而寻找的过程并不简单。</p>
+<ul>
+<li>从unsorted bin中拿出最后一个chunk(P1)</li>
+<li>把这个chunk(P1)放进small bin中，并标记这个small bin中有空闲的chunk（小于0x3F0）</li>
+<li>从unsorted bin中拿出最后一个chunk(P2)（P1被拿走之后P2就作为最后一个chunk了）</li>
+<li>把这个chunk(P2)放进large bin中，并标记这个large bin有空先的chunk(大于0x3F0)</li>
+<li>现在unsorted bin中为空，从small bin中的P1中分割出一个小chunk，满足请求的P4，并把剩下的chunk(0x390 - 0xa0后记<code>P1_left</code>)放回unsorted bin中</li>
+</ul>
+<p>这个过程是比较复杂的，我这里讲的依然只是其中的一种情况，还有很多情况没有说。</p>
+<h2 id="malloc-c中从unsorted-bin中摘除chunk完整过程代码"><a href="#malloc-c中从unsorted-bin中摘除chunk完整过程代码" class="headerlink" title="malloc.c中从unsorted bin中摘除chunk完整过程代码"></a>malloc.c中从unsorted bin中摘除chunk完整过程代码</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* remove from unsorted list */</span></span><br><span class="line">unsorted_chunks (av)-&gt;bk = bck;</span><br><span class="line">bck-&gt;fd = unsorted_chunks (av);</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Take now instead of binning if exact fit */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (size == nb)</span><br><span class="line">  &#123;</span><br><span class="line">    set_inuse_bit_at_offset (victim, size);</span><br><span class="line">    <span class="keyword">if</span> (av != &amp;main_arena)</span><br><span class="line">      victim-&gt;size |= NON_MAIN_ARENA;</span><br><span class="line">    check_malloced_chunk (av, victim, nb);</span><br><span class="line">    <span class="type">void</span> *p = chunk2mem (victim);</span><br><span class="line">    alloc_perturb (p, bytes);</span><br><span class="line">    <span class="keyword">return</span> p;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* place chunk in bin */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (in_smallbin_range (size))</span><br><span class="line">  &#123;</span><br><span class="line">    victim_index = smallbin_index (size);</span><br><span class="line">    bck = bin_at (av, victim_index);</span><br><span class="line">    fwd = bck-&gt;fd;</span><br><span class="line">  &#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    victim_index = largebin_index (size);</span><br><span class="line">    bck = bin_at (av, victim_index);</span><br><span class="line">    fwd = bck-&gt;fd;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* maintain large bins in sorted order */</span></span><br><span class="line">    <span class="keyword">if</span> (fwd != bck)</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="comment">/* Or with inuse bit to speed comparisons */</span></span><br><span class="line">        size |= PREV_INUSE;</span><br><span class="line">        <span class="comment">/* if smaller than smallest, bypass loop below */</span></span><br><span class="line">        assert ((bck-&gt;bk-&gt;size &amp; NON_MAIN_ARENA) == <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">if</span> ((<span class="type">unsigned</span> <span class="type">long</span>) (size) &lt; (<span class="type">unsigned</span> <span class="type">long</span>) (bck-&gt;bk-&gt;size))</span><br><span class="line">          &#123;</span><br><span class="line">            fwd = bck;</span><br><span class="line">            bck = bck-&gt;bk;</span><br><span class="line"></span><br><span class="line">            victim-&gt;fd_nextsize = fwd-&gt;fd;</span><br><span class="line">            victim-&gt;bk_nextsize = fwd-&gt;fd-&gt;bk_nextsize;</span><br><span class="line">            fwd-&gt;fd-&gt;bk_nextsize = victim-&gt;bk_nextsize-&gt;fd_nextsize = victim;</span><br><span class="line">          &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">          &#123;</span><br><span class="line">            assert ((fwd-&gt;size &amp; NON_MAIN_ARENA) == <span class="number">0</span>);</span><br><span class="line">            <span class="keyword">while</span> ((<span class="type">unsigned</span> <span class="type">long</span>) size &lt; fwd-&gt;size)</span><br><span class="line">              &#123;</span><br><span class="line">                fwd = fwd-&gt;fd_nextsize;</span><br><span class="line">                assert ((fwd-&gt;size &amp; NON_MAIN_ARENA) == <span class="number">0</span>);</span><br><span class="line">              &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> ((<span class="type">unsigned</span> <span class="type">long</span>) size == (<span class="type">unsigned</span> <span class="type">long</span>) fwd-&gt;size)</span><br><span class="line">              <span class="comment">/* Always insert in the second position.  */</span></span><br><span class="line">              fwd = fwd-&gt;fd;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">              &#123;</span><br><span class="line">                victim-&gt;fd_nextsize = fwd;</span><br><span class="line">                victim-&gt;bk_nextsize = fwd-&gt;bk_nextsize;</span><br><span class="line">                fwd-&gt;bk_nextsize = victim;</span><br><span class="line">                victim-&gt;bk_nextsize-&gt;fd_nextsize = victim;</span><br><span class="line">              &#125;</span><br><span class="line">            bck = fwd-&gt;bk;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      victim-&gt;fd_nextsize = victim-&gt;bk_nextsize = victim;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">mark_bin (av, victim_index);</span><br><span class="line">victim-&gt;bk = bck;</span><br><span class="line">victim-&gt;fd = fwd;</span><br><span class="line">fwd-&gt;bk = victim;</span><br><span class="line">bck-&gt;fd = victim;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>上面这是完整的原代码有时间再详细分析一下。</p>
+<h1 id="tcache-attack"><a href="#tcache-attack" class="headerlink" title="tcache attack"></a><strong>tcache attack</strong></h1><p>fast bin&#x3D;0~0x80</p>
+<p>small bin&lt;0x3F0</p>
+<p>large bin&gt;0x3F0</p>
+<p>tcache bin 最多有7个chunk，多的要放在其他bin中。</p>
+<h3 id="tcache-poisoning"><a href="#tcache-poisoning" class="headerlink" title="tcache poisoning"></a><em>tcache poisoning</em></h3><p>这个漏洞的的利用是很方便的，同时效果也很强，不过这个漏洞的很大问题在于这个目前只能在libc2.27的版本上利用，在高一点的版本都对其有检测，不能利用，这是很重要的一点。</p>
+<p>这个漏洞利用的是在tcache中的链表对chunk的检测不完全而到导致的，先来讲一下tcache bin中的chunk结构。</p>
+<p>当程序中有被free的程序进入到tcache bin中，当进入的数量大于两个后程序会将这里chunk通过他们的fd指针链接起来，而链接的过程是，由后一个进入tcache bin的chunk在fd中产生一个指向上一个chunk的数据段的指针，依次相连从而构成tcache bin，并且bin的记录的是新进入的chunk，在后面的程序有需要chunk时，程序变会从记录的第一个开始，依次分配chunk以供使用，所以其分配结构为<strong>先进后出，后进先出</strong>的结构。</p>
+<p>那么既然知道了tcache bin中的chunk链表结构，便会发现一个很严重的问题，这里tcache bin上的chunk是有fd指针指向下一个chunk的数据段，来相连的。并且在libc.2.27这个版本中有一个很大的问题，在于使用fd指向的下一个chunk，在上一个chunk没分配出去后，将这个fd指向的记录在bin中时，程序不会有任何检测，同样的在malloc那块地址时，也不会对那块地址有任何检测，因此这里我们的这个漏洞便出现了。</p>
+<p>到我们使用堆溢出或uaf将tcache bin中的chunk的fd指针，修改为一个我们需要修改的地址后（这里由于程序对那个地址没有一点检测，同时fd指针指向的是chunk的数据段，因此我们直接修改为要修改的地址就行），程序便会直接将那块地址记录在tcache bin中，我们一直申请向程序申请与之前的free chunk相同的chunk，那程序便会现将前面的chunk分出去,然后变会来到被我修改了的fd指针，并因为程序对chunk的不检查，从而导致我们输入到fd的地址被直接分配成我们需要的chunk以供我们使用，这样我们便可以修改那块地址。</p>
+<p>总结一下</p>
+<ol>
+<li>产生tcache bin中的chunk链表</li>
+<li>将tcache bin中的chunk的fd指针修改为我们要修改的地址</li>
+<li>申请大小与修改的chunk相同的chunk，一直申请到修改的fd指针被分配出去</li>
+<li>我们要的地址被认作chunk分配给我们使用，从而修改那块地址</li>
+</ol>
+<p>这个方法是很简单的一种，但限制也很大几乎只能在libc.2.27的条件下使用。</p>
+<h3 id="tcache-dup"><a href="#tcache-dup" class="headerlink" title="tcache dup"></a><em>tcache dup</em></h3><p>这个漏洞也是一个几乎只能在libc.2.27使用的漏洞。</p>
+<p>这里利用的是在tcache bin对free进的函数没有然后检测从而利用的漏洞</p>
+<p>这个漏洞也算是一个比较离谱的漏洞，这个简单说就是对同一个chunk连续两次free，在连续两次申请相同大小的chunk，从而导致程序中的后面两个malloc的指针同时指向一个chunk。这里的由于程序对这个释放的过程并不会有检测从而导致，我们能同时连续对一块chunk释放两次。中间甚至不用free其他的chunk从而间隔。</p>
+<p>所以这个漏洞就是对同一个chunk，free两次，然后在申请相同大小的chunk两次，这两次的指针会指向同一个chunk。</p>
+<h3 id="tcache-house-of-spirit"><a href="#tcache-house-of-spirit" class="headerlink" title="tcache house of spirit"></a><em>tcache house of spirit</em></h3><p>这个漏洞和上一个一样也是只能在libc.2.27的上使用的漏洞。</p>
+<p>这个漏洞的利用很简单，只要我们在程序的某一个地方伪造一个fake_chunk然后将这个chunk直接free进tcache  bin中，在后面的malloc中申请我们fake_chunk的大小chunk，这样就可以把这个fake_chunk当做一个真正的chunk分配给我们使用。</p>
+<p>关于这个fake_chunk的伪造条件只有一个，就是要保证这个fake_chunk的size为一个相对正确的chunk大小，这样就可以满足要求了。</p>
+<ul>
+<li>找到要伪造的chunk的地址，就这个地址的size为一个正确的地址。</li>
+<li>将这个fake_chunk的数据段地址使用free函数将这个fake_chunk挂入tcache bin中</li>
+<li>申请我们刚刚free的fake_chunk的大小的chunk</li>
+</ul>
+<p>这样我们fake_chunk就会被当做chunk供我们使用。</p>
+<h3 id="tcache-stashing-unlink-attack"><a href="#tcache-stashing-unlink-attack" class="headerlink" title="tcache stashing unlink attack"></a><em>tcache stashing unlink attack</em></h3><p>这个漏洞的利用相较上面的几种就相对来说要复杂一点，并且利用的东西也多了很多，</p>
+<ul>
+<li>当使用calloc分配的堆块时会从small bin中获取（不从tcache bin中拿）</li>
+<li>获取一次之后会将small bin中其余堆块挂进tcache中（前提tcache中有相同堆块的链表，且其中chunk大小相同有剩余）</li>
+<li>在将small bin中其余堆块挂进tcache中这个过程中只会对第一个挂进去的chunk进行完整性检查，后面的不做检查</li>
+</ul>
+<p>这里其实就已经很明显的告诉我们这里我们可以在程序中，产生small bin后在small bin中修改chunk的控制字段，从而使伪造的fake_chunk挂入small bin中，在使用calloc分配一个相同大小的chunk，从而使small bin的剩下的chunk挂入tcache bin中，这里注意一定要保证我们伪造的fake_chunk之前还有一个正常的chunk，只有这样才能保证我们的fake_chunk能顺利挂入tcache bin，然后被分配出来。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="comment">//gcc -g -no-pie hollk.c -o hollk</span></span><br><span class="line"> <span class="number">2</span> <span class="comment">//patchelf --set-rpath 路径/2.27-3ubuntu1_amd64/ hollk</span></span><br><span class="line"> <span class="number">3</span> <span class="comment">//patchelf --set-interpreter 路径/2.27-3ubuntu1_amd64/ld-linux-x86-64.so.2 hollk</span></span><br><span class="line"> <span class="number">4</span> <span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"> <span class="number">5</span> <span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"> <span class="number">6</span> <span class="meta">#<span class="keyword">include</span> <span class="string">&lt;assert.h&gt;</span></span></span><br><span class="line"> <span class="number">7</span> </span><br><span class="line"> <span class="number">8</span> <span class="type">int</span> <span class="title function_">main</span><span class="params">()</span>&#123;</span><br><span class="line"> <span class="number">9</span>     <span class="type">unsigned</span> <span class="type">long</span> stack_var[<span class="number">0x10</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="number">10</span>     <span class="type">unsigned</span> <span class="type">long</span> *chunk_lis[<span class="number">0x10</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="number">11</span>     <span class="type">unsigned</span> <span class="type">long</span> *target;</span><br><span class="line"><span class="number">12</span> </span><br><span class="line"><span class="number">13</span>     setbuf(<span class="built_in">stdout</span>, <span class="literal">NULL</span>);</span><br><span class="line"><span class="number">14</span>     </span><br><span class="line"><span class="number">15</span>     <span class="built_in">printf</span>(<span class="string">&quot;stack_var addr is:%p\n&quot;</span>,&amp;stack_var[<span class="number">0</span>]);</span><br><span class="line"><span class="number">16</span>     <span class="built_in">printf</span>(<span class="string">&quot;chunk_lis addr is:%p\n&quot;</span>,&amp;chunk_lis[<span class="number">0</span>]);</span><br><span class="line"><span class="number">17</span>     <span class="built_in">printf</span>(<span class="string">&quot;target addr is:%p\n&quot;</span>,(<span class="type">void</span>*)target);</span><br><span class="line"><span class="number">18</span> </span><br><span class="line"><span class="number">19</span>     stack_var[<span class="number">3</span>] = (<span class="type">unsigned</span> <span class="type">long</span>)(&amp;stack_var[<span class="number">2</span>]);</span><br><span class="line"><span class="number">20</span> </span><br><span class="line"><span class="number">21</span>     <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i &lt; <span class="number">9</span>;i++)&#123;</span><br><span class="line"><span class="number">22</span>         chunk_lis[i] = (<span class="type">unsigned</span> <span class="type">long</span>*)<span class="built_in">malloc</span>(<span class="number">0x90</span>);</span><br><span class="line"><span class="number">23</span>     &#125;</span><br><span class="line"><span class="number">24</span> </span><br><span class="line"><span class="number">25</span>     <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">3</span>;i &lt; <span class="number">9</span>;i++)&#123;</span><br><span class="line"><span class="number">26</span>         <span class="built_in">free</span>(chunk_lis[i]);</span><br><span class="line"><span class="number">27</span>     &#125;</span><br><span class="line"><span class="number">28</span>     </span><br><span class="line"><span class="number">29</span>     <span class="built_in">free</span>(chunk_lis[<span class="number">1</span>]);</span><br><span class="line"><span class="number">30</span>     <span class="built_in">free</span>(chunk_lis[<span class="number">0</span>]);</span><br><span class="line"><span class="number">31</span>     <span class="built_in">free</span>(chunk_lis[<span class="number">2</span>]);</span><br><span class="line"><span class="number">32</span>     </span><br><span class="line"><span class="number">33</span>     <span class="built_in">malloc</span>(<span class="number">0xa0</span>);</span><br><span class="line"><span class="number">34</span>     <span class="built_in">malloc</span>(<span class="number">0x90</span>);</span><br><span class="line"><span class="number">35</span>     <span class="built_in">malloc</span>(<span class="number">0x90</span>);</span><br><span class="line"><span class="number">36</span>     </span><br><span class="line"><span class="number">37</span>     chunk_lis[<span class="number">2</span>][<span class="number">1</span>] = (<span class="type">unsigned</span> <span class="type">long</span>)stack_var;</span><br><span class="line"><span class="number">38</span>     <span class="built_in">calloc</span>(<span class="number">1</span>,<span class="number">0x90</span>);</span><br><span class="line"><span class="number">39</span> </span><br><span class="line"><span class="number">40</span>     target = <span class="built_in">malloc</span>(<span class="number">0x90</span>);</span><br><span class="line"><span class="number">41</span> </span><br><span class="line"><span class="number">42</span>     <span class="built_in">printf</span>(<span class="string">&quot;target now: %p\n&quot;</span>,(<span class="type">void</span>*)target);</span><br><span class="line"><span class="number">43</span> </span><br><span class="line"><span class="number">44</span>     assert(target == &amp;stack_var[<span class="number">2</span>]);</span><br><span class="line"><span class="number">45</span>     <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"><span class="number">46</span> &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>这里具体的根据这个案例来分析这种漏洞的利用（注意要使用libc.2.27来编译这个程序），</p>
+<p><strong>LCTF2018 PWN easy_heap</strong></p>
+<p>这个方向在wiki上的第一道题就是这个，这是一个极好的题目，其中对于如何泄露libc的手法很是奇妙，很值得仔细写一写。</p>
+<p>先感谢hollk大佬的文章<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41202237/article/details/113697892">（补题）LCTF2018 PWN easy_heap超详细讲解_lctftk-CSDN博客</a>写的很详细，膜拜大佬。</p>
+<p>这道题的整体逻辑还是比较简单的，就是可以申请10个chunk，这10个chunk的大小固定，都为0xf8（数据段大小）。然后这10个chunk的指针和大小都会被记录进最开始的一个chunk中，然后我们可以对这10个chun进行，free，puts，其中的内容在最开始申请的时候就会被输入其中，后期不能更改。</p>
+<p>整体看完程序会发现漏洞就一个，在chunk申请的时候能输入多少多少数据是由我们输入的大小决定的，这里由于我们这个chunk的大小为固定的0xf8，我们能输入的数据的最大大小也为0xf8，然后这里有个很大的问题在于用于向chunk读入的内容的函数，使用的是个循环函数，这里只要我们输入的大小为0xf8这个循环就会出现一个类似于<code>off-by-one</code>漏洞的<code>null-byte-overflow</code>漏洞(wiki上这么叫，虽然我感觉没什么差别)，这里会对下一个chunk的size的最后两个位址覆盖为<code>\x00</code>，这里覆盖的这个位置正好是chunk中由于检测上一个chunk是否为free chunk的inuse标志位，当程序检测到这个chunk的上一个chunk为free chunk时，这个位址的值为0，否则为1。</p>
+<p>然后就会发现，好了没有其他漏洞。是的，这道题的漏洞就只有这一个可以覆盖inuse标志位为0的漏洞，那么现在我们就要想办法看看能不呢使用什么方法来让我们能在程序中出现一个chunk既能有指针能调用，同时自身又在unsorted bin中，这样我们便可以直接通过打印这个chunk从而实现得到libc地址。</p>
+<p>这里有一个需要先讲的知识点那就是当我们将数个相同的大小并且并且相邻的chunk被挂入unsorted bin中时，程序会为了后面的malloc方便会直接将这几个chunk在unsorted bin中合并成一个大的chunk，同时对于其中的之前的chunk会对其控制字段进行一定的改变，将其中的prev size会更具前面的free chunk的大小修改，同时size的inuse标志为0。</p>
+<p>这里就有一个很大的问题如果我们在后期能将这个合并的大chunk，在后期将第一个chunk挂入unsorted bin中，同时有将最后一个chunk挂入其中，并修改其中的所有chunk1的控制字段与合并时相同（prev size和size的内容相同）程序会默认在unsorted bin中形成之前的那个大chunk，从而使我能对中间的那个chunk进行Double Free和泄露libc地址。</p>
+<p><strong>以下由于在程序中chunk的次序是由0开始，所以这里要注意下面的第几个chunk是从0开始数的第几，不是从1开始，要注意这一点避免认错chunk</strong></p>
+<ol>
+<li><p>申请10个chunk</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxMjAyMjM3,size_16,color_FFFFFF,t_70-17188743446133.png" alt="在这里插入图片描述"></p>
+</li>
+<li><p>将前6个chunk和第9个chunk，free进入tcachebin中填满，再将第6到第8个chunk，free进入unsorted bin中。</p>
+<p>这里678这3个chunk被free到unsorted bin会合并为一个大chunk，使得chunk7和chunk8的prve size 和size的值分别被修改为0x100，0x100和0x200，0x100。chunk6的size为0x300。<img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxMjAyMjM3,size_16,color_FFFFFF,t_70.png" alt="在这里插入图片描述"></p>
+</li>
+<li><p>在向程序申请10个chunk，使得chunk成新的排列。</p>
+<p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxMjAyMjM3,size_16,color_FFFFFF,t_70-17188743583236.png" alt="在这里插入图片描述"></p>
+</li>
+<li><p>在free前6个chunk和第7个chunk以填满tcachebin（这里最后一个填chunk8，是为了在后面可以直接申请这个从而覆盖chunk9的inuse标志位为0，让程序以为chunk8也是free chunk），再将chunk7也free掉使其进入unsorted bin，同时这样也能修改chunk7的inuse标志位也为0，</p>
+</li>
+<li><p>再向程序malloc一个chunk，程序会将上一个中chunk8拿给我们使用（chunk8在tcachebin的第一位，第一个分配）这里直接使用漏洞修改chunk9中的inuse标志位，使其认为上一个chunk为free。</p>
+</li>
+<li><p>free掉chunk6的chunk用于填满tcachebin中刚刚分配的那一个，然后在free掉chunk9的chunk。</p>
+<p>这里由于之前我们通过第二步的3个chunk的合并，使得上面第3步后的chunk789的chunk中的prev size和size都被修改了。然后在第4步时我们又将chunk7 free进unsorted bin，这样使得chunk8中的size的inuse标志位为0。此时这两个chunk的控制字段与第2步的相同了，此时我们在free掉chunk9的chunk，正常情况下由于chunk8在第5步时不是free chunk了，所以这里chunk9的size的inuse标志位为1。即使我们在这里free了chunk9也不会有什么问题发生，但是由于我们在第5步时将chunk9的size的inuse标志位覆盖为0了，于是这里我们在将chunk9 free时就会使程序中的unsorted bin中又出现第2步的3个合并的大chunk，但是chunk8却在第5步时被程序拿给我们了。</p>
+</li>
+<li><p>将tcachebin中的7个chunk和unsorted bin中的第一个chunk7的chunk都malloc出来那此在程序中。unsorted bin的第一个hunk便是以第3歩中的chunk8为起始地址，但是在新的chunk0中记录的正好就是chunk8的指针。</p>
+</li>
+<li><p>打印chunk0的内容，从而得到libc的地址。</p>
+</li>
+</ol>
+<p>以上就是这道题中关于libc的泄露，只是基本步骤，具体的有时间再仔细分析一下，这个方法还是很奇妙的，利用到unsorted bin中chunk的合并，从而使的程序中误认为有大free chunk的出现。</p>
+<p>这道题我写的比较简陋，只是为了我自己方便研究这个方法，更好的推荐看这个地方<a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/user-mode/heap/ptmalloc2/tcache-attack/#_3">Tcache attack - CTF Wiki (ctf-wiki.org)</a>和上面提到的大佬的博客讲的更加直观与详细。</p>
 
       
     </div>
