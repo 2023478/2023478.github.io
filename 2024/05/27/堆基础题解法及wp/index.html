@@ -80,7 +80,7 @@
 <meta property="og:image" content="https://2023478.github.io/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240623174109860.png">
 <meta property="og:image" content="https://2023478.github.io/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240623174547683.png">
 <meta property="article:published_time" content="2024-05-27T13:07:47.000Z">
-<meta property="article:modified_time" content="2024-06-23T09:56:56.449Z">
+<meta property="article:modified_time" content="2024-07-15T15:00:16.222Z">
 <meta property="article:author" content="wgiegie">
 <meta property="article:tag" content="堆">
 <meta name="twitter:card" content="summary">
@@ -357,6 +357,7 @@
 <li>必须在申请的堆中有堆溢出，用于修改下一个堆的prev size段空间</li>
 </ol>
 <p>对于这一类的题，最重要的就是在我们申请的堆中间，通过我们自己伪造一个fake chunk与bss段的存放对指针的地址，构成一个含有3个chunk的双向链表，然后在申请的宁外一个堆中使用堆溢出，从而修改下一个堆中的prev size段，并使大小为从要修改这个chunk的prev size一直到，我们伪造的fake chunk的prev size这两个地址的距离差大小，这样使得我们在后面free掉我们修改了prev size 的chunk时，程序会将从这个chunk一直到我们伪造的fake chunk的这一段地址都认为是之前已经free的chunk（prev size中记录的是上一个free chunk的大小），从而使这一个刚刚释放的free chunk，直接就把上面的一整段被识变为free chunk的地址合并了（连续的两个free chunk会被程序合并），但是我们在之前伪造的fake chunk已经与存放指针的地址，构成了一个双向链表，所以在这里fake chunk被下面的free chunk合并时，原本与之构成双项链表的那两个空间，由于与之相连的chunk被拿走了，使得那两个空间，会有一定的改变，而改变的结果就会使原本存放指针的地方存放其他地址空间，从而使用这个地址修改函数地址。</p>
+<p><strong>注意一下，当这道题的libc版本为2.23时，我们用于free的chunk的大小必须要大于fastbin（大于等于0x80）的大小，否则不能出现unlink的情况</strong></p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240601102616025.png" alt="image-20240601102616025"></p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240602084358411.png" alt="image-20240602084358411"></p>
 <p><img src="/2024/05/27/%E5%A0%86%E5%9F%BA%E7%A1%80%E9%A2%98%E8%A7%A3%E6%B3%95%E5%8F%8Awp/image-20240602085046748.png" alt="image-20240602085046748"></p>
